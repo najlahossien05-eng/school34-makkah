@@ -7,7 +7,7 @@
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>الابتدائية الرابعة والثلاثون — الرئيسية</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap">
 <style id="css">
 /* تخطيط: ترويسة رسمية + لوحة تعريف + أقسام بشبكات بطاقات؛ صفحة العنصر عمودان؛ لوحة تحكم بتبويبات وشريط حفظ سفلي */
 :root{
@@ -850,36 +850,12 @@ body{background:var(--bg)}
 .me-name{display:flex;flex-direction:column;line-height:1.35}
 .me-name b{font-size:14px}
 .me-name small{font-size:11.5px;color:var(--muted);font-family:var(--f-body)}
-@media (min-width:1180px){
-  .shell{grid-template-columns:1fr}
-  .nav,.scrim{display:none}
-  .menu-btn,.tb-title{display:none}
-  .tb-brand,.pills{display:flex}
-  .fab,.search-btn{display:inline-grid}
-  .gsearch{display:none;position:absolute;top:calc(100% + 8px);left:20px;width:420px;z-index:35}
-  .gsearch.open{display:block}
-  .gsearch input{background:var(--surface);box-shadow:0 14px 34px rgba(18,40,30,.14);border:0;padding:12px 42px 12px 16px}
-  .admin-link span{display:none}
-}
-@media (min-width:1180px) and (max-width:1599px){
-  .pill{padding:9px 12px;font-size:13.5px}
-  .pills{gap:5px}
-  .me-name{display:none}
-  .me-chip{padding:0}
-  .tb-brand-t small{display:none}
-  .top-actions{gap:6px}
-}
-@media (min-width:1180px) and (max-width:1379px){
-  .tb-brand-t{display:none}
-  .icon-btn,.fab{width:40px;height:40px}
-}
-@media (max-width:1179px){
-  .shell{grid-template-columns:1fr}
-  .nav{position:fixed;inset:0 0 0 auto;width:min(290px,86vw);height:auto;z-index:50;transform:translateX(105%);transition:transform .25s ease;padding-top:calc(env(safe-area-inset-top,0px) + 18px);padding-right:max(14px,env(safe-area-inset-right,0px))}
-  .nav.open{transform:none;box-shadow:-10px 0 40px rgba(0,0,0,.3)}
-  .menu-btn{display:inline-grid}
-  .fab{display:inline-grid}
-}
+/* الشريط الجانبي كما كان (بتدرّج البترولي والأخضر) */
+.fab{display:inline-grid}
+.nav{background:linear-gradient(175deg,#0E4A57,#1B6B57)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .nav{background:linear-gradient(175deg,#0A2128,#0F3A31)}}
+:root[data-theme="dark"] .nav{background:linear-gradient(175deg,#0A2128,#0F3A31)}
+@media (max-width:1280px) and (min-width:981px){.me-name{display:none}.me-chip{padding:0}}
 @media (max-width:640px){.fab{width:42px;height:42px}}
 
 /* ===== الرئيسية ===== */
@@ -1045,11 +1021,12 @@ body{background:var(--bg)}
 .sched.duty,.sched.dutyend{border-inline-start-color:var(--lime)}
 .sched b{font-family:var(--f-display);font-size:14px}
 .sched span{font-size:12.5px;color:var(--muted)}
-@media (max-width:1280px){
+@media (max-width:1600px){
   .d-head{grid-template-columns:minmax(0,1fr) auto}
   .kpis{grid-column:1/-1}
   .kpi{flex:1}
 }
+.d-greet h1{font-size:clamp(30px,3.2vw,46px)}
 @media (max-width:1100px){
   .d-chart,.d-hero,.d-table,.d-people,.d-sched{grid-column:span 12;grid-row:auto}
   .d-goal,.d-rem{grid-column:span 6}
@@ -1068,6 +1045,19 @@ body{background:var(--bg)}
   .mini-search input{width:120px}
   .dcard{padding:18px}
 }
+
+/* ===== الخط: سكالا مجالا (من جهاز المستخدم) مع بديل Noto Naskh Arabic ===== */
+/* سكالا مجالا يظهر أصغر من غيره بالحجم نفسه، فيُكبَّر بـ size-adjust دون تغيير بقية الأحجام */
+/* وجه واحد عادي فقط: ملف «Sakkal Majalla Bold» يفصل «ر» عن «ا» (الر ابعة)، فيُولَّد العريض صناعيًا من العادي */
+@font-face{font-family:"Majalla";src:local("Sakkal Majalla"),local("SakkalMajalla");font-weight:400;font-style:normal;size-adjust:128%}
+:root{
+  --f-display:"Majalla","Noto Naskh Arabic","Segoe UI",Tahoma,sans-serif;
+  --f-body:"Majalla","Noto Naskh Arabic","Segoe UI",Tahoma,sans-serif;
+}
+body{line-height:1.7}
+h1,h2,h3{line-height:1.35}
+.tk-item,.tk-cur{line-height:1.3}
+body{font-synthesis:weight style}
 </style>
 </head>
 <body>
@@ -1697,7 +1687,7 @@ body{background:var(--bg)}
     return '<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>' + reset + '</style></head><body>'
       + '<title>' + esc(title) + '</title>\n'
       + '<meta name="claude:viewport-fit-sides" content="cover">\n'
-      + '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">\n'
+      + '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap">\n'
       + '<style id="css">' + document.getElementById('css').textContent + '</style>\n'
       + '<div id="root"></div>\n'
       + '<' + S + ' src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></' + S + '>\n'
