@@ -762,6 +762,312 @@ span.avatar{display:inline-grid;place-items:center;color:var(--onpetrol);line-he
 .folder-btn svg{width:16px;height:16px}
 .ach-hero-t .folder-btn{margin-top:6px}
 .exp-list+div .folder-btn,.panel .folder-btn{align-self:flex-start}
+
+/* ===================== التصميم ٢: بطاقات فاتحة، أزرار كبسولية، أخضر الهوية ===================== */
+/* تخطيط: شريط علوي بأزرار كبسولية + شبكة بطاقات بزوايا كبيرة وظلال ناعمة (مستوحى من لوحات المتابعة الحديثة) */
+:root{
+  --bg:#EDF1EF; --surface:#FFFFFF; --soft:#F2F6F4; --line:#E2E9E5;
+  --ink:#17221E; --muted:#6B7B74;
+  --petrol:#12875C; --teal:#1BA572; --green:#1BA572; --onpetrol:#FFFFFF;
+  --lime:#E4EE6A; --limebg:#F6F9D6; --lime-ink:#5B6410;
+  --ok:#14895E; --okbg:#E3F4EC; --wait:#A07012; --waitbg:#FBF0D7; --bad:#C2413B; --badbg:#FCE9E7;
+  --nav-a:#0E6E4B; --nav-b:#1BA572;
+  --shadow:0 1px 2px rgba(18,40,30,.04),0 10px 30px rgba(18,40,30,.06);
+  --r:24px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0E1513; --surface:#161F1C; --soft:#1C2824; --line:#26352F;
+  --ink:#E7EFEB; --muted:#93A69E;
+  --petrol:#3CC48E; --teal:#4FD39C; --green:#4FD39C; --onpetrol:#06231A;
+  --lime:#D8E35A; --limebg:#2C301A; --lime-ink:#E4EE9A;
+  --ok:#6FD8A6; --okbg:#173A2B; --wait:#E8C46E; --waitbg:#3A2F17; --bad:#F09A9A; --badbg:#3D1E1E;
+  --nav-a:#0B3D2B; --nav-b:#12704E;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1513; --surface:#161F1C; --soft:#1C2824; --line:#26352F;
+  --ink:#E7EFEB; --muted:#93A69E;
+  --petrol:#3CC48E; --teal:#4FD39C; --green:#4FD39C; --onpetrol:#06231A;
+  --lime:#D8E35A; --limebg:#2C301A; --lime-ink:#E4EE9A;
+  --ok:#6FD8A6; --okbg:#173A2B; --wait:#E8C46E; --waitbg:#3A2F17; --bad:#F09A9A; --badbg:#3D1E1E;
+  --nav-a:#0B3D2B; --nav-b:#12704E;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.25); color-scheme:dark}
+
+body{background:var(--bg)}
+.wrap{max-width:1360px}
+
+/* البطاقات: بلا حدود، زوايا كبيرة، ظل ناعم */
+.panel,.tile,.mod,.det,.tbl-wrap,.datebar,.att-list,.pf-body,.pf-tabs,.sec-card,.count,.lvl-stat,.nafs-c,.info-dl div,.link-card,.names,.leader,.goal,.check-list li,.soon{border-color:transparent}
+.panel,.tile,.mod,.det,.tbl-wrap,.datebar,.att-list,.pf-body,.pf-tabs,.sec-card,.card{border-radius:var(--r);box-shadow:var(--shadow);border:0}
+.card{border:1px solid transparent}
+.card:hover,.tile:hover,.mod:hover{border-color:transparent;box-shadow:0 14px 34px rgba(18,40,30,.12)}
+.btn{border-radius:999px}
+.btn-sm{border-radius:999px}
+.in,.search input,.mini .in{border-radius:14px}
+.chip{border-radius:999px}
+.tabs{border-bottom:0;gap:6px;background:var(--surface);padding:6px;border-radius:999px;width:fit-content;max-width:100%;box-shadow:var(--shadow)}
+.tabs button{border:0;border-radius:999px;margin:0;padding:8px 16px}
+.tabs button[aria-selected="true"]{background:var(--petrol);color:var(--onpetrol);border:0}
+.seg{border-radius:999px;border-color:var(--line)}
+.seg button{padding:7px 14px}
+.pg-ico{border-radius:50%}
+.pg-title h1{font-size:28px;font-weight:800}
+.corner{border-bottom-right-radius:22px}
+.card-ico,.det-ico,.mod-ico,.tile-ico,.goal-n{border-radius:50%}
+
+/* ===== الشريط العلوي بأزرار كبسولية ===== */
+.topbar{background:var(--surface);border-bottom:0;box-shadow:0 1px 0 var(--line)}
+.topbar-in{padding-block:12px;gap:14px;position:relative}
+.tb-brand,.pills,.search-btn,.fab{display:none}
+.tb-brand{align-items:center;gap:10px;text-decoration:none;color:inherit;flex:none}
+.tb-logo{width:44px;height:44px;border-radius:14px;background:var(--soft);display:grid;place-items:center;overflow:hidden}
+.tb-logo img{width:36px;height:auto}
+.tb-logo .logo-d{display:none}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tb-logo .logo-l{display:none}:root:not([data-theme="light"]) .tb-logo .logo-d{display:block}}
+:root[data-theme="dark"] .tb-logo .logo-l{display:none} :root[data-theme="dark"] .tb-logo .logo-d{display:block}
+.tb-brand-t{display:flex;flex-direction:column;line-height:1.35}
+.tb-brand-t b{font-family:var(--f-display);font-size:15px}
+.tb-brand-t small{font-size:11.5px;color:var(--muted)}
+.pills{align-items:center;gap:6px;flex:1;justify-content:center;min-width:0}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:999px;background:var(--soft);color:var(--ink);text-decoration:none;font-family:var(--f-display);font-size:14px;font-weight:700;border:0;cursor:pointer;white-space:nowrap;transition:background .15s,color .15s}
+.pill:hover{background:var(--line)}
+.pill.on{background:var(--petrol);color:var(--onpetrol)}
+.pill svg{width:15px;height:15px}
+.pill-g{position:relative}
+.pill-menu{position:absolute;top:calc(100% + 8px);right:0;z-index:40;min-width:240px;background:var(--surface);border-radius:20px;box-shadow:0 18px 44px rgba(18,40,30,.16);padding:8px;display:flex;flex-direction:column;gap:2px}
+.pill-menu[hidden]{display:none}
+.pill-menu a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;text-decoration:none;font-family:var(--f-display);font-size:14px}
+.pill-menu a:hover{background:var(--soft)}
+.pill-menu a.on{background:var(--okbg);color:var(--ok)}
+.pill-menu a svg{width:17px;height:17px;color:var(--petrol)}
+.fab{width:46px;height:46px;border-radius:50%;background:var(--petrol);color:var(--onpetrol);place-items:center;box-shadow:0 8px 18px rgba(18,135,92,.32);flex:none}
+.fab svg{width:20px;height:20px}
+.fab:hover{filter:brightness(1.08)}
+.icon-btn{border-radius:50%;width:42px;height:42px;border:0;background:var(--soft);color:var(--ink)}
+.icon-btn:hover{background:var(--line)}
+.badge{top:-2px;left:-2px}
+.me-chip{border:0;background:transparent;padding:0 6px 0 0;gap:10px}
+.me-chip .avatar{width:42px;height:42px;font-size:13px}
+.me-name{display:flex;flex-direction:column;line-height:1.35}
+.me-name b{font-size:14px}
+.me-name small{font-size:11.5px;color:var(--muted);font-family:var(--f-body)}
+@media (min-width:1180px){
+  .shell{grid-template-columns:1fr}
+  .nav,.scrim{display:none}
+  .menu-btn,.tb-title{display:none}
+  .tb-brand,.pills{display:flex}
+  .fab,.search-btn{display:inline-grid}
+  .gsearch{display:none;position:absolute;top:calc(100% + 8px);left:20px;width:420px;z-index:35}
+  .gsearch.open{display:block}
+  .gsearch input{background:var(--surface);box-shadow:0 14px 34px rgba(18,40,30,.14);border:0;padding:12px 42px 12px 16px}
+  .admin-link span{display:none}
+}
+@media (min-width:1180px) and (max-width:1599px){
+  .pill{padding:9px 12px;font-size:13.5px}
+  .pills{gap:5px}
+  .me-name{display:none}
+  .me-chip{padding:0}
+  .tb-brand-t small{display:none}
+  .top-actions{gap:6px}
+}
+@media (min-width:1180px) and (max-width:1379px){
+  .tb-brand-t{display:none}
+  .icon-btn,.fab{width:40px;height:40px}
+}
+@media (max-width:1179px){
+  .shell{grid-template-columns:1fr}
+  .nav{position:fixed;inset:0 0 0 auto;width:min(290px,86vw);height:auto;z-index:50;transform:translateX(105%);transition:transform .25s ease;padding-top:calc(env(safe-area-inset-top,0px) + 18px);padding-right:max(14px,env(safe-area-inset-right,0px))}
+  .nav.open{transform:none;box-shadow:-10px 0 40px rgba(0,0,0,.3)}
+  .menu-btn{display:inline-grid}
+  .fab{display:inline-grid}
+}
+@media (max-width:640px){.fab{width:42px;height:42px}}
+
+/* ===== الرئيسية ===== */
+.dash2{gap:20px}
+.d-head{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:18px;align-items:center}
+.d-greet{display:flex;align-items:flex-start;gap:16px;min-width:0}
+.d-greet h1{font-size:clamp(30px,3.6vw,48px);font-weight:800;line-height:1.15;letter-spacing:-.01em;display:flex;flex-direction:column}
+.d-greet h1 span{font-size:.62em;font-weight:700;color:var(--muted);margin-top:4px}
+.d-date{margin:10px 0 0;color:var(--muted);font-size:14.5px}
+.rbtn{display:inline-grid;place-items:center;width:46px;height:46px;border-radius:50%;background:var(--surface);color:var(--ink);box-shadow:var(--shadow);border:0;cursor:pointer;text-decoration:none;flex:none;transition:background .15s,transform .15s}
+.rbtn:hover{background:var(--soft);transform:translateY(-1px)}
+.rbtn svg{width:19px;height:19px}
+.rbtn.sm{width:36px;height:36px;box-shadow:none;background:var(--soft)}
+.rbtn.sm svg{width:16px;height:16px}
+.rbtn.xs{width:30px;height:30px;box-shadow:none;background:transparent}
+.rbtn.xs[disabled]{opacity:.3;cursor:default}
+.rbtn.light{background:rgba(255,255,255,.9);color:var(--nav-a)}
+.rbtn.back{margin-top:6px}
+.d-tools{display:flex;gap:10px;flex-wrap:wrap}
+.kpis{display:flex;gap:16px}
+.kpi{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"ico k" "v pill";gap:6px 12px;align-items:center;background:var(--surface);border-radius:var(--r);padding:18px 20px;min-width:220px;box-shadow:var(--shadow);text-decoration:none;color:inherit}
+.kpi:hover{box-shadow:0 14px 34px rgba(18,40,30,.12)}
+.kpi-ico{grid-area:ico;width:34px;height:34px;border-radius:50%;background:var(--limebg);color:var(--lime-ink);display:grid;place-items:center}
+.kpi-ico svg{width:18px;height:18px}
+.kpi-k{grid-area:k;font-family:var(--f-display);font-weight:700;font-size:15px}
+.kpi-v{grid-area:v;font-family:var(--f-display);font-size:34px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.dpill{grid-area:pill;justify-self:start;display:inline-flex;align-items:center;gap:4px;background:var(--okbg);color:var(--ok);border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700;white-space:nowrap}
+.dpill svg{width:13px;height:13px}
+.dgrid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:20px;align-items:start}
+.dcard{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:22px;min-width:0;position:relative}
+.dc-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.dc-head h2,.dcard>h2{font-size:19px;font-weight:800;margin:0}
+.dcard>h2{margin-bottom:12px}
+.d-chart{grid-column:span 7}
+.d-hero{grid-column:span 5;grid-row:span 2;padding:14px}
+.d-goal{grid-column:span 3}
+.d-rem{grid-column:span 4}
+.d-table{grid-column:span 7}
+.d-people{grid-column:span 5;display:grid;grid-template-columns:1fr;gap:20px}
+.d-sched{grid-column:span 5;grid-column-end:-1}
+.sel-pill{position:relative;display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:0 12px 0 10px;height:36px;background:var(--surface)}
+.sel-pill select{appearance:none;border:0;background:transparent;font-family:var(--f-display);font-size:13.5px;padding-left:22px;cursor:pointer;color:var(--ink)}
+.sel-pill svg{position:absolute;left:10px;width:15px;height:15px;pointer-events:none;color:var(--muted)}
+.chart-legend{display:flex;gap:16px;font-size:13px;color:var(--muted);margin-bottom:4px}
+.chart-legend span{display:inline-flex;align-items:center;gap:6px}
+.lg.lime{background:var(--lime)}
+.area-chart{position:relative}
+.area-chart svg{width:100%;height:auto;display:block;cursor:crosshair}
+.area-chart .gl{stroke:var(--line);stroke-width:1;stroke-dasharray:3 5}
+.area-chart .ax,.area-chart .xl{fill:var(--muted);font-size:12px;font-family:var(--f-body)}
+.area-chart .xl.now{fill:var(--petrol);font-weight:700}
+.area-chart .ag-a{stop-color:var(--teal);stop-opacity:.28}
+.area-chart .ag-b{stop-color:var(--teal);stop-opacity:0}
+.area-chart .ln1{fill:none;stroke:var(--petrol);stroke-width:3;stroke-linecap:round}
+.area-chart .ln2{fill:none;stroke:var(--lime);stroke-width:2.5;stroke-linecap:round}
+.area-chart .band{fill:var(--okbg)}
+.area-chart .hdot{fill:var(--surface);stroke:var(--petrol);stroke-width:3}
+.chart-empty{position:absolute;inset:40% 0 auto;text-align:center;margin:0}
+.tip{position:absolute;z-index:3;background:var(--surface);border-radius:16px;box-shadow:0 14px 34px rgba(18,40,30,.16);padding:10px 12px;display:flex;flex-direction:column;gap:4px;font-size:13px;min-width:150px;pointer-events:none}
+.tip>b{font-family:var(--f-display);margin-bottom:2px}
+.tip span{display:flex;align-items:center;gap:6px}
+.tip span b{margin-inline-start:auto;font-family:var(--f-display);font-variant-numeric:tabular-nums}
+.tip .lg{width:10px;height:10px}
+/* بطاقة المدرسة */
+.hero-media{display:grid;grid-template-columns:minmax(0,1fr) 128px;gap:12px}
+.hero-main{position:relative;min-height:250px;border-radius:20px;overflow:hidden;background:linear-gradient(140deg,var(--nav-a),var(--nav-b));display:flex;align-items:flex-end;padding:16px}
+.hero-main::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 15%,rgba(255,255,255,.18),transparent 45%),radial-gradient(circle,rgba(255,255,255,.12) 0 1.4px,transparent 1.9px) 0 0/16px 16px}
+.hero-logo{position:absolute;top:22px;right:22px;width:118px;height:auto;opacity:.95}
+.hero-num{position:absolute;left:18px;top:6px;font-family:var(--f-display);font-weight:800;font-size:120px;line-height:1;color:rgba(255,255,255,.14);letter-spacing:-4px}
+.hero-main .rbtn{position:absolute;top:14px;left:14px}
+.hero-pill{position:relative;display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.18);backdrop-filter:blur(6px);color:#fff;border-radius:999px;padding:9px 14px 9px 16px;font-family:var(--f-display);font-size:14px}
+.hero-pill svg{width:18px;height:18px;background:var(--lime);color:var(--nav-a);border-radius:50%;padding:3px;box-sizing:content-box}
+.hero-side{display:grid;grid-template-rows:1fr 1fr;gap:12px}
+.hero-thumb{border-radius:18px;background:var(--limebg);color:var(--lime-ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-decoration:none;font-family:var(--f-display);font-size:13px;font-weight:700}
+.hero-thumb svg{width:30px;height:30px}
+.hero-thumb.alt{background:var(--soft);color:var(--ink)}
+.hero-thumb.alt b{width:48px;height:48px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-size:16px;box-shadow:var(--shadow)}
+.hero-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:16px;padding:18px 8px 10px}
+.hero-info h3{font-size:20px;font-weight:800}
+.hero-info>span{font-size:13px;color:var(--muted)}
+.hero-stats{display:flex;gap:8px;margin-top:14px}
+.hero-stats div{flex:1;background:var(--soft);border-radius:16px;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.hero-stats b{font-family:var(--f-display);font-size:18px;font-variant-numeric:tabular-nums}
+.hero-stats span{font-size:11.5px;color:var(--muted)}
+.hero-deals h3{font-size:16px}
+.stripe-bar{height:40px;border-radius:12px;background:repeating-linear-gradient(-45deg,var(--soft) 0 6px,var(--line) 6px 9px);overflow:hidden}
+.stripe-bar i{display:block;height:100%;border-radius:12px;background:linear-gradient(90deg,var(--teal),var(--petrol))}
+.deal-nums{display:flex;justify-content:space-between;margin-top:8px}
+.deal-nums div{display:flex;flex-direction:column}
+.deal-nums div:last-child{text-align:left}
+.deal-nums b{font-family:var(--f-display);font-size:18px}
+.deal-nums span{font-size:12px;color:var(--muted)}
+.hero-feats{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;border-top:1px solid var(--line);margin:4px 8px 0;padding:14px 0 6px;font-size:13.5px;color:var(--ink)}
+.hero-feats span{display:inline-flex;align-items:center;gap:6px}
+.hero-feats svg{width:17px;height:17px;color:var(--muted)}
+/* مستوى التميز */
+.goal-donut{display:flex;justify-content:center;padding:4px 0 10px}
+.donut{width:170px;height:170px}
+.dn-a{fill:none;stroke:var(--petrol);stroke-width:22;stroke-linecap:round}
+.dn-b{fill:none;stroke:var(--lime);stroke-width:22;stroke-linecap:round}
+.dn-in{fill:var(--soft)}
+.dn-v{text-anchor:middle;font-family:var(--f-display);font-weight:800;font-size:22px;fill:var(--ink)}
+.dn-k{text-anchor:middle;font-family:var(--f-body);font-size:10.5px;fill:var(--muted)}
+.goal-mini{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.goal-mini>div{display:flex;align-items:center;gap:8px}
+.goal-mini b{display:block;font-family:var(--f-display);font-size:14px}
+.goal-mini span{font-size:11.5px;color:var(--muted)}
+.gm-ico{flex:none;width:38px;height:38px;border-radius:12px;border:1px solid var(--line);display:grid;place-items:center;color:var(--petrol)}
+.gm-ico.lime{color:var(--lime-ink)}
+.gm-ico svg{width:18px;height:18px}
+/* التذكيرات */
+.rem-list{display:flex;flex-direction:column;gap:6px}
+.rem{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:10px;padding:12px 14px;border-radius:18px;text-decoration:none;color:inherit}
+.rem:hover{background:var(--soft)}
+.rem.hl{background:var(--soft)}
+.rem b{display:block;font-family:var(--f-display);font-size:14.5px}
+.rem span{font-size:12.5px;color:var(--muted)}
+.rem-go{width:16px;height:16px;color:var(--muted)}
+.mring .mr-bg{fill:none;stroke:var(--line);stroke-width:4}
+.mring .mr-fg{fill:none;stroke:var(--petrol);stroke-width:4;stroke-linecap:round}
+.mring.done .mr-fg{stroke:var(--ok)}
+/* جدول اليوم */
+.mini-search{position:relative;margin-inline-start:auto}
+.mini-search input{border:0;background:var(--soft);border-radius:999px;padding:7px 32px 7px 12px;font-size:13px;width:170px}
+.mini-search svg{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--muted)}
+.tbl-wrap.flat{box-shadow:none;border-radius:0}
+.dtbl th{background:transparent;color:var(--muted);font-weight:600;font-family:var(--f-body);border-bottom:1px solid var(--line)}
+.dtbl td{border-top:0;border-bottom:1px solid var(--soft);padding:10px 12px}
+.dtbl tbody tr:last-child td{border-bottom:0}
+.spill{display:inline-block;border-radius:999px;padding:3px 12px;font-size:12px;font-weight:600;white-space:nowrap}
+.spill.ok{background:var(--okbg);color:var(--ok)}
+.spill.wait{background:var(--waitbg);color:var(--wait)}
+.spill.bad{background:var(--badbg);color:var(--bad)}
+.spill.info{background:var(--limebg);color:var(--lime-ink)}
+.spill.none{background:var(--soft);color:var(--muted)}
+.more-link{display:inline-block;margin-top:10px;font-size:13.5px;color:var(--petrol);font-family:var(--f-display)}
+/* بطاقات المناوبة */
+.person{display:flex;flex-direction:column;gap:14px}
+.person-top{display:flex;align-items:center;gap:12px}
+.avatar.md{width:50px;height:50px;font-size:15px}
+.avatar.ghost{background:var(--soft);color:var(--petrol)}
+.avatar.ghost svg{width:22px;height:22px}
+.person-t{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.45}
+.person-t b{font-family:var(--f-display);font-size:16.5px}
+.person-t span{font-size:12.5px;color:var(--muted)}
+.person-mid{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.person-v{font-family:var(--f-display);font-size:24px;font-variant-numeric:tabular-nums}
+.person-foot{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);border-top:1px solid var(--soft);padding-top:10px}
+/* شريط الأسبوع */
+.week-strip{display:flex;align-items:center;gap:4px;justify-content:space-between}
+.wday{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:transparent;border-radius:16px;padding:8px 0;cursor:pointer;color:var(--ink);font-family:var(--f-display)}
+.wday b{font-size:15px}
+.wday span{font-size:11px;color:var(--muted)}
+.wday:hover{background:var(--soft)}
+.wday.today b{color:var(--petrol)}
+.wday.on{background:var(--petrol);color:var(--onpetrol)}
+.wday.on span,.wday.on b{color:var(--onpetrol)}
+.sched-tabs{display:flex;justify-content:space-around;margin:12px 0 8px;border-bottom:1px solid var(--soft)}
+.sched-tabs button{border:0;background:transparent;padding:8px 10px;font-family:var(--f-display);font-size:13.5px;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
+.sched-tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--lime)}
+.sched-list{display:flex;flex-direction:column;gap:8px}
+.sched{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border-radius:14px;background:var(--soft);border-inline-start:3px solid var(--petrol);text-decoration:none;color:inherit}
+.sched.duty,.sched.dutyend{border-inline-start-color:var(--lime)}
+.sched b{font-family:var(--f-display);font-size:14px}
+.sched span{font-size:12.5px;color:var(--muted)}
+@media (max-width:1280px){
+  .d-head{grid-template-columns:minmax(0,1fr) auto}
+  .kpis{grid-column:1/-1}
+  .kpi{flex:1}
+}
+@media (max-width:1100px){
+  .d-chart,.d-hero,.d-table,.d-people,.d-sched{grid-column:span 12;grid-row:auto}
+  .d-goal,.d-rem{grid-column:span 6}
+  .d-people{grid-template-columns:1fr 1fr}
+}
+@media (max-width:760px){
+  .d-head{grid-template-columns:1fr}
+  .d-tools{order:3}
+  .kpis{flex-direction:column}
+  .kpi{min-width:0}
+  .d-goal,.d-rem{grid-column:span 12}
+  .d-people{grid-template-columns:1fr}
+  .hero-media{grid-template-columns:1fr}
+  .hero-side{grid-template-columns:1fr 1fr;grid-template-rows:96px}
+  .hero-body{grid-template-columns:1fr}
+  .mini-search input{width:120px}
+  .dcard{padding:18px}
+}
 </style>
 </head>
 <body>
@@ -877,9 +1183,13 @@ span.avatar{display:inline-grid;place-items:center;color:var(--onpetrol);line-he
       <div class="main-col">
         <header class="topbar"><div class="topbar-in">
           <button type="button" class="icon-btn menu-btn" id="menu-btn" aria-label="فتح القائمة" aria-controls="nav" aria-expanded="false"><i data-lucide="menu"></i></button>
+          <a class="tb-brand" href="#home"><span class="tb-logo"><img class="logo-l" src="${ASSETS.logo}" alt="شعار وزارة التعليم"><img class="logo-d" src="${ASSETS.logoW}" alt=""></span><span class="tb-brand-t"><b id="tb-school"></b><small>منصة إدارة المدرسة</small></span></a>
+          <nav class="pills" id="pills" aria-label="التنقل الرئيسي"></nav>
           <div class="tb-title"><b id="page-title"></b><span id="save-state" class="save-state" aria-live="polite"></span></div>
           <div class="gsearch" id="gsearch"><i data-lucide="search"></i><input id="gq" type="search" placeholder="ابحث عن اسم موظف أو رقم وظيفي…" autocomplete="off" aria-label="بحث في المنصة" aria-controls="gres"><div class="gres" id="gres" role="listbox" hidden></div></div>
           <div class="top-actions">
+            <a class="fab" id="fab" href="#att" title="تسجيل حضور اليوم" aria-label="تسجيل حضور اليوم"><i data-lucide="clipboard-check"></i></a>
+            <button type="button" class="icon-btn search-btn" id="search-btn" aria-label="بحث" aria-controls="gsearch" aria-expanded="false"><i data-lucide="search"></i></button>
             <button type="button" class="icon-btn" id="theme-btn" aria-label="تبديل الوضع الليلي"><i data-lucide="moon"></i></button>
             <div class="bell-wrap"><button type="button" class="icon-btn" id="bell-btn" aria-label="التنبيهات" aria-expanded="false" aria-controls="bell-pop"><i data-lucide="bell"></i><span class="badge" id="bell-n" hidden></span></button><div class="bell-pop" id="bell-pop" hidden></div></div>
             <div class="edition" id="edition" role="group" aria-label="النسخة">
@@ -942,6 +1252,20 @@ span.avatar{display:inline-grid;place-items:center;color:var(--onpetrol);line-he
   document.addEventListener('click', e => {
     if (!e.target.closest('#gsearch')) gres.hidden = true;
     if (!e.target.closest('.bell-wrap')) { bellPop.hidden = true; bellBtn.setAttribute('aria-expanded', 'false'); }
+    if (!e.target.closest('.pill-g')) closePills();
+    if (!e.target.closest('#gsearch') && !e.target.closest('#search-btn')) setSearch(false);
+  });
+  /* البحث في الشريط العلوي (حاسب): يظهر عند الضغط على العدسة */
+  const gsearch = document.getElementById('gsearch'), searchBtn = document.getElementById('search-btn');
+  function setSearch(open){ gsearch.classList.toggle('open', open); searchBtn.setAttribute('aria-expanded', open); if (open) setTimeout(() => gq.focus(), 30); }
+  searchBtn.addEventListener('click', e => { e.stopPropagation(); setSearch(!gsearch.classList.contains('open')); });
+  /* الأزرار الكبسولية */
+  const pillsEl = document.getElementById('pills');
+  function closePills(except){ pillsEl.querySelectorAll('.pill-g').forEach(g => { if (g === except) return; g.querySelector('.pill-menu').hidden = true; g.querySelector('button').setAttribute('aria-expanded', 'false'); }); }
+  pillsEl.addEventListener('click', e => {
+    const b = e.target.closest('.pill-g > button');
+    if (b) { e.stopPropagation(); const g = b.parentElement, menu = g.querySelector('.pill-menu'); closePills(g); menu.hidden = !menu.hidden; b.setAttribute('aria-expanded', !menu.hidden); return; }
+    if (e.target.closest('a')) closePills();
   });
 
   function chrome(){
@@ -965,9 +1289,21 @@ span.avatar{display:inline-grid;place-items:center;color:var(--onpetrol);line-he
       return `<a href="#${n.r === 'admin' ? 'admin' : hashFor(n.r)}" class="${on ? 'on' : ''}" ${on ? 'aria-current="page"' : ''}><i data-lucide="${n.i}"></i><span>${n.t}</span></a>`;
     }).join('');
     document.getElementById('nav-list').querySelectorAll('a').forEach(a => a.addEventListener('click', () => setNav(false)));
+    const byR = r => items.find(n => n.r === r) || NAV.find(n => n.r === r);
+    const href = r => '#' + (r === 'admin' ? 'admin' : hashFor(r));
+    const PILLS = [['home'], ['profile'], ['ach', 'الإنجازات'], ['staff'], ['att', 'الحضور'],
+      {g: 'المتابعة اليومية', items: ['assembly', 'late', 'sup', 'duty', 'dutyend']}, ['ev', 'الشواهد'],
+      {g: 'المزيد', items: ['io'].concat(showAdmin ? ['admin'] : [])}];
+    pillsEl.innerHTML = PILLS.map(p => {
+      if (Array.isArray(p)) { const n = byR(p[0]); const on = n.r === activeRoute || (n.r === 'ev' && isEv); return `<a class="pill${on ? ' on' : ''}" href="${href(n.r)}" ${on ? 'aria-current="page"' : ''}>${p[1] || n.t}</a>`; }
+      const on = p.items.includes(activeRoute);
+      return `<div class="pill-g"><button type="button" class="pill${on ? ' on' : ''}" aria-expanded="false" aria-haspopup="true">${on ? byR(activeRoute).t : p.g}<i data-lucide="chevron-down"></i></button><div class="pill-menu" hidden>${p.items.map(r => { const n = byR(r); return `<a href="${href(r)}" class="${r === activeRoute ? 'on' : ''}"><i data-lucide="${n.i}"></i>${n.t}</a>`; }).join('')}</div></div>`;
+    }).join('');
+    document.getElementById('tb-school').textContent = st.school || 'وزارة التعليم';
+    document.getElementById('fab').setAttribute('href', href('att'));
     document.getElementById('nav-foot').innerHTML = `${st.person ? `<div class="nav-me"><span class="avatar">${esc(initials(st.person))}</span><span><b>أ. ${esc(st.person)}</b><small>${esc(role())}</small></span></div>` : ''}<small>منصة إدارة المنسوبين${st.year ? ' · ' + esc(st.year) : ''}</small>`;
     const me = document.getElementById('me-chip');
-    me.hidden = !st.person; me.innerHTML = st.person ? `<span class="avatar">${esc(initials(st.person))}</span><span class="me-name">أ. ${esc(st.person)}</span>` : '';
+    me.hidden = !st.person; me.innerHTML = st.person ? `<span class="avatar">${esc(initials(st.person))}</span><span class="me-name"><b>أ. ${esc(st.person)}</b><small>${esc(role())}</small></span>` : '';
     const cur0 = items.find(n => n.r === activeRoute) || (isEv ? NAV.find(n => n.r === 'ev') : NAV[0]);
     document.getElementById('page-title').textContent = cur0.t;
     document.getElementById('foot-l').textContent = (st.school || 'منصة المدرسة') + ' — ' + role();
@@ -1629,91 +1965,213 @@ span.avatar{display:inline-grid;place-items:center;color:var(--onpetrol);line-he
     ['ev', 'award', 'شواهد الأداء الوظيفي', 'عناصر الأداء التسعة عشر وروابط شواهدها.']
   ];
 
-  /* ---------- الرئيسية ---------- */
+  /* ---------- الرئيسية (تصميم البطاقات الفاتحة) ---------- */
+  const digits = s => { const t = String(s || '').replace(/[٠-٩]/g, c => '٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/[^\d]/g, ''); return t ? +t : 0; };
+  function miniRing(f, cls){
+    const r = 15, c = 2 * Math.PI * r, v = Math.max(0, Math.min(1, f || 0));
+    return `<svg class="mring ${cls || ''}" viewBox="0 0 40 40" width="34" height="34" aria-hidden="true"><circle cx="20" cy="20" r="${r}" class="mr-bg"/><circle cx="20" cy="20" r="${r}" class="mr-fg" stroke-dasharray="${c * v} ${c}" transform="rotate(-90 20 20)"/></svg>`;
+  }
   function dash(fromData){
-    const s = cur().settings, t = today();
+    const s = cur().settings, P = SP(), A = P.ach || {}, t = today();
     if (!fromData) {
-      M.week = {};
-      if (db) {
-        const ws = weekStart(), we = addDays(ws, 4);
-        ['att', 'late'].forEach(c => routeSubs.push(db.collection(c).where('date', '>=', ws).where('date', '<=', we).onSnapshot(x => { M.week[c] = x.docs.map(d => d.data()); drawWeek(); }, () => {})));
-      }
+      M.trend = M.trend || {}; M.dashRange = M.dashRange || 'week'; M.dashDay = M.dashDay || (dayIdx(t) > 4 ? 0 : dayIdx(t)); M.dashTab = M.dashTab || 'all';
+      subTrend();
     }
+    const ready = dbState === 'ok' && S.staffReady;
     const att = (T.att && T.att.rec) || {};
     const cnt = k => Object.values(att).filter(v => v && v.s === k).length;
-    const recorded = Object.keys(att).length;
-    const di = dayIdx(t), wk = di > 4;
-    const supRows = wk ? [] : cfg().slots.map(sl => ({sl, ids: ((cfg().supGrid[di] || {})[sl.id]) || []}));
-    const tiles = [
-      ['users', 'إجمالي الطاقم', ar(S.staff.length), 'staff', ''],
-      ['user-check', g('{الحاضرون|الحاضرات} اليوم'), recorded ? ar(cnt('p') + cnt('l')) : '—', 'att', 'ok'],
-      ['user-x', g('{الغائبون|الغائبات} اليوم'), recorded ? ar(cnt('a')) : '—', 'att', 'bad'],
-      ['clock-alert', g('{المتأخرون|المتأخرات} اليوم'), recorded ? ar(cnt('l')) : '—', 'att', 'wait'],
-      ['siren', 'عدم حضور الاصطفاف', T.assembly ? ar((T.assembly.absentStaff || []).length) : '—', 'assembly', 'bad'],
-      ['alarm-clock', 'التأخر عن الحصص', ar(((T.late && T.late.entries) || []).length), 'late', 'wait']
-    ];
+    const marked = Object.keys(att).filter(id => S.staff.some(x => x.id === id)).length;
+    const totalCounts = (P.counts || []).reduce((a, c) => a + (+c.n || 0), 0);
+    const staffN = S.staff.length || totalCounts;
+    const studentsRow = (P.info || []).find(r => r.k === 'عدد الطالبات');
+    const students = studentsRow ? digits(studentsRow.v) : 0;
     const items = allItems(cur()), linked = items.filter(i => linksOf(i).length).length;
-    const dutyPanel = k => {
+    const di = dayIdx(t), wk = di > 4;
+    const first = (s.person || '').split(/\s+/)[0];
+
+    /* التذكيرات بحلقات تقدم */
+    const rem = [];
+    if (ready && !wk) {
+      rem.push({t: 'حضور اليوم', d: marked ? `سُجّل ${ar(marked)} من ${ar(S.staff.length)}` : 'لم يُسجَّل بعد', f: S.staff.length ? marked / S.staff.length : 0, r: 'att'});
+      rem.push({t: 'الاصطفاف الصباحي', d: T.assembly ? (T.assembly.rating ? 'التقييم: ' + T.assembly.rating : 'تم التوثيق') : 'لم يُوثَّق بعد', f: T.assembly ? 1 : 0, r: 'assembly'});
+      ['duty', 'dutyend'].forEach(k => { const ids = cfg()[DUTY[k].grid][di] || []; if (!ids.length) return; const rec = (T[k] && T[k].rec) || {}; const done = ids.filter(id => rec[id] && rec[id].s).length; rem.push({t: DUTY[k].title, d: `تمت متابعة ${ar(done)} من ${ar(ids.length)}`, f: done / ids.length, r: k}); });
+    }
+    rem.push({t: 'شواهد الأداء الوظيفي', d: `${ar(linked)} من ${ar(items.length)} عنصرًا مرفق بها روابط`, f: items.length ? linked / items.length : 0, r: 'ev'});
+
+    /* بطاقات المناوبة */
+    const dutyCard = k => {
       const D = DUTY[k], ids = wk ? [] : (cfg()[D.grid][di] || []), rec = (T[k] && T[k].rec) || {};
-      return `<section class="panel"><h2><i data-lucide="${D.icon}"></i>${D.title}</h2>
-        ${wk ? '<p class="muted">عطلة نهاية الأسبوع.</p>' : ids.length ? `<ul class="plist">${ids.map(id => { const r = rec[id]; const st = r && D.st.find(x => x[0] === r.s); return `<li><span class="who">${avatar(sname(id))}${esc(sname(id))}</span>${st ? `<span class="chip ${st[2]}">${esc(g(st[1]))}${r.t ? ' · ' + ar(r.t) : ''}</span>` : '<span class="chip wait">لم يُسجَّل</span>'}</li>`; }).join('')}</ul>` : `<p class="muted">لم يُحدَّد ${g('{مناوبون|مناوبات}')} لهذا اليوم. <a href="#${hashFor(k)}">إعداد الجدول</a></p>`}
-      </section>`;
+      const id = ids[0], r = id && rec[id], st = r && D.st.find(x => x[0] === r.s);
+      return `<section class="dcard person"><div class="person-top">${id ? avatar(sname(id)).replace('avatar', 'avatar md') : `<span class="avatar md ghost"><i data-lucide="${D.icon}"></i></span>`}
+          <div class="person-t"><b>${id ? esc(sname(id)) : 'لا يوجد مناوب'}</b><span>${D.title}${ids.length > 1 ? ` · +${ar(ids.length - 1)}` : ''}</span></div>
+          <a class="rbtn sm" href="#${hashFor(k)}" aria-label="فتح ${D.title}"><i data-lucide="arrow-up-left"></i></a></div>
+        <div class="person-mid"><b class="person-v">${id && r && r.t ? ar(r.t) : '—'}</b>${st ? `<span class="spill ${st[2]}">${esc(g(st[1]))}</span>` : `<span class="spill wait">${wk ? 'عطلة' : 'لم يُسجَّل'}</span>`}</div>
+        <div class="person-foot"><span>${D.timeLbl}</span><span>${dayName(t)}</span></div></section>`;
     };
-    const who = s.person ? `مرحبًا، أ. ${esc(s.person)}` : 'مرحبًا بك';
-    app.innerHTML = `<div class="wrap page">
-      <section class="welcome">
-        <div><div class="eyebrow">${esc(s.school || role())}</div><h1>${who}</h1>
-          <p><b>${dayName(t)}</b> · ${hijri(t)} · ${gregTxt(t)}</p></div>
-        <img src="${ASSETS.logoW}" alt="" class="welcome-logo">
+
+    /* جدول اليوم (شريط الأسبوع) */
+    const ws = weekStart();
+    const day = M.dashDay, dayDate = addDays(ws, day);
+    const sched = [];
+    if (M.dashTab !== 'duty') cfg().slots.forEach(sl => { const ids = ((cfg().supGrid[day] || {})[sl.id]) || []; if (ids.length) sched.push({k: 'sup', t: 'إشراف: ' + sl.name, d: ids.map(sname).join('، ')}); });
+    if (M.dashTab !== 'sup') ['duty', 'dutyend'].forEach(k => { const ids = (cfg()[DUTY[k].grid] || {})[day] || []; if (ids.length) sched.push({k, t: DUTY[k].title, d: ids.map(sname).join('، ')}); });
+
+    /* جدول حضور اليوم */
+    const tq = (M.dashQ || '').trim();
+    const rows = S.staff.filter(x => !tq || x.name.includes(tq)).slice(0, 7);
+
+    app.innerHTML = `<div class="wrap page dash2">
+      <section class="d-head">
+        <div class="d-greet">
+          <a class="rbtn back" href="#${hashFor('profile')}" aria-label="ملف المدرسة"><i data-lucide="arrow-right"></i></a>
+          <div><h1>${first ? `مرحبًا، أ. ${esc(first)}` : 'مرحبًا بك'}<span>لوحة متابعة المدرسة</span></h1>
+          <p class="d-date"><b>${dayName(t)}</b> · ${hijri(t)} · ${gregTxt(t)}</p></div>
+        </div>
+        <div class="d-tools">
+          <button type="button" class="rbtn" id="d-refresh" title="تحديث" aria-label="تحديث"><i data-lucide="refresh-cw"></i></button>
+          <a class="rbtn" href="#${hashFor('profile')}" title="ملف المدرسة" aria-label="ملف المدرسة"><i data-lucide="layout-grid"></i></a>
+          <a class="rbtn" href="#${hashFor('ach')}" title="الإنجازات" aria-label="الإنجازات"><i data-lucide="trophy"></i></a>
+          <a class="rbtn" href="#${hashFor('io')}" title="الاستيراد والتصدير" aria-label="الاستيراد والتصدير"><i data-lucide="upload"></i></a>
+          ${okUrl((P.folders || {}).root) ? `<a class="rbtn" href="${esc(P.folders.root)}" target="_blank" rel="noopener" title="مجلد ملفات المدرسة" aria-label="مجلد ملفات المدرسة"><i data-lucide="folder-open"></i></a>` : ''}
+          <a class="rbtn" href="#${hashFor('ev')}" title="الشواهد" aria-label="الشواهد"><i data-lucide="award"></i></a>
+        </div>
+        <div class="kpis">
+          <a class="kpi" href="#${hashFor('staff')}"><span class="kpi-ico"><i data-lucide="users"></i></span><span class="kpi-k">إجمالي المنسوبات</span><b class="kpi-v">${ar(staffN)}</b><span class="dpill">${ready && marked ? `${g('{الحاضرون|الحاضرات}')} ${ar(cnt('p') + cnt('l'))}` : `المعلمات ${ar(((P.counts || []).find(c => c.label === 'المعلمات') || {}).n || 0)}`}<i data-lucide="arrow-up-left"></i></span></a>
+          <a class="kpi" href="#${hashFor('profile')}"><span class="kpi-ico"><i data-lucide="graduation-cap"></i></span><span class="kpi-k">${g('{الطلاب|الطالبات}')}</span><b class="kpi-v">${students ? ar(students) : '—'}</b><span class="dpill">التميز ${pc(A.overall || 0)}<i data-lucide="arrow-up-left"></i></span></a>
+        </div>
       </section>
-      ${gate() || `
-      <div class="tiles six">${tiles.map(([i, k, v, r, c]) => `<a class="tile ${c}" href="#${hashFor(r)}"><span class="tile-ico"><i data-lucide="${i}"></i></span><span class="tile-v">${v}</span><span class="tile-k">${k}</span></a>`).join('')}</div>
-      ${!S.staff.length ? emptyStaffNote() : ''}
-      <section class="panel week-panel"><div class="week-head"><h2><i data-lucide="chart-column"></i>الحضور والتأخر خلال الأسبوع</h2>
-        <div class="legend"><span><i class="lg ok"></i>${g('{حاضر|حاضرة}')}</span><span><i class="lg wait"></i>${g('{متأخر|متأخرة}')} صباحًا</span><span><i class="lg bad"></i>${g('{غائب|غائبة}')}</span></div></div>
-        <div id="week-chart" class="week-chart"></div></section>
-      <div class="dash-grid">
-        ${dutyPanel('duty')}
-        ${dutyPanel('dutyend')}
-        <section class="panel"><h2><i data-lucide="calendar-days"></i>إشراف اليوم</h2>
-          ${wk ? '<p class="muted">عطلة نهاية الأسبوع.</p>' : supRows.some(x => x.ids.length) ? `<ul class="plist">${supRows.filter(x => x.ids.length).map(x => `<li><b>${esc(x.sl.name)}</b><span class="pchips">${chipsOf(x.ids)}</span></li>`).join('')}</ul>` : `<p class="muted">لم يُحدَّد ${g('{مشرفون|مشرفات}')} لهذا اليوم. <a href="#${hashFor('sup')}">إعداد الجدول</a></p>`}
+
+      <div class="dgrid">
+        <section class="dcard d-chart">
+          <div class="dc-head"><h2>الحضور خلال ${M.dashRange === 'week' ? 'الأسبوع' : 'آخر ٤ أسابيع'}</h2>
+            <label class="sel-pill"><select id="d-range" aria-label="المدة"><option value="week" ${M.dashRange === 'week' ? 'selected' : ''}>هذا الأسبوع</option><option value="4w" ${M.dashRange === '4w' ? 'selected' : ''}>آخر ٤ أسابيع</option></select><i data-lucide="chevron-down"></i></label></div>
+          <div class="chart-legend"><span><i class="lg ok"></i>${g('{الحاضرون|الحاضرات}')}</span><span><i class="lg lime"></i>${g('{الغائبون|الغائبات}')} ${g('{والمتأخرون|والمتأخرات}')}</span></div>
+          <div class="area-chart" id="area-chart">${ready ? '' : `<p class="muted">${dbState === 'none' ? 'تظهر بيانات الحضور لمن يملك صلاحية السجلات.' : 'جارٍ تحميل البيانات…'}</p>`}</div>
         </section>
-        <section class="panel"><h2><i data-lucide="sunrise"></i>الاصطفاف الصباحي</h2>
-          ${T.assembly ? `<p>${T.assembly.rating ? `التقييم: <b>${esc(T.assembly.rating)}</b>` : 'سُجّل الاصطفاف'}${T.assembly.presenter ? ` · التقديم: ${esc(T.assembly.presenter)}` : ''}</p><p class="muted">الفقرات المنفذة: ${ar((T.assembly.items || []).length)} · المتأخرون عن الاصطفاف: ${ar(T.assembly.lateStudents || 0)}</p>` : `<p class="muted">لم يُسجَّل الاصطفاف الصباحي اليوم بعد.</p>`}
-          <a class="btn btn-ghost btn-sm" href="#${hashFor('assembly')}">فتح السجل</a>
+
+        <section class="dcard d-hero">
+          <div class="hero-media">
+            <div class="hero-main"><img src="${ASSETS.logoW}" alt="" class="hero-logo"><span class="hero-num">٣٤</span>
+              <span class="hero-pill"><i data-lucide="medal"></i>${A.overall ? `مدرسة في مستوى التميز · ${pc(A.overall)}` : 'منصة المدرسة'}</span>
+              <a class="rbtn sm light" href="#${hashFor('ach')}" aria-label="الإنجازات"><i data-lucide="arrow-up-left"></i></a></div>
+            <div class="hero-side">
+              <a class="hero-thumb" href="#${hashFor('ach')}"><i data-lucide="trophy"></i><span>الإنجازات</span></a>
+              <a class="hero-thumb alt" href="#${hashFor('profile')}"><b>+${ar(PROFILE_TABS.length)}</b><span>أقسام الملف</span></a>
+            </div>
+          </div>
+          <div class="hero-body">
+            <div class="hero-info"><h3>${esc(P.name || s.school || 'المدرسة')}</h3><span>${esc(((P.info || []).find(r => r.k === 'المدينة') || {}).v || '')}${(P.info || []).find(r => r.k === 'المرحلة') ? ' · ' + esc(P.info.find(r => r.k === 'المرحلة').v) : ''}</span>
+              <div class="hero-stats">${(P.counts || []).filter(c => ['المعلمات', 'الإداريات'].includes(c.label)).map(c => `<div><b>${ar(c.n)}</b><span>${esc(c.label)}</span></div>`).join('')}${students ? `<div><b>${ar(students)}</b><span>${g('{الطلاب|الطالبات}')}</span></div>` : ''}</div></div>
+            <div class="hero-deals"><div class="dc-head"><h3>الشواهد المرفقة</h3><a class="rbtn sm" href="#${hashFor('ev')}" aria-label="الشواهد"><i data-lucide="chevron-left"></i></a></div>
+              <div class="stripe-bar"><i style="width:${items.length ? Math.max(6, linked / items.length * 100) : 0}%"></i></div>
+              <div class="deal-nums"><div><b>${ar(linked)}</b><span>عنصرًا مرتبطًا بمجلد</span></div><div><b>${ar(items.length - linked)}</b><span>بانتظار الرابط</span></div></div></div>
+          </div>
+          <div class="hero-feats"><span><i data-lucide="school"></i>${esc(((P.info || []).find(r => r.k === 'المرحلة') || {}).v || 'المدرسة')}</span><span><i data-lucide="map-pin"></i>${esc(((P.info || []).find(r => r.k === 'المدينة') || {}).v || '')}</span><span><i data-lucide="users-round"></i>${ar(totalCounts)} منسوبة</span><span><i data-lucide="calendar"></i>${esc(s.year || '')}</span></div>
         </section>
-      </div>`}
-      <section><h2 class="sec-title">الوصول السريع</h2>
-        <div class="mods">${MODS.map(([r, i, t2, d]) => `<a class="mod" href="#${hashFor(r)}"><span class="mod-ico"><i data-lucide="${i}"></i></span><b>${t2}</b><span>${r === 'ev' ? `${ar(linked)} من ${ar(items.length)} عنصرًا مرفق بها روابط` : d}</span></a>`).join('')}</div>
-      </section>
+
+        <section class="dcard d-goal"><div class="dc-head"><h2>مستوى التميز</h2><a class="rbtn sm" href="#${hashFor('ach')}" aria-label="الإنجازات"><i data-lucide="ellipsis-vertical"></i></a></div>
+          ${A.overall ? goalDonut(A) : `<p class="muted">لا توجد بيانات تقويم.</p>`}
+        </section>
+
+        <section class="dcard d-rem"><div class="dc-head"><h2>تذكيرات اليوم</h2><a class="rbtn sm" href="#${hashFor('att')}" aria-label="الحضور"><i data-lucide="arrow-up-left"></i></a></div>
+          <div class="rem-list">${rem.map((x, i) => `<a class="rem${i === 0 ? ' hl' : ''}" href="#${hashFor(x.r)}"><div><b>${esc(x.t)}</b><span>${esc(x.d)}</span></div>${miniRing(x.f, x.f >= 1 ? 'done' : '')}<i data-lucide="chevron-left" class="rem-go"></i></a>`).join('')}</div>
+        </section>
+
+        <section class="dcard d-table"><div class="dc-head"><h2>حضور اليوم</h2>
+            <label class="mini-search"><i data-lucide="search"></i><input id="d-q" type="search" value="${esc(tq)}" placeholder="بحث…" aria-label="بحث في حضور اليوم"></label>
+            <a class="rbtn sm" href="#${hashFor('att')}" aria-label="فتح الحضور"><i data-lucide="arrow-up-left"></i></a></div>
+          ${!ready ? `<p class="muted">${dbState === 'none' ? 'سجلات الحضور متاحة لمن يملك صلاحية السجلات.' : 'جارٍ التحميل…'}</p>` : !S.staff.length ? emptyStaffNote() : `<div class="tbl-wrap flat"><table class="tbl dtbl"><thead><tr><th>${g('{الموظف|الموظفة}')}</th><th>العمل</th><th>الحالة</th><th>الوقت</th><th>ملاحظة</th></tr></thead><tbody>
+            ${rows.map(x => { const r = att[x.id] || {}; const a2 = ATT.find(q => q.k === r.s); return `<tr><td><span class="who">${avatar(x.name)}<b>${esc(x.name)}</b></span></td><td>${esc(g(jobOf(x)))}</td><td>${a2 ? `<span class="spill ${a2.c}">${esc(g(a2.t))}</span>` : '<span class="spill none">لم يُسجَّل</span>'}</td><td class="ltr">${r.t ? ar(r.t) : '—'}</td><td class="muted">${esc(r.n || '')}</td></tr>`; }).join('') || '<tr><td colspan="5" class="muted">لا توجد نتائج.</td></tr>'}
+          </tbody></table></div>${S.staff.length > rows.length && !tq ? `<a class="more-link" href="#${hashFor('att')}">عرض جميع المنسوبات (${ar(S.staff.length)})</a>` : ''}`}
+        </section>
+
+        <div class="d-people">${dutyCard('duty')}${dutyCard('dutyend')}</div>
+
+        <section class="dcard d-sched"><h2>جدول ${DAYS[day]}</h2>
+          <div class="week-strip"><button type="button" class="rbtn xs" data-wd="-1" aria-label="اليوم السابق" ${day === 0 ? 'disabled' : ''}><i data-lucide="chevron-right"></i></button>
+            ${DAYS.map((n, i) => { const dd = addDays(ws, i); return `<button type="button" class="wday${i === day ? ' on' : ''}${dd === t ? ' today' : ''}" data-day="${i}"><b>${ar(parseD(dd).getDate())}</b><span>${n.replace('ال', '').slice(0, 5)}</span></button>`; }).join('')}
+            <button type="button" class="rbtn xs" data-wd="1" aria-label="اليوم التالي" ${day === 4 ? 'disabled' : ''}><i data-lucide="chevron-left"></i></button></div>
+          <div class="sched-tabs" role="tablist">${[['all', 'الكل'], ['sup', 'الإشراف'], ['duty', 'المناوبة']].map(([k, l]) => `<button type="button" role="tab" data-st="${k}" aria-selected="${M.dashTab === k}">${l}</button>`).join('')}</div>
+          <div class="sched-list">${sched.length ? sched.map(x => `<a class="sched ${x.k}" href="#${hashFor(x.k)}"><b>${esc(x.t)}</b><span>${esc(x.d)}</span></a>`).join('') : `<p class="muted">لا توجد تكليفات في جدول ${DAYS[day]}. <a href="#${hashFor('sup')}">إعداد الجداول</a></p>`}</div>
+        </section>
+      </div>
     </div>`;
-    drawWeek();
+    document.getElementById('d-refresh').onclick = () => { M.trend = {}; subTrend(true); dash(true); toast('تم التحديث.', 'ok'); };
+    document.getElementById('d-range').onchange = e => { M.dashRange = e.target.value; subTrend(true); dash(true); };
+    app.querySelectorAll('[data-day]').forEach(b => b.onclick = () => { M.dashDay = +b.dataset.day; dash(true); });
+    app.querySelectorAll('[data-wd]').forEach(b => b.onclick = () => { M.dashDay = Math.max(0, Math.min(4, M.dashDay + +b.dataset.wd)); dash(true); });
+    app.querySelectorAll('[data-st]').forEach(b => b.onclick = () => { M.dashTab = b.dataset.st; dash(true); });
+    const dq = document.getElementById('d-q');
+    if (dq) dq.addEventListener('input', () => { M.dashQ = dq.value; const p = dq.selectionStart; dash(true); const n = document.getElementById('d-q'); n.focus(); n.setSelectionRange(p, p); });
+    drawArea();
   }
-  function drawWeek(){
-    const el = document.getElementById('week-chart'); if (!el) return;
-    const ws = weekStart(), W = M.week || {};
-    const rows = DAYS.map((n, i) => {
-      const date = addDays(ws, i), a = (W.att || []).find(x => x.date === date), L = (W.late || []).find(x => x.date === date);
-      const rec = a && a.rec ? Object.values(a.rec) : [];
-      return {n, date, p: rec.filter(r => r.s === 'p').length, l: rec.filter(r => r.s === 'l').length, a: rec.filter(r => r.s === 'a').length, c: L ? (L.entries || []).length : 0, has: !!a};
-    });
-    const max = Math.max(4, S.staff.length, ...rows.map(r => Math.max(r.p, r.l, r.a)));
-    const top = Math.ceil(max / 4) * 4;
-    const X0 = 16, X1 = 600, Y0 = 18, Y1 = 178, gw = (X1 - X0) / 5, bw = Math.min(22, gw / 5);
-    const y = v => Y1 - (v / top) * (Y1 - Y0);
-    let svg = '';
-    [0, .25, .5, .75, 1].forEach(f => { const v = Math.round(top * f), yy = y(v); svg += `<line x1="${X0}" x2="${X1}" y1="${yy}" y2="${yy}" class="gl"/><text x="${X1 + 8}" y="${yy + 4}" class="ax">${ar(v)}</text>`; });
-    rows.forEach((r, i) => {
-      const cx = X1 - (i + .5) * gw;
-      [['p', 'ok', -1], ['l', 'wait', 0], ['a', 'bad', 1]].forEach(([k, c, o]) => {
-        const v = r[k], x = cx + o * (bw + 4) - bw / 2, h = Y1 - y(v);
-        svg += `<rect x="${x}" y="${y(v)}" width="${bw}" height="${Math.max(h, v ? 2 : 0)}" rx="3" class="b-${c}"><title>${r.n}: ${v}</title></rect>`;
-        if (v) svg += `<text x="${x + bw / 2}" y="${y(v) - 5}" class="bv">${ar(v)}</text>`;
-      });
-      svg += `<text x="${cx}" y="${Y1 + 20}" class="dl${r.date === today() ? ' now' : ''}">${r.n}</text>`;
-      svg += `<text x="${cx}" y="${Y1 + 38}" class="dc">${r.has ? (r.c ? 'تأخر حصص: ' + ar(r.c) : 'دون تأخر حصص') : 'لم يُسجَّل'}</text>`;
-    });
-    el.innerHTML = `<svg viewBox="0 0 640 228" role="img" aria-label="الحضور والتأخر خلال الأسبوع">${svg}</svg>`;
+  function goalDonut(A){
+    const a = (A.indicators || [0, 0])[0], b = (A.indicators || [0, 1])[1] || 1;
+    const R = 62, C = 2 * Math.PI * R, f1 = a / b, gap = 0.02;
+    return `<div class="goal-donut"><svg viewBox="0 0 160 160" class="donut" role="img" aria-label="الأداء العام ${A.overall}٪">
+        <circle cx="80" cy="80" r="${R}" class="dn-a" stroke-dasharray="${C * Math.max(0, f1 - gap)} ${C}" transform="rotate(-90 80 80)"/>
+        <circle cx="80" cy="80" r="${R}" class="dn-b" stroke-dasharray="${C * Math.max(0, 1 - f1 - gap)} ${C}" stroke-dashoffset="${-C * f1}" transform="rotate(-90 80 80)"/>
+        <circle cx="80" cy="80" r="44" class="dn-in"/>
+        <text x="80" y="80" class="dn-v">${pc(A.overall)}</text><text x="80" y="99" class="dn-k">الأداء العام</text></svg></div>
+      <div class="goal-mini">
+        <div><span class="gm-ico"><i data-lucide="target"></i></span><div><b>${ar(a)} من ${ar(b)}</b><span>مؤشرًا في التميز</span></div></div>
+        <div><span class="gm-ico lime"><i data-lucide="layers"></i></span><div><b>${ar((A.standards || [0])[0])} من ${ar((A.standards || [0, 0])[1])}</b><span>معيارًا في التميز</span></div></div>
+      </div>`;
+  }
+  function subTrend(force){
+    if (!db) return;
+    const range = M.dashRange || 'week';
+    const start = range === 'week' ? weekStart() : addDays(today(), -27), end = range === 'week' ? addDays(weekStart(), 4) : today();
+    if (!force && M.trend.key === range + start) return;
+    M.trend = {key: range + start, start, end};
+    ['att', 'late'].forEach(c => routeSubs.push(db.collection(c).where('date', '>=', start).where('date', '<=', end).onSnapshot(x => { M.trend[c] = x.docs.map(d => d.data()); drawArea(); }, () => {})));
+  }
+  function smooth(pts){
+    if (pts.length < 2) return pts.length ? `M${pts[0][0]},${pts[0][1]}` : '';
+    let d = `M${pts[0][0]},${pts[0][1]}`;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+      d += ` C${p1[0] + (p2[0] - p0[0]) / 6},${p1[1] + (p2[1] - p0[1]) / 6} ${p2[0] - (p3[0] - p1[0]) / 6},${p2[1] - (p3[1] - p1[1]) / 6} ${p2[0]},${p2[1]}`;
+    }
+    return d;
+  }
+  function drawArea(){
+    const el = document.getElementById('area-chart'); if (!el || !(dbState === 'ok' && S.staffReady)) return;
+    const tr = M.trend || {}; if (!tr.start) return;
+    const days = []; for (let d = tr.start; d <= tr.end; d = addDays(d, 1)) if (dayIdx(d) <= 4) days.push(d);
+    const pts = days.map(d => { const a = (tr.att || []).find(x => x.date === d); const rec = a && a.rec ? Object.values(a.rec) : []; const L = (tr.late || []).find(x => x.date === d);
+      return {d, has: !!a, p: rec.filter(r => r.s === 'p' || r.s === 'l').length, x: rec.filter(r => r.s === 'a' || r.s === 'l').length, a: rec.filter(r => r.s === 'a').length, l: rec.filter(r => r.s === 'l').length, c: L ? (L.entries || []).length : 0}; });
+    const top = Math.max(4, Math.ceil(Math.max(S.staff.length, ...pts.map(p => p.p)) / 4) * 4);
+    const W = 640, H = 230, X0 = 40, X1 = W - 14, Y0 = 14, Y1 = 190;
+    const xs = i => pts.length < 2 ? (X0 + X1) / 2 : X1 - i * (X1 - X0) / (pts.length - 1);
+    const ys = v => Y1 - v / top * (Y1 - Y0);
+    const P1 = pts.map((p, i) => [xs(i), ys(p.p)]), P2 = pts.map((p, i) => [xs(i), ys(p.x)]);
+    const line1 = smooth(P1), line2 = smooth(P2);
+    const area1 = line1 + ` L${P1[P1.length - 1][0]},${Y1} L${P1[0][0]},${Y1} Z`;
+    const step = Math.max(1, Math.ceil(pts.length / 10));
+    let svg = `<defs><linearGradient id="ag1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="ag-a"/><stop offset="1" class="ag-b"/></linearGradient></defs>`;
+    [0, .25, .5, .75, 1].forEach(f => { const v = Math.round(top * f); svg += `<line x1="${X0}" x2="${X1}" y1="${ys(v)}" y2="${ys(v)}" class="gl"/><text x="${X0 - 8}" y="${ys(v) + 4}" class="ax" text-anchor="end">${ar(v)}</text>`; });
+    svg += `<rect id="hover-band" x="0" y="${Y0}" width="0" height="${Y1 - Y0}" rx="10" class="band" opacity="0"/>`;
+    svg += `<path d="${area1}" fill="url(#ag1)"/><path d="${line1}" class="ln1"/><path d="${line2}" class="ln2"/>`;
+    pts.forEach((p, i) => { if (i % step === 0 || i === pts.length - 1) svg += `<text x="${xs(i)}" y="${Y1 + 24}" class="xl${p.d === today() ? ' now' : ''}" text-anchor="middle">${M.dashRange === 'week' ? DAYS[dayIdx(p.d)] : ar(parseD(p.d).getDate()) + '/' + ar(parseD(p.d).getMonth() + 1)}</text>`; });
+    svg += `<circle id="hover-dot" r="6" class="hdot" cx="-20" cy="-20"/>`;
+    el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="الحضور والغياب خلال المدة">${svg}</svg><div class="tip" id="area-tip" hidden></div>${pts.some(p => p.has) ? '' : '<p class="muted chart-empty">لم تُسجَّل أيام حضور في هذه المدة بعد.</p>'}`;
+    const svgEl = el.querySelector('svg'), tip = el.querySelector('#area-tip'), band = el.querySelector('#hover-band'), dot = el.querySelector('#hover-dot');
+    const bw = Math.max(16, Math.min(46, (X1 - X0) / Math.max(1, pts.length - 1) * .7));
+    const show = i => {
+      const p = pts[i], x = xs(i);
+      band.setAttribute('x', x - bw / 2); band.setAttribute('width', bw); band.setAttribute('opacity', 1);
+      dot.setAttribute('cx', x); dot.setAttribute('cy', ys(p.p));
+      tip.hidden = false;
+      tip.innerHTML = `<b>${dayName(p.d)} ${ar(parseD(p.d).getDate())}/${ar(parseD(p.d).getMonth() + 1)}</b>${p.has ? `<span><i class="lg ok"></i>${g('{حاضر|حاضرة}')}<b>${ar(p.p)}</b></span><span><i class="lg lime"></i>${g('{غائب|غائبة}')}<b>${ar(p.a)}</b></span><span><i class="lg wait"></i>${g('{متأخر|متأخرة}')}<b>${ar(p.l)}</b></span><span><i class="lg bad"></i>تأخر حصص<b>${ar(p.c)}</b></span>` : '<span>لم يُسجَّل</span>'}`;
+      const r = svgEl.getBoundingClientRect(), px = x / W * r.width, py = ys(p.p) / H * r.height;
+      tip.style.left = Math.min(r.width - tip.offsetWidth - 4, Math.max(4, px - tip.offsetWidth / 2 + (px > r.width / 2 ? -tip.offsetWidth / 2 - 18 : tip.offsetWidth / 2 + 18))) + 'px';
+      tip.style.top = Math.max(0, py - 30) + 'px';
+    };
+    const nearest = ev => { const r = svgEl.getBoundingClientRect(); const x = (ev.clientX - r.left) / r.width * W; let bi = 0, bd = 1e9; pts.forEach((_, i) => { const d = Math.abs(xs(i) - x); if (d < bd) { bd = d; bi = i; } }); return bi; };
+    svgEl.addEventListener('mousemove', ev => show(nearest(ev)));
+    svgEl.addEventListener('mouseleave', () => { tip.hidden = true; band.setAttribute('opacity', 0); dot.setAttribute('cx', -20); });
+    const ti = pts.findIndex(p => p.d === today()); if (ti >= 0 && pts[ti].has) show(ti);
   }
 
   /* ---------- التنبيهات ---------- */
