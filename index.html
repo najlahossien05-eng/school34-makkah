@@ -1236,6 +1236,63 @@ body{background:var(--bg)}
 @media (max-width:760px){.admin-link{display:none!important}.hb-logo{width:50px;padding-inline-end:10px}.hb-id h1{font-size:18px}.hb-lead{font-size:12px}.hb-top{gap:10px}.hb-ref{width:34px;height:34px}}
 .tip[hidden]{display:none}
 
+/* ===================== ألوان هوية وزارة التعليم (تُحمَّل أخيرًا وتعلو على ما قبلها) ===================== */
+/* بترولي داكن #0B3D4A · بترولي #0E5A66 · تركوازي #138D90 · فيروزي #1FB5AC · أخضر #2FA37A · أزرق #1F7FA8 */
+:root{
+  --bg:#EEF4F5; --surface:#FFFFFF; --soft:#EEF7F6; --line:#DCE8EA;
+  --ink:#10262D; --muted:#5F7479;
+  --petrol:#0E5A66; --teal:#138D90; --green:#2FA37A; --onpetrol:#FFFFFF;
+  --lime:#1FB5AC; --limebg:#E2F5F3; --lime-ink:#0E6E6C;
+  --ok:#1E8A63; --okbg:#E2F3EC; --info:#1F7FA8; --infobg:#E4F0F7;
+  --nav-a:#0B3D4A; --nav-b:#0E5A66;
+  --gold:#138D90; --goldbg:#E2F5F3;
+  --shadow:0 1px 2px rgba(11,61,74,.05),0 10px 30px rgba(11,61,74,.07);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0A1619; --surface:#112126; --soft:#16292F; --line:#22393F;
+  --ink:#E6F1F2; --muted:#93AAAE;
+  --petrol:#3FC2B9; --teal:#4FCFC6; --green:#5CC79A; --onpetrol:#062226;
+  --lime:#3FC2B9; --limebg:#143235; --lime-ink:#8EE0D8;
+  --nav-a:#07252D; --nav-b:#0B3D4A; --gold:#4FCFC6; --goldbg:#143235}}
+:root[data-theme="dark"]{
+  --bg:#0A1619; --surface:#112126; --soft:#16292F; --line:#22393F;
+  --ink:#E6F1F2; --muted:#93AAAE;
+  --petrol:#3FC2B9; --teal:#4FCFC6; --green:#5CC79A; --onpetrol:#062226;
+  --lime:#3FC2B9; --limebg:#143235; --lime-ink:#8EE0D8;
+  --nav-a:#07252D; --nav-b:#0B3D4A; --gold:#4FCFC6; --goldbg:#143235}
+
+/* القائمة الجانبية */
+.nav{background:linear-gradient(175deg,#0B3D4A 0%,#0E5A66 60%,#138D90 100%)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .nav{background:linear-gradient(175deg,#07252D,#0B3D4A)}}
+:root[data-theme="dark"] .nav{background:linear-gradient(175deg,#07252D,#0B3D4A)}
+.fab{box-shadow:0 8px 18px rgba(14,90,102,.3)}
+
+/* البنر الرئيسي */
+.hb{background:linear-gradient(135deg,#0B3D4A 0%,#0E5A66 45%,#138D90 80%,#1FB5AC 100%);box-shadow:0 18px 40px rgba(11,61,74,.24)}
+.hb::after{background:rgba(31,181,172,.18)}
+.hb-stats svg{background:#fff;color:#0E5A66}
+.hb-btn.pri{background:#fff;color:#0B3D4A}
+.hb-btn.pri:hover{background:#EEF7F6;filter:none}
+.svc-t.c3 .svc-i{background:var(--infobg);color:var(--info)}
+
+/* الشريط المتحرك: تركوازي بدل الذهبي */
+.ticker{border-bottom-color:#1FB5AC}
+.tk-lead{background:linear-gradient(100deg,#138D90,#1FB5AC 45%,#138D90);background-size:220% 100%;color:#fff}
+.tk-cur.tk-main{color:#BFEDE8}
+.tk-dot,.tk-dots i.on{background:#7FDCD3}
+.ach-hero .ring-fg{stroke:#7FDCD3}
+.pbar.gold i{background:linear-gradient(90deg,#138D90,#1FB5AC)}
+.thanks>svg{color:#7FDCD3}
+
+/* الرسم البياني والدائرة */
+.area-chart .ln2{stroke:#1F7FA8}
+.lg.lime{background:#1F7FA8}
+.dn-b{stroke:#1FB5AC}
+.sched-tabs button[aria-selected="true"]{border-bottom-color:var(--teal)}
+.svc-t.c4 .svc-i{background:#E3EEF0;color:#0B3D4A}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .svc-t.c4 .svc-i{background:#173039;color:#8CCBD6}}
+:root[data-theme="dark"] .svc-t.c4 .svc-i{background:#173039;color:#8CCBD6}
+
 /* ===== الخط: سكالا مجالا (من جهاز المستخدم) مع بديل Noto Naskh Arabic ===== */
 /* سكالا مجالا يظهر أصغر من غيره بالحجم نفسه، فيُكبَّر بـ size-adjust دون تغيير بقية الأحجام */
 /* وجه واحد عادي فقط: ملف «Sakkal Majalla Bold» يفصل «ر» عن «ا» (الر ابعة)، فيُولَّد العريض صناعيًا من العادي */
