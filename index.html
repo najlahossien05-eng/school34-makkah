@@ -1697,6 +1697,11 @@ body.gated{overflow:hidden}
 .act-code{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:4px 0 6px}
 .act-code span{font-family:Consolas,"Courier New",monospace;font-size:24px;font-weight:700;letter-spacing:3px;color:var(--petrol);background:var(--soft);border:1px dashed var(--teal);border-radius:12px;padding:6px 14px}
 .code-in{font-family:Consolas,"Courier New",monospace;letter-spacing:2px;text-transform:uppercase}
+/* SaaS */
+.plat{display:grid;gap:16px}
+.dev-school-h{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:16px;border-top:2px dashed var(--line)}
+.dev-school-h h2{display:flex;align-items:center;gap:8px;font-size:19px;color:var(--petrol)}
+.sg-list{margin:0 0 12px;padding-inline-start:18px;color:var(--muted);font-size:13.5px;line-height:1.9}
 
 /* ===== الخط: سكالا مجالا (من جهاز المستخدم) مع بديل Noto Naskh Arabic ===== */
 /* سكالا مجالا يظهر أصغر من غيره بالحجم نفسه، فيُكبَّر بـ size-adjust دون تغيير بقية الأحجام */
@@ -2488,7 +2493,7 @@ body{font-synthesis:weight style}
       S.staff = s.docs.map(x => ({id: x.id, ...x.data()})).sort((a, b) => (a.order || 0) - (b.order || 0) || String(a.name).localeCompare(String(b.name), 'ar'));
       S.staffReady = true; schoolRefresh('staff');
       if (!S._routed && /^#(cadre|cat-|pf-|mine|evals)/.test(location.hash)) { S._routed = 1; route(); }
-      if (useFb) setTimeout(() => syncPersonal(), 1500);
+      if (useFb) { setTimeout(() => syncPersonal(), 1500); syncRoster(); }
       seedStaff(d);
     }, e => { clearTimeout(timer); dbState = 'none'; schoolRefresh(); });
     d.doc('config/main').onSnapshot(s => { if (isPending('config/main')) return; S.cfg = s.exists ? Object.assign({}, DEF_CFG, s.data()) : null; if (S.cfg && S.cfg.assemblyItems) S.cfg.assemblyItems = S.cfg.assemblyItems.map(fixItem); S.cfgReady = true; schoolRefresh('cfg'); }, () => {});
@@ -2723,7 +2728,7 @@ body{font-synthesis:weight style}
     const svcTile = ([r, i, l, c]) => `<a class="svc-t ${c}" href="#${hashFor(r)}"><span class="svc-i"><i data-lucide="${i}"></i></span><span class="svc-l">${l}</span></a>`;
     app.innerHTML = `<div class="wrap page dash2">
       <section class="hb" aria-label="الواجهة الرئيسية">
-        <span class="hb-num" aria-hidden="true">٣٤</span>
+        ${cur().settings.badge ? `<span class="hb-num" aria-hidden="true">${esc(cur().settings.badge)}</span>` : ''}
         <div class="hb-top">
           <img src="${ASSETS.logoW}" alt="شعار وزارة التعليم" class="hb-logo">
           <div class="hb-id"><small>منصة إدارة المدرسة${s.year ? ' · ' + esc(s.year) : ''}</small><h1>${esc(P.name || s.school || 'المدرسة')}</h1>
@@ -3463,7 +3468,7 @@ body{font-synthesis:weight style}
   const PROFILE_TABS = [
     ['basic', 'البيانات الأساسية', 'users-round'], ['policy', 'أهداف وسياسة التعليم بالمملكة', 'scroll-text'], ['vision', 'الرؤية والرسالة', 'eye'],
     ['bio', 'السيرة الذاتية', 'id-card'], ['info', 'بيانات المدرسة', 'school'], ['level', 'مستوى أداء المدرسة (التميز)', 'medal'],
-    ['reports', 'التقارير الخاصة بمنصة التميز', 'file-chart-column'], ['nafs', 'نتائج الاختبارات الوطنية', 'chart-column'], ['inits', 'المبادرات', 'lightbulb'], ['circ', 'التعاميم والأدلة', 'book-marked'], ['repcats', 'التقارير', 'files'], ['about', 'من نحن (٣٤)', 'heart-handshake']];
+    ['reports', 'التقارير الخاصة بمنصة التميز', 'file-chart-column'], ['nafs', 'نتائج الاختبارات الوطنية', 'chart-column'], ['inits', 'المبادرات', 'lightbulb'], ['circ', 'التعاميم والأدلة', 'book-marked'], ['repcats', 'التقارير', 'files'], ['about', 'من نحن', 'heart-handshake']];
 
   /* ---------- الشريط التحفيزي ---------- */
   let tkTimer = 0, tkIdx = 0, tkPaused = false, tkNarrow = null;
@@ -3546,7 +3551,7 @@ body{font-synthesis:weight style}
     if (k === 'inits') return (P.initiatives || []).length ? `<div class="goal-grid">${P.initiatives.map((x, i) => `<div class="goal"><span class="goal-n">${ar(i + 1)}</span><div><b>${esc(x.t)}</b>${x.d ? `<p>${esc(x.d)}</p>` : ''}${okUrl(x.url) ? `<a href="${esc(x.url)}" target="_blank" rel="noopener" class="goal-link">عرض الشواهد <i data-lucide="external-link"></i></a>` : ''}</div></div>`).join('')}</div>` : soon('مبادرات المدرسة مع وصف مختصر وروابط شواهدها.');
     if (k === 'circ') return (P.circulars || []).filter(r => okUrl(r.url)).length ? `<div class="link-cards">${P.circulars.filter(r => okUrl(r.url)).map(r => `<a class="link-card" href="${esc(r.url)}" target="_blank" rel="noopener"><i data-lucide="book-marked"></i><span>${esc(r.label || 'تعميم')}</span><i data-lucide="external-link"></i></a>`).join('')}</div>` : soon('التعاميم والأدلة التنظيمية المعتمدة. ارفعيها في مجلد «التعاميم والأدلة» من الزر أعلاه.');
     if (k === 'repcats') return `<div class="rep-grid">${(P.reportCats || []).map((r, i) => `<${okUrl(r.url) ? `a href="${esc(r.url)}" target="_blank" rel="noopener"` : 'div'} class="rep-c"><span class="rep-n">${ar(i + 1)}</span><span class="rep-i"><i data-lucide="${esc(r.icon || 'file-text')}"></i></span><b>${esc(r.t)}</b><p>${esc(r.d || '')}</p><span class="rep-go">${okUrl(r.url) ? 'فتح المجلد <i data-lucide="arrow-up-left"></i>' : 'يُضاف الرابط قريبًا'}</span></${okUrl(r.url) ? 'a' : 'div'}>`).join('')}</div>`;
-    if (k === 'about') return P.about ? `<div class="about"><span class="about-num">٣٤</span><p>${esc(P.about)}</p></div>` : soon('نبذة تعريفية بالمدرسة.');
+    if (k === 'about') return P.about ? `<div class="about">${cur().settings.badge ? `<span class="about-num">${esc(cur().settings.badge)}</span>` : ''}<p>${esc(P.about)}</p></div>` : soon('نبذة تعريفية بالمدرسة.');
     return '';
   }
 
@@ -3644,6 +3649,33 @@ body{font-synthesis:weight style}
   const fbLive = isLocal && /[?&]fb=live\b/.test(location.search);
   const useFb = !!(FB && FB.apiKey) && (webHost || fbEmu || fbLive);
   let fb = null, acct = null;
+  /* ===== SaaS: المدرسة الحالية — كل بيانات المدرسة تحت schools/{SID}/… ===== */
+  let SID = '', SCHOOL = null, ROSTER = [], LIC = null;
+  const PUBLISHED0 = JSON.parse(JSON.stringify(PUBLISHED));
+  const SD = {doc: p => fb.fs.doc('schools/' + SID + '/' + p), collection: c => fb.fs.collection('schools/' + SID + '/' + c), batch: () => fb.fs.batch()};
+  const PLATFORM = 'منصة إدارة المدرسة';
+  const ss = {get(k){ try { return sessionStorage.getItem(k) || ''; } catch(e){ return ''; } }, set(k, v){ try { sessionStorage.setItem(k, v); } catch(e){} }, del(k){ try { sessionStorage.removeItem(k); } catch(e){} }};
+  (function(){ try { const c = new URLSearchParams(location.search).get('s'); if (c) ss.set('joinCode', c.trim().toUpperCase()); } catch(e){} })();
+  const genCode = n => { const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; return Array.from(crypto.getRandomValues(new Uint32Array(n)), x => A[x % A.length]).join(''); };
+  const dayMs = 86400000;
+  /* قالب محايد لمدرسة جديدة: نماذج التقييم كما هي، وملف المدرسة فارغ، ولا روابط لمدرسة أخرى */
+  function templateState(sc){
+    const t = JSON.parse(JSON.stringify(PUBLISHED0)), P0 = t.school || {};
+    t.settings = Object.assign({}, t.settings, {school: sc.name || '', person: sc.principal || '', region: sc.office || sc.region || '', mainFolder: '', siteUrl: '', editions: sc.gender === 'm' ? 'm' : 'f', defaultEdition: sc.gender === 'm' ? 'm' : 'f', badge: ''});
+    t.sections = (t.sections || []).map(sec => Object.assign({}, sec, {items: (sec.items || []).map(it => Object.assign({}, it, {links: []}))}));
+    t.school = {name: sc.name || '', banner: [], leaders: [], counts: [], teachers: [], teachersSlots: 0, admins: [], adminsSlots: 0,
+      policyGoals: P0.policyGoals || [], vision2030: P0.vision2030 || [], vision: '', mission: '', visionGoals: [], bio: '',
+      info: [{k: 'المدينة', v: sc.city || ''}, {k: 'المرحلة', v: sc.stage || ''}, {k: 'إدارة التعليم', v: sc.office || sc.region || ''}, {k: 'عدد المنسوبات', v: ''}, {k: 'عدد الطالبات', v: ''}],
+      reports: [], initiatives: [], about: '', ach: {}, folders: {}, reportCats: (P0.reportCats || []).map(r => Object.assign({}, r, {url: ''})), circulars: [], staffSeed: []};
+    return t;
+  }
+  function applySchool(sc){
+    if (!sc) return;
+    const st = PUBLISHED.settings;
+    st.school = sc.name || st.school; if (sc.principal && !st.person) st.person = sc.principal;
+    st.editions = sc.gender === 'm' ? 'm' : 'f'; st.defaultEdition = st.editions;
+    if (sc.office || sc.region) st.region = sc.office || sc.region;
+  }
   const fbEmuNoPw = fbEmu && /[?&]nopw\b/.test(location.search);
   const FB_V = '10.12.5';
   const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
@@ -3708,11 +3740,11 @@ body{font-synthesis:weight style}
   function gateEl(){ let g = document.getElementById('gate'); if (!g) { g = document.createElement('div'); g.id = 'gate'; document.body.appendChild(g); } document.body.classList.add('gated'); return g; }
   function hideGate(){ const g = document.getElementById('gate'); if (g) g.remove(); document.body.classList.remove('gated'); }
   function gateShell(inner){
-    const s = cur().settings;
+    const s = cur().settings, nm = SCHOOL ? SCHOOL.name : (ss.get('joinName') || '');
     return `<div class="gate-in"><div class="gate-card">
-      <div class="gate-brand"><img src="${ASSETS.logoW}" alt="شعار وزارة التعليم"><div><small>منصة إدارة المدرسة${s.year ? ' · ' + esc(s.year) : ''}</small><b>${esc(s.school || 'المدرسة')}</b></div></div>
+      <div class="gate-brand"><img src="${ASSETS.logoW}" alt="شعار وزارة التعليم"><div><small>${nm ? PLATFORM + (s.year ? ' · ' + esc(s.year) : '') : 'نظام إدارة الكادر والأداء الوظيفي'}</small><b>${esc(nm || PLATFORM)}</b></div></div>
       <div class="gate-body">${inner}</div></div>
-      <p class="gate-foot">${esc(s.region || 'وزارة التعليم')}</p></div>`;
+      <p class="gate-foot">${esc(SCHOOL ? (SCHOOL.office || SCHOOL.region || '') : 'لمدارس المملكة العربية السعودية')}</p></div>`;
   }
   function gateLoading(t){ gateEl().innerHTML = gateShell(`<div class="gate-wait"><span class="spinner"></span>${esc(t || 'جارٍ التحميل…')}</div>`); }
   let claimOwner = false;
@@ -3739,11 +3771,15 @@ body{font-synthesis:weight style}
       <div class="gate-or"><span>أو</span></div>
       <div id="g-msg" aria-live="polite"></div>
       <button class="btn-google" type="button" id="g-google">${G_ICON}<span>المتابعة بحساب Google</span></button>
-      <p class="gate-new">ليس لديك حساب؟ <button type="button" class="gate-link strong" id="g-create">إنشاء حساب جديد</button></p>`);
+      <p class="gate-new">ليس لديك حساب؟ <button type="button" class="gate-link strong" id="g-create">الانضمام إلى مدرستي</button></p>
+      <p class="gate-new" id="g-signup-p" hidden>مدرسة جديدة؟ <button type="button" class="gate-link strong" id="g-signup">سجّلي مدرستك مجانًا</button></p>`);
     wireEyes(g); icons();
     const m1 = document.getElementById('g-msg');
     document.getElementById('g-google').onclick = e => { claimOwner = false; googleSignIn(e.currentTarget, m1); };
-    document.getElementById('g-create').onclick = () => gateCreate();
+    document.getElementById('g-create').onclick = () => gateJoin();
+    document.getElementById('g-signup').onclick = () => gateSignup();
+    fb.fs.doc('platform/config').get().then(c => { const p = document.getElementById('g-signup-p'); if (p && c.exists && c.data().signupOpen) p.hidden = false; }).catch(() => {});
+    if (ss.get('joinCode') && !note) { const p = g.querySelector('.gate-sub'); if (p) p.insertAdjacentHTML('afterend', `<div class="msg info">وصلتك دعوة للانضمام إلى مدرسة. إن لم يكن لك حساب فاختاري «الانضمام إلى مدرستي».</div>`); }
     const msg = (m, ok) => { document.getElementById('g-msg2').innerHTML = m ? `<div class="msg ${ok ? 'ok' : 'err'}">${esc(m)}</div>` : ''; };
     document.getElementById('g-login').onsubmit = async ev => {
       ev.preventDefault();
@@ -3765,18 +3801,17 @@ body{font-synthesis:weight style}
   /* إنشاء حساب جديد: اختيار الفئة ثم Google */
   async function gateCreate(){
     const g = gateEl(), seeds = seedList();
-    let owner = null; try { owner = await fb.fs.doc('meta/owner').get(); } catch(e){}
-    const noOwner = owner && !owner.exists;
+    const noOwner = true; /* المالكة تُفعَّل بالرمز؛ إن وُجدت يُرفض الطلب برسالة واضحة */
     const list = TITLES.filter(t => t.k !== 'lead' || noOwner);
     g.innerHTML = gateShell(`
-      <button type="button" class="gate-back" id="g-back"><i data-lucide="arrow-right"></i>تسجيل الدخول</button>
-      <h1>إنشاء حساب جديد</h1><p class="gate-sub">اختاري مسماك الوظيفي، ثم أنشئي الحساب بحساب Google. بعدها تختارين اسمك وتضعين كلمة مرور، ويُرسل طلبك لمديرة المدرسة لاعتماده.</p>
-      <div class="title-pick">${list.map(t => `<button type="button" class="tp" data-tk="${t.k}"><span class="cp-i"><i data-lucide="${t.i}"></i></span><b>${t.t}</b><small>${t.k === 'lead' ? 'تفعيل حساب الإدارة' : ar(seeds.filter(x => t.m(x.job)).length)}</small></button>`).join('')}</div>
+      <button type="button" class="gate-back" id="g-back"><i data-lucide="arrow-right"></i>تغيير المدرسة</button>
+      <h1>إنشاء حساب جديد</h1>${ss.get('joinName') ? `<div class="msg ok">المدرسة: <b>${esc(ss.get('joinName'))}</b></div>` : ''}<p class="gate-sub">اختاري مسماك الوظيفي، ثم أنشئي الحساب بحساب Google. بعدها تختارين اسمك وتضعين كلمة مرور، ويُرسل طلبك لمديرة المدرسة لاعتماده.</p>
+      <div class="title-pick">${list.map(t => `<button type="button" class="tp" data-tk="${t.k}"><span class="cp-i"><i data-lucide="${t.i}"></i></span><b>${t.t}</b><small>${t.k === 'lead' ? 'برمز التفعيل' : ''}</small></button>`).join('')}</div>
       <label class="field" id="g-code-wrap" hidden><span>رمز تفعيل حساب الإدارة</span><input class="in ltr code-in" id="g-code" autocomplete="off" autocapitalize="characters" placeholder="مثال: MK34-7Q2X"><small class="muted">يصلك الرمز من مزوّد المنصة مع رابطها.</small></label>
       <div id="g-msg" aria-live="polite"></div>
       <button class="btn-google" type="button" id="g-google" disabled>${G_ICON}<span>اختاري مسماك الوظيفي أولًا</span></button>`);
     icons();
-    document.getElementById('g-back').onclick = () => gateLogin();
+    document.getElementById('g-back').onclick = () => gateJoin();
     const gb = document.getElementById('g-google');
     let pick = '';
     g.querySelectorAll('[data-tk]').forEach(b => b.onclick = () => {
@@ -3789,6 +3824,110 @@ body{font-synthesis:weight style}
     gb.onclick = e => {
       if (pick === 'lead') { ownerCode = document.getElementById('g-code').value.trim().toUpperCase(); if (!ownerCode) { document.getElementById('g-msg').innerHTML = '<div class="msg err">اكتبي رمز التفعيل الذي وصلك مع رابط المنصة.</div>'; return; } }
       claimOwner = pick === 'lead'; doorWanted = 'new'; googleSignIn(e.currentTarget, document.getElementById('g-msg'));
+    };
+  }
+  /* ---------- SaaS: الانضمام برمز المدرسة ---------- */
+  async function resolveCode(code){
+    const c = String(code || '').trim().toUpperCase().replace(/\s+/g, '');
+    if (!c) return null;
+    const d = await fb.fs.doc('schoolCodes/' + c).get();
+    return d.exists ? Object.assign({code: c}, d.data()) : null;
+  }
+  async function gateJoin(note){
+    const g = gateEl(), u = fb.auth.currentUser;
+    g.innerHTML = gateShell(`
+      <button type="button" class="gate-back" id="j-back"><i data-lucide="arrow-right"></i>${u ? 'رجوع' : 'تسجيل الدخول'}</button>
+      <h1>الانضمام إلى مدرستي</h1><p class="gate-sub">اكتبي رمز المدرسة الذي أرسلته الإدارة (أو افتحي رابط الدعوة فيُكتب تلقائيًا).</p>
+      ${note ? `<div class="msg info">${esc(note)}</div>` : ''}
+      <form id="j-form" class="gate-form" novalidate>
+        <label class="field"><span>رمز المدرسة</span><input class="in ltr code-in" id="j-code" autocomplete="off" autocapitalize="characters" placeholder="مثال: MK34" value="${esc(ss.get('joinCode'))}"></label>
+        <div id="j-msg" aria-live="polite"></div>
+        <button class="btn btn-primary btn-block" type="submit"><i data-lucide="arrow-left"></i>متابعة</button>
+      </form>`);
+    icons();
+    document.getElementById('j-back').onclick = () => u ? gateNoSchool(u) : gateLogin();
+    document.getElementById('j-form').onsubmit = async ev => {
+      ev.preventDefault();
+      const msg = m => { document.getElementById('j-msg').innerHTML = m ? `<div class="msg err">${esc(m)}</div>` : ''; };
+      const btn = g.querySelector('#j-form [type=submit]'); btn.disabled = true; msg('');
+      try {
+        const r = await resolveCode(document.getElementById('j-code').value);
+        if (!r) { btn.disabled = false; return msg('رمز المدرسة غير صحيح. تأكدي منه مع إدارة المدرسة.'); }
+        ss.set('joinCode', r.code); ss.set('joinSid', r.sid); ss.set('joinName', r.name || '');
+        if (u) { await fb.fs.doc('userSchools/' + String(u.email).toLowerCase()).set({sid: r.sid, role: 'member', at: new Date().toISOString()}); return onUser(u); }
+        gateCreate();
+      } catch(err){ btn.disabled = false; msg(authMsg(err)); }
+    };
+  }
+  /* حساب مسجّل بلا مدرسة */
+  async function gateNoSchool(u){
+    const g = gateEl();
+    let open = false; try { const c = await fb.fs.doc('platform/config').get(); open = c.exists && !!c.data().signupOpen; } catch(e){}
+    g.innerHTML = gateShell(`
+      <h1>لا ترتبطين بمدرسة بعد</h1>${who(u)}
+      <p class="gate-sub">انضمي إلى مدرستك برمزها، ${open ? 'أو سجّلي مدرسة جديدة إن كنتِ مديرتها، ' : ''}أو ادخلي بحساب آخر.</p>
+      <button class="btn btn-primary btn-block" type="button" id="n-join"><i data-lucide="school"></i>الانضمام برمز المدرسة</button>
+      ${open ? '<button class="btn btn-ghost btn-block" type="button" id="n-new"><i data-lucide="building-2"></i>تسجيل مدرسة جديدة (تجربة مجانية)</button>' : ''}
+      <button class="btn btn-ghost btn-block" type="button" id="n-out"><i data-lucide="log-out"></i>الدخول بحساب آخر</button>`);
+    icons();
+    document.getElementById('n-join').onclick = () => gateJoin();
+    const nn = document.getElementById('n-new'); if (nn) nn.onclick = () => gateSchoolForm(u);
+    document.getElementById('n-out').onclick = () => fb.auth.signOut();
+  }
+  /* ---------- SaaS: تسجيل مدرسة جديدة ---------- */
+  function gateSignup(){
+    const g = gateEl();
+    g.innerHTML = gateShell(`
+      <button type="button" class="gate-back" id="s-back"><i data-lucide="arrow-right"></i>تسجيل الدخول</button>
+      <h1>تسجيل مدرسة جديدة</h1>
+      <p class="gate-sub">تجربة مجانية ١٤ يومًا بكامل المزايا، دون بطاقة دفع. تسجّل المديرة أو المدير المدرسة بحسابه في Google، ثم يُدعى الكادر برمز المدرسة.</p>
+      <ul class="sg-list"><li>حسابات مستقلة لكل منسوبة بصلاحيات حسب المسمى</li><li>الحضور، والاصطفاف، والإشراف، والمناوبة</li><li>ملف شواهد لكل منسوبة في Google Drive</li><li>التقييم بنماذج تقييم شاغلي الوظائف التعليمية</li></ul>
+      <div id="s-msg" aria-live="polite"></div>
+      <button class="btn-google" type="button" id="s-google">${G_ICON}<span>المتابعة بحساب Google</span></button>`);
+    icons();
+    document.getElementById('s-back').onclick = () => gateLogin();
+    document.getElementById('s-google').onclick = e => { ss.set('signup', '1'); googleSignIn(e.currentTarget, document.getElementById('s-msg')); };
+  }
+  function gateSchoolForm(u, note){
+    const g = gateEl();
+    g.innerHTML = gateShell(`
+      <h1>بيانات المدرسة</h1>${who(u)}
+      ${note ? `<div class="msg err">${esc(note)}</div>` : ''}
+      <form id="sf" class="gate-form" novalidate>
+        <label class="field"><span>اسم المدرسة</span><input class="in" id="sf-name" placeholder="مثال: الابتدائية الرابعة والثلاثون" autocomplete="organization"></label>
+        <div class="row2"><label class="field"><span>المرحلة</span><select class="in" id="sf-stage"><option>رياض الأطفال</option><option selected>ابتدائي</option><option>متوسط</option><option>ثانوي</option><option>مجمع</option></select></label>
+          <label class="field"><span>نوع المدرسة</span><select class="in" id="sf-gender"><option value="f">بنات</option><option value="m">بنين</option></select></label></div>
+        <label class="field"><span>إدارة التعليم</span><input class="in" id="sf-office" placeholder="مثال: الإدارة العامة للتعليم بمنطقة مكة المكرمة"></label>
+        <label class="field"><span>المدينة</span><input class="in" id="sf-city" placeholder="مثال: مكة المكرمة"></label>
+        <label class="field"><span>اسم المدير / المديرة</span><input class="in" id="sf-pr" value="${esc(u.displayName || '')}"></label>
+        <label class="mod-c big"><input type="checkbox" id="sf-ok"><span>أوافق على شروط الاستخدام وسياسة الخصوصية، وأقرّ بأني مسؤول/ة عن بيانات مدرستي.</span></label>
+        <div id="sf-msg" aria-live="polite"></div>
+        <button class="btn btn-primary btn-block" type="submit"><i data-lucide="check"></i>إنشاء المدرسة وبدء التجربة</button>
+        <button class="btn btn-ghost btn-block" type="button" id="sf-cancel">إلغاء</button>
+      </form>`);
+    icons();
+    document.getElementById('sf-cancel').onclick = () => { ss.del('signup'); fb.auth.signOut(); };
+    document.getElementById('sf').onsubmit = async ev => {
+      ev.preventDefault();
+      const v = id => document.getElementById(id).value.trim(), msg = m => { document.getElementById('sf-msg').innerHTML = m ? `<div class="msg err">${esc(m)}</div>` : ''; };
+      if (v('sf-name').length < 4) return msg('اكتبي اسم المدرسة.');
+      if (!v('sf-office') || !v('sf-city')) return msg('اكتبي إدارة التعليم والمدينة.');
+      if (!document.getElementById('sf-ok').checked) return msg('يلزم الموافقة على الشروط.');
+      const btn = g.querySelector('#sf [type=submit]'); btn.disabled = true; msg('');
+      const e = String(u.email).toLowerCase(), now = new Date(), until = new Date(now.getTime() + 14 * dayMs);
+      const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+      for (let attempt = 0; attempt < 3; attempt++) {
+        const sid = fb.fs.collection('schools').doc().id, code = genCode(6);
+        const sc = {name: v('sf-name'), stage: v('sf-stage'), gender: v('sf-gender'), office: v('sf-office'), region: v('sf-office'), city: v('sf-city'), principal: v('sf-pr'), ownerEmail: e, plan: 'trial', code, createdAt: now.toISOString()};
+        const b = fb.fs.batch(), P = 'schools/' + sid;
+        b.set(fb.fs.doc(P), sc);
+        b.set(fb.fs.doc('schoolCodes/' + code), {sid, name: sc.name});
+        b.set(fb.fs.doc(P + '/meta/owner'), {email: e, name: sc.principal, photo: u.photoURL || '', at: now.toISOString()});
+        b.set(fb.fs.doc(P + '/meta/license'), {active: true, plan: 'trial', until: iso(until), untilMs: until.getTime() - 60000, client: sc.name, msg: ''});
+        b.set(fb.fs.doc('userSchools/' + e), {sid, role: 'owner', at: now.toISOString()});
+        try { await b.commit(); ss.del('signup'); toast('أُنشئت المدرسة. تجربتك المجانية تنتهي ' + iso(until), 'ok'); return onUser(u); }
+        catch(err){ if (attempt === 2 || err.code !== 'permission-denied') { btn.disabled = false; return msg(err.code === 'permission-denied' ? 'تعذّر إنشاء المدرسة: التسجيل مغلق حاليًا، أو أن حسابك مرتبط بمدرسة أخرى.' : authMsg(err)); } }
+      }
     };
   }
   /* تعيين كلمة مرور لحساب أُنشئ بـ Google (للدخول لاحقًا بالبريد وكلمة المرور) */
@@ -3831,7 +3970,7 @@ body{font-synthesis:weight style}
   function who(u){ return `<div class="gate-who">${u.photoURL ? `<img src="${esc(u.photoURL)}" alt="" referrerpolicy="no-referrer">` : `<span class="avatar">${esc(initials(u.displayName || u.email))}</span>`}<div><b>${esc(u.displayName || '')}</b><small class="ltr">${esc(u.email)}</small></div></div>`; }
 
   /* ---------- طلب الانضمام ---------- */
-  function seedList(){ return (SP().staffSeed || []).filter(x => x && x.name); }
+  function seedList(){ return (ROSTER.length ? ROSTER : (SP().staffSeed || [])).filter(x => x && x.name); }
   function gateRegister(u, note){
     const g = gateEl(), all = seedList();
     let tk = ''; try { tk = sessionStorage.getItem('regcat') || ''; } catch(e){}
@@ -3866,13 +4005,13 @@ body{font-synthesis:weight style}
       ev.preventDefault(); if (!pick) return;
       const msg = m => { document.getElementById('r-msg').innerHTML = m ? `<div class="msg err">${esc(m)}</div>` : ''; };
       sub.disabled = true; msg('');
-      const e = String(u.email).toLowerCase(), k = nameKey(pick.name);
+      const e = String(u.email).toLowerCase(), k = pick.id || nameKey(pick.name);
       try {
-        const l = await fb.fs.doc('links/' + k).get();
+        const l = await SD.doc('links/' + k).get();
         if (l.exists && l.data().email !== e) { sub.disabled = false; return msg('هذا الاسم مرتبط بحساب آخر. إن كان اسمك فتواصلي مع إدارة المدرسة.'); }
-        if (!l.exists) await fb.fs.doc('links/' + k).set({email: e, name: pick.name, at: new Date().toISOString()});
+        if (!l.exists) await SD.doc('links/' + k).set({email: e, name: pick.name, at: new Date().toISOString()});
         const c = catOf(pick.job), fk = document.getElementById('r-form-k');
-        await fb.fs.doc('members/' + e).set({email: e, name: pick.name, staffName: pick.name, job: pick.job, cat: c, form: c === 'teacher' && fk ? fk.value : defForm(pick.job), role: 'member', ops: false, active: false, status: 'pending', photo: u.photoURL || '', at: new Date().toISOString()});
+        await SD.doc('members/' + e).set({email: e, name: pick.name, staffName: pick.name, staffId: pick.id || '', job: pick.job, cat: c, form: c === 'teacher' && fk ? fk.value : defForm(pick.job), role: 'member', ops: false, active: false, status: 'pending', photo: u.photoURL || '', at: new Date().toISOString()});
         gatePending(u, pick.name);
       } catch(err){ sub.disabled = false; msg(authMsg(err)); }
     };
@@ -3892,11 +4031,11 @@ body{font-synthesis:weight style}
     document.getElementById('p-refresh').onclick = () => onUser(fb.auth.currentUser);
     document.getElementById('p-out').onclick = () => fb.auth.signOut();
     const c = document.getElementById('p-cancel');
-    if (c) c.onclick = async () => { const e = String(u.email).toLowerCase(); try { await fb.fs.doc('links/' + nameKey(name)).delete(); } catch(x){} try { await fb.fs.doc('members/' + e).delete(); } catch(x){} gateRegister(u); };
+    if (c) c.onclick = async () => { const e = String(u.email).toLowerCase(); let k = nameKey(name); try { const md = await SD.doc('members/' + e).get(); if (md.exists && md.data().staffId) k = md.data().staffId; } catch(x){} try { await SD.doc('links/' + k).delete(); } catch(x){} try { await SD.doc('members/' + e).delete(); } catch(x){} gateRegister(u); };
     clearInterval(pendTimer); if (!stopped) pendTimer = setInterval(() => { if (fb.auth.currentUser && !acct) checkActive(fb.auth.currentUser); }, 20000);
   }
   let pendTimer = 0;
-  async function checkActive(u){ try { const m = await fb.fs.doc('members/' + String(u.email).toLowerCase()).get(); if (m.exists && m.data().active) { clearInterval(pendTimer); onUser(u); } } catch(e){} }
+  async function checkActive(u){ try { const m = await SD.doc('members/' + String(u.email).toLowerCase()).get(); if (m.exists && m.data().active) { clearInterval(pendTimer); onUser(u); } } catch(e){} }
 
   /* ---------- بعد الدخول ---------- */
   let fbReady = false, unsubMe = null;
@@ -3907,13 +4046,29 @@ body{font-synthesis:weight style}
     if (!hasPw(u) && !pwSkip.has(e) && !fbEmuNoPw) { gateSetPw(u); return; }
     try {
       let sup = false; try { sup = (await fb.fs.doc('supers/' + e).get()).exists; } catch(x){}
-      try { const L = await fb.fs.doc('meta/license').get(); LIC = L.exists ? L.data() : null; } catch(x){ LIC = null; }
+      let us = null; try { const x = await fb.fs.doc('userSchools/' + e).get(); us = x.exists ? x.data() : null; } catch(x){}
+      if (!us && !sup) {
+        if (ss.get('signup')) { gateSchoolForm(u); return; }
+        if (ss.get('joinSid')) { try { await fb.fs.doc('userSchools/' + e).set({sid: ss.get('joinSid'), role: claimOwner ? 'owner' : 'member', at: new Date().toISOString()}); us = {sid: ss.get('joinSid')}; } catch(x){ gateJoin('تعذّر ربط حسابك بالمدرسة. أعيدي كتابة الرمز.'); return; } }
+        else { acct = null; gateNoSchool(u); return; }
+      }
+      SID = (sup && ss.get('superSid')) || (us && us.sid) || '';
+      if (sup && !SID) {
+        acct = {email: e, name: u.displayName || 'مطوّر المنصة', role: 'admin', owner: false, super: true, ops: true, cat: '', form: '', staffName: '', job: '', photo: u.photoURL || ''};
+        PUBLISHED.settings.school = PLATFORM; PUBLISHED.settings.region = 'لوحة مالكة المنصة';
+        canWrite = false; canEdit = true; art = null; hideGate(); chrome(); history.replaceState(null, '', location.pathname + location.search + '#dev'); devPage(); return;
+      }
+      try { const x = await fb.fs.doc('schools/' + SID).get(); SCHOOL = x.exists ? Object.assign({id: SID}, x.data()) : null; } catch(x){ SCHOOL = null; }
+      if (!SCHOOL) { acct = null; gateEl().innerHTML = gateShell('<div class="msg err">المدرسة المرتبطة بحسابك غير موجودة. تواصلي مع مزوّد المنصة.</div><button class="btn btn-ghost btn-block" type="button" id="x-out">تسجيل الخروج</button>'); document.getElementById('x-out').onclick = () => fb.auth.signOut(); return; }
+      ss.set('joinName', SCHOOL.name || '');
+      try { const r = await SD.doc('meta/roster').get(); ROSTER = r.exists ? (r.data().list || []) : []; } catch(x){ ROSTER = []; }
+      try { const L = await SD.doc('meta/license').get(); LIC = L.exists ? L.data() : null; } catch(x){ LIC = null; }
       if (!sup && licOff(LIC)) { acct = null; gateBlocked(u, LIC); return; }
-      const o = await fb.fs.doc('meta/owner').get();
+      const o = await SD.doc('meta/owner').get();
       if (sup && !claimOwner) {
         acct = {email: e, name: u.displayName || 'مطوّر المنصة', role: 'admin', owner: false, super: true, ops: true, cat: '', form: '', staffName: '', job: '', photo: u.photoURL || ''};
       } else if (!o.exists && claimOwner) {
-        try { await fb.fs.doc('meta/owner').set({email: e, name: u.displayName || cur().settings.person || '', photo: u.photoURL || '', code: ownerCode, at: new Date().toISOString()}); }
+        try { await SD.doc('meta/owner').set({email: e, name: u.displayName || cur().settings.person || '', photo: u.photoURL || '', code: ownerCode, at: new Date().toISOString()}); }
         catch(err){ claimOwner = false; ownerCode = ''; try { sessionStorage.setItem('gnote', 'رمز تفعيل حساب الإدارة غير صحيح. تأكدي من الرمز الذي وصلك مع رابط المنصة، ثم أعيدي المحاولة من «إنشاء حساب جديد».'); } catch(x){} await fb.auth.signOut(); return; }
         claimOwner = false; ownerCode = ''; return onUser(u);
       }
@@ -3921,18 +4076,22 @@ body{font-synthesis:weight style}
       if (acct && acct.super) {}
       else if (o.exists && o.data().email === e) {
         const lead = seedList().find(x => /مدير/.test(x.job)) || {};
-        acct = {email: e, name: lead.name || o.data().name || u.displayName || '', role: 'admin', owner: true, ops: true, job: lead.job || '{مدير|مديرة} المدرسة', cat: 'lead', form: 'principal', staffName: lead.name || o.data().name || '', photo: u.photoURL || ''};
+        acct = {email: e, name: lead.name || o.data().name || u.displayName || '', role: 'admin', owner: true, ops: true, staffId: lead.id || '', job: lead.job || '{مدير|مديرة} المدرسة', cat: 'lead', form: 'principal', staffName: lead.name || o.data().name || '', photo: u.photoURL || ''};
       } else {
-        const m = await fb.fs.doc('members/' + e).get();
+        const m = await SD.doc('members/' + e).get();
         if (!m.exists) { acct = null; gateRegister(u, doorWanted === 'new' ? '' : 'هذا الحساب غير مسجّل في المنصة بعد. اختاري اسمك لإرسال طلب حساب.'); return; }
         const d = m.data();
         if (!d.active) { acct = null; gatePending(u, d.staffName || d.name, d.status === 'stopped'); return; }
-        acct = {email: e, name: d.name || '', role: d.role === 'admin' ? 'admin' : 'member', owner: false, ops: d.role === 'admin' || !!d.ops, mods: Array.isArray(d.mods) ? d.mods : [], cat: d.cat || catOf(d.job), form: d.form || defForm(d.job), staffName: d.staffName || d.name || '', job: d.job || '', photo: d.photo || u.photoURL || ''};
+        acct = {email: e, name: d.name || '', role: d.role === 'admin' ? 'admin' : 'member', owner: false, ops: d.role === 'admin' || !!d.ops, mods: Array.isArray(d.mods) ? d.mods : [], staffId: d.staffId || '', cat: d.cat || catOf(d.job), form: d.form || defForm(d.job), staffName: d.staffName || d.name || '', job: d.job || '', photo: d.photo || u.photoURL || ''};
       }
-      try { const s = await fb.fs.doc('site/state').get(); if (s.exists && s.data().json) { const v = JSON.parse(s.data().json); if (v && v.settings && Array.isArray(v.sections)) { v.settings.firebase = FB; PUBLISHED = v; } } } catch(x){}
+      let got = false;
+      try { const s = await SD.doc('site/state').get(); if (s.exists && s.data().json) { const v = JSON.parse(s.data().json); if (v && v.settings && Array.isArray(v.sections)) { v.settings.firebase = FB; PUBLISHED = v; got = true; } } } catch(x){}
+      if (!got) { PUBLISHED = templateState(SCHOOL); PUBLISHED.settings.firebase = FB; }
+      applySchool(SCHOOL);
     } catch(err){ gateLogin(authMsg(err)); return; }
     canWrite = true; deviceMode = false; canEdit = acct.role === 'admin'; art = null;
-    if (!fbReady) { fbReady = true; initDb(fb.fs); }
+    if (!fbReady) { fbReady = true; initDb(SD); }
+    if (LIC && LIC.plan === 'trial' && acct.role === 'admin' && !ss.get('trialNote')) { ss.set('trialNote', '1'); const left = Math.max(0, Math.ceil(((LIC.untilMs || 0) - Date.now()) / dayMs)); setTimeout(() => toast(`تجربة مجانية: تبقّى ${ar(left)} يومًا. للاشتراك تواصلي مع مزوّد المنصة.`, 'info'), 1200); }
     { const h0 = (location.hash || '').replace('#', ''); const base = h0.replace(/^(cat-|pf-).*/, 'cadre');
       if ((h0 === 'admin' && acct.role !== 'admin') || (h0 && NAV.some(n => n.r === base) && !navAllowed(base))) history.replaceState(null, '', location.pathname + location.search + '#home'); }
     hideGate(); chrome(); renderBar(); route();
@@ -3943,10 +4102,10 @@ body{font-synthesis:weight style}
     fb.auth.onAuthStateChanged(onUser);
     if (fbEmu) window.__emuGoogle = (email, name, owner, code) => { claimOwner = !!owner; if (code != null) ownerCode = String(code).toUpperCase(); return fb.auth.signInWithCredential(firebase.auth.GoogleAuthProvider.credential(JSON.stringify({sub: email, email, email_verified: true, name}))); };
   }
-  async function fbSignOut(){ try { sessionStorage.removeItem('gtok'); } catch(e){} try { await fb.auth.signOut(); } catch(e){} location.hash = '#home'; }
+  async function fbSignOut(){ try { ['gtok', 'superSid', 'joinSid', 'joinName', 'joinCode', 'trialNote'].forEach(k => sessionStorage.removeItem(k)); } catch(e){} try { await fb.auth.signOut(); } catch(e){} location.hash = '#home'; }
   async function fbSaveState(st){
     const clean = clone(st); delete clean.settings.firebase;
-    await fb.fs.doc('site/state').set({json: JSON.stringify(clean), at: new Date().toISOString(), by: acct.email});
+    await SD.doc('site/state').set({json: JSON.stringify(clean), at: new Date().toISOString(), by: acct.email});
   }
 
   /* ---------- لوحة التحكم: الحسابات والطلبات ---------- */
@@ -3961,10 +4120,10 @@ body{font-synthesis:weight style}
     if (!fb || !acct) { tab.innerHTML = `<div class="panel"><p class="muted">إدارة الحسابات تعمل في نسخة المنصة المستضافة بعد تسجيل الدخول.</p></div>`; return; }
     tab.innerHTML = `<div class="panel muted-panel"><span class="spinner"></span>جارٍ تحميل الحسابات…</div>`;
     let list = [];
-    try { list = (await fb.fs.collection('members').get()).docs.map(d => d.data()).sort((a, b) => String(a.name).localeCompare(String(b.name), 'ar')); }
+    try { list = (await SD.collection('members').get()).docs.map(d => d.data()).sort((a, b) => String(a.name).localeCompare(String(b.name), 'ar')); }
     catch(e){ tab.innerHTML = `<div class="msg err">${esc(authMsg(e))}</div>`; return; }
-    let owner = null; try { const o = await fb.fs.doc('meta/owner').get(); owner = o.exists ? o.data() : null; } catch(e){}
-    const seeds = seedList(), share = (location.origin + location.pathname).replace(/#.*$/, '');
+    let owner = null; try { const o = await SD.doc('meta/owner').get(); owner = o.exists ? o.data() : null; } catch(e){}
+    const seeds = seedList(), share = (location.origin + location.pathname).replace(/#.*$/, '') + (SCHOOL && SCHOOL.code ? '?s=' + SCHOOL.code : '');
     const catOfM = m => m.cat || catOf(m.job);
     const pend = list.filter(m => !m.active && m.status === 'pending');
     const row = (m, isPend) => `<div class="u-row${isPend ? ' pend' : ''}" data-e="${esc(m.email)}">${m.photo ? `<img class="u-ph" src="${esc(m.photo)}" alt="" referrerpolicy="no-referrer">` : `<span class="avatar">${esc(initials(m.name))}</span>`}
@@ -3993,7 +4152,7 @@ body{font-synthesis:weight style}
         ${CATS.filter(c => c.k !== 'lead').map(c => { const ms = list.filter(m => !(!m.active && m.status === 'pending') && catOfM(m) === c.k); return ms.length ? `<h3 class="u-grp"><i data-lucide="${c.i}"></i>${c.t} (${ar(ms.length)})</h3><div class="u-list">${ms.map(m => row(m, false)).join('')}</div>` : ''; }).join('') || '<p class="muted">لا توجد حسابات بعد.</p>'}</div>
       <div class="panel invite"><h2><i data-lucide="send"></i>دعوة المنسوبات</h2>
         <p class="ev-note" style="margin:0 0 10px!important">أرسلي هذه الرسالة في مجموعة المنسوبات.</p>
-        <textarea class="in" id="inv-txt" readonly style="min-height:130px">${esc(`السلام عليكم ورحمة الله\nمنصة ${cur().settings.school || 'المدرسة'} للأداء الوظيفي:\n${share}\n١) اضغطي «دخول الكادر» واختاري فئتك.\n٢) ادخلي بحساب Google، واختاري اسمك، وأرسلي الطلب.\n٣) بعد القبول افتحي «ملفي» واضغطي «إنشاء ملفي في Google Drive»، ثم ارفعي شواهدك.`)}</textarea>
+        <textarea class="in" id="inv-txt" readonly style="min-height:130px">${esc(`السلام عليكم ورحمة الله\nمنصة ${cur().settings.school || 'المدرسة'} للأداء الوظيفي:\n${share}\nرمز المدرسة: ${SCHOOL && SCHOOL.code ? SCHOOL.code : ''}\n١) افتحي الرابط واضغطي «الانضمام إلى مدرستي».\n٢) اختاري مسماك، وادخلي بحساب Google، واختاري اسمك، وأرسلي الطلب.\n٣) بعد القبول افتحي «ملفي» واضغطي «إنشاء ملفي في Google Drive»، ثم ارفعي شواهدك.`)}</textarea>
         <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn btn-ghost btn-sm" id="inv-copy"><i data-lucide="copy"></i>نسخ الرسالة</button><a class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="#" id="inv-wa"><i data-lucide="message-circle"></i>إرسال عبر واتساب</a></div></div>
     </div>`;
     icons();
@@ -4008,14 +4167,14 @@ body{font-synthesis:weight style}
         const act = b.dataset.u;
         const run = async () => {
           try {
-            const ref = fb.fs.doc('members/' + e), cat = csel.value, form = fsel() ? fsel().value : '';
+            const ref = SD.doc('members/' + e), cat = csel.value, form = fsel() ? fsel().value : '';
             if (act === 'approve') { const r = rw.querySelector('[data-role]').value; await ref.update({active: true, status: 'active', role: r === 'admin' ? 'admin' : 'member', ops: r !== 'member', mods: r === 'ops' ? defMods(m.job) : [], cat, form, by: acct.email}); toast('قُبل حساب ' + m.name, 'ok'); }
-            if (act === 'reject') { await ref.delete(); try { await fb.fs.doc('links/' + nameKey(m.staffName || m.name)).delete(); } catch(x){} toast('رُفض الطلب.', 'ok'); }
+            if (act === 'reject') { await ref.delete(); try { await SD.doc('links/' + (m.staffId || nameKey(m.staffName || m.name))).delete(); } catch(x){} toast('رُفض الطلب.', 'ok'); }
             if (act === 'save') { const mb = rw.querySelector('.mods'); const upd = {cat, form}; if (mb) upd.mods = [...mb.querySelectorAll('input:checked')].map(i => i.value); await ref.update(upd); toast('حُفظت التعديلات.', 'ok'); }
             if (act === 'ops') await ref.update(m.ops ? {ops: false, mods: []} : {ops: true, mods: (m.mods && m.mods.length) ? m.mods : defMods(m.job)});
             if (act === 'role') await ref.update({role: m.role === 'admin' ? 'member' : 'admin'});
             if (act === 'active') await ref.update({active: !m.active, status: m.active ? 'stopped' : 'active'});
-            if (act === 'del') { await ref.delete(); try { await fb.fs.doc('links/' + nameKey(m.staffName || m.name)).delete(); } catch(x){} }
+            if (act === 'del') { await ref.delete(); try { await SD.doc('links/' + (m.staffId || nameKey(m.staffName || m.name))).delete(); } catch(x){} }
             tabUsers();
           } catch(err){ toast(authMsg(err), 'err'); }
         };
@@ -4096,8 +4255,8 @@ body{font-synthesis:weight style}
   async function dTrash(id){ if (fbEmu) return; await dreq(`${DAPI}/${id}?fields=id`, {method: 'PATCH', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({trashed: true})}); }
 
   /* ---------- البيانات ---------- */
-  async function loadFile(email){ const d = await fb.fs.doc('files/' + email).get(); return d.exists ? d.data() : null; }
-  async function loadUploads(email){ const q = email ? fb.fs.collection('uploads').where('email', '==', email) : fb.fs.collection('uploads'); return (await q.get()).docs.map(d => ({id: d.id, ...d.data()})).sort((a, b) => (a.at < b.at ? 1 : -1)); }
+  async function loadFile(email){ const d = await SD.doc('files/' + email).get(); return d.exists ? d.data() : null; }
+  async function loadUploads(email){ const q = email ? SD.collection('uploads').where('email', '==', email) : SD.collection('uploads'); return (await q.get()).docs.map(d => ({id: d.id, ...d.data()})).sort((a, b) => (a.at < b.at ? 1 : -1)); }
   const staffByName = n => S.staff.find(s => s.name === n) || null;
   const fileIcon = m => /pdf/.test(m || '') ? 'file-text' : /image/.test(m || '') ? 'image' : /video/.test(m || '') ? 'video' : /sheet|excel/.test(m || '') ? 'sheet' : /word|document/.test(m || '') ? 'file-type' : 'file';
   const sizeTxt = n => !n ? '' : n > 1048576 ? ar((n / 1048576).toFixed(1)) + ' م.ب' : ar(Math.max(1, Math.round(n / 1024))) + ' ك.ب';
@@ -4156,7 +4315,7 @@ body{font-synthesis:weight style}
       host.querySelectorAll('input[type=file][data-k]').forEach(inp => inp.onchange = () => uploadFiles(inp.dataset.k, [...inp.files], inp));
       host.querySelectorAll('[data-del]').forEach(b => armDelete(b, async () => {
         const u = MF.ups.find(x => x.id === b.dataset.del); if (!u) return;
-        try { try { await dTrash(u.fileId); } catch(e){ if (e.status !== 404) throw e; } await fb.fs.doc('uploads/' + u.id).delete(); MF.ups = MF.ups.filter(x => x !== u); toast('حُذف الملف (نُقل إلى سلة Drive).', 'ok'); minePageDraw(); }
+        try { try { await dTrash(u.fileId); } catch(e){ if (e.status !== 404) throw e; } await SD.doc('uploads/' + u.id).delete(); MF.ups = MF.ups.filter(x => x !== u); toast('حُذف الملف (نُقل إلى سلة Drive).', 'ok'); minePageDraw(); }
         catch(e){ toast(authMsg(e), 'err'); }
       }));
     }
@@ -4186,14 +4345,14 @@ body{font-synthesis:weight style}
       const sec = secOfForm(acct.form), items = sec ? sec.items : [], year = cur().settings.year || '';
       const f = MF.file || {folders: {}, items: {}};
       f.folders = f.folders || {}; f.items = f.items || {};
-      const save = () => fb.fs.doc('files/' + acct.email).set(Object.assign(f, {email: acct.email, name: acct.staffName || acct.name, form: acct.form || '', cat: acct.cat || '', at: new Date().toISOString()}));
+      const save = () => SD.doc('files/' + acct.email).set(Object.assign(f, {email: acct.email, name: acct.staffName || acct.name, form: acct.form || '', cat: acct.cat || '', at: new Date().toISOString()}));
       if (!f.root) { prog('إنشاء المجلد الرئيسي…'); const r = await dFolder(`ملف ${plain(acct.staffName || acct.name)} — ${plain(acct.job || 'مديرة المدرسة')} — ${year}`); f.root = r.id; f.rootLink = r.webViewLink; await save(); }
       const tops = TOP(acct.cat);
       for (const [k, n] of tops) if (!f.folders[k]) { prog('إنشاء مجلد ' + n.replace(/^\d+ /, '') + '…'); f.folders[k] = (await dFolder(n, f.root)).id; await save(); }
       let n = 0;
       for (const it of items) { n++; if (f.items[it.id]) continue; prog(`مجلدات العناصر ${ar(n)} من ${ar(items.length)}…`); f.items[it.id] = (await dFolder(String(n).padStart(2, '0') + ' ' + fname(g(it.name)), f.folders.ev)).id; if (n % 4 === 0) await save(); }
       await save();
-      try { const o = await fb.fs.doc('meta/owner').get(); const oe = o.exists ? o.data().email : ''; if (oe && oe !== acct.email && !f.sharedWith) { prog('مشاركة الملف مع مديرة المدرسة…'); await dShare(f.root, oe); f.sharedWith = oe; await save(); } } catch(e){}
+      try { const o = await SD.doc('meta/owner').get(); const oe = o.exists ? o.data().email : ''; if (oe && oe !== acct.email && !f.sharedWith) { prog('مشاركة الملف مع مديرة المدرسة…'); await dShare(f.root, oe); f.sharedWith = oe; await save(); } } catch(e){}
       MF.file = f; prog(''); toast('أُنشئ ملفك في Google Drive.', 'ok'); minePageDraw();
     } catch(e){ prog(''); btn.disabled = false; toast(authMsg(e), 'err'); console.error(e); }
   }
@@ -4209,7 +4368,7 @@ body{font-synthesis:weight style}
       try {
         const r = await dUpload(file, parent);
         const rec = {email: acct.email, staffName: acct.staffName || acct.name, item: k, name: r.name || file.name, fileId: r.id, link: r.webViewLink || '', mime: r.mimeType || file.type || '', size: +r.size || file.size, at: new Date().toISOString()};
-        const d = await fb.fs.collection('uploads').add(rec); MF.ups.unshift({id: d.id, ...rec}); ok++;
+        const d = await SD.collection('uploads').add(rec); MF.ups.unshift({id: d.id, ...rec}); ok++;
       } catch(e){ toast(authMsg(e), 'err'); console.error(e); break; }
     }
     inp.value = ''; MF.open[k] = true;
@@ -4221,13 +4380,13 @@ body{font-synthesis:weight style}
   const CD = {members: [], files: [], ups: [], at: 0};
   async function cadreLoad(force){
     if (!force && Date.now() - CD.at < 60000) return;
-    const [m, f, u] = await Promise.all([fb.fs.collection('members').get(), fb.fs.collection('files').get(), fb.fs.collection('uploads').get()]);
+    const [m, f, u] = await Promise.all([SD.collection('members').get(), SD.collection('files').get(), SD.collection('uploads').get()]);
     CD.members = m.docs.map(d => d.data()); CD.files = f.docs.map(d => d.data()); CD.ups = u.docs.map(d => ({id: d.id, ...d.data()})); CD.at = Date.now();
-    try { const o = await fb.fs.doc('meta/owner').get(); if (o.exists) { const lead = S.staff.find(s => catOf(jobOf(s)) === 'lead'); CD.owner = Object.assign({}, o.data(), {staffName: lead ? lead.name : o.data().name, active: true, form: 'principal', cat: 'lead'}); } } catch(e){}
+    try { const o = await SD.doc('meta/owner').get(); if (o.exists) { const lead = S.staff.find(s => catOf(jobOf(s)) === 'lead'); CD.owner = Object.assign({}, o.data(), {staffName: lead ? lead.name : o.data().name, active: true, form: 'principal', cat: 'lead'}); } } catch(e){}
   }
   function personInfo(s){
     const all = CD.owner ? CD.members.concat([CD.owner]) : CD.members;
-    const m = all.find(x => (x.staffName || x.name) === s.name) || null;
+    const m = all.find(x => x.staffId && x.staffId === s.id) || all.find(x => !x.staffId && (x.staffName || x.name) === s.name) || null;
     const file = m ? CD.files.find(x => x.email === m.email) || null : null;
     const ups = m ? CD.ups.filter(u => u.email === m.email) : [];
     const form = (m && m.form) || defForm(jobOf(s)), sec = secOfForm(form), items = sec ? sec.items : [];
@@ -4359,7 +4518,7 @@ body{font-synthesis:weight style}
     try {
       const [col, date] = path.split('/'), prev = MIR[path]; MIR[path] = clone(data || {});
       const FV = firebase.firestore.FieldValue, batch = fb.fs.batch(); let n = 0;
-      const put = (id, patch) => { batch.set(fb.fs.doc('pa/' + id), Object.assign({name: sname(id), at: new Date().toISOString()}, patch), {merge: true}); n++; };
+      const put = (id, patch) => { batch.set(SD.doc('pa/' + id), Object.assign({name: sname(id), at: new Date().toISOString()}, patch), {merge: true}); n++; };
       if (col === 'att') {
         const a = (data && data.rec) || {}, b = (prev && prev.rec) || {};
         new Set([...Object.keys(a), ...Object.keys(b)]).forEach(id => { if (JSON.stringify(a[id] || null) !== JSON.stringify(b[id] || null) || !prev) put(id, {days: {[date]: a[id] ? {s: a[id].s || '', t: a[id].t || '', n: a[id].n || ''} : FV.delete()}}); });
@@ -4387,7 +4546,7 @@ body{font-synthesis:weight style}
       late.forEach(d => (d.entries || []).forEach(e => { if (P[e.staffId]) (P[e.staffId].late[d.date] = P[e.staffId].late[d.date] || []).push({p: e.period || '', m: +e.min || 0, a: e.action || ''}); }));
       asm.forEach(d => (d.absentStaff || []).forEach(id => { if (P[id]) P[id].asm[d.date] = true; }));
       const ids = Object.keys(P);
-      for (let i = 0; i < ids.length; i += 400) { const b = fb.fs.batch(); ids.slice(i, i + 400).forEach(id => b.set(fb.fs.doc('pa/' + id), Object.assign({at: new Date().toISOString()}, P[id]), {merge: true})); await b.commit(); }
+      for (let i = 0; i < ids.length; i += 400) { const b = fb.fs.batch(); ids.slice(i, i + 400).forEach(id => b.set(SD.doc('pa/' + id), Object.assign({at: new Date().toISOString()}, P[id]), {merge: true})); await b.commit(); }
       store.set(key, 1);
     } catch(e){ console.warn('sync', e); }
   }
@@ -4397,12 +4556,12 @@ body{font-synthesis:weight style}
   async function loadMyPa(force){
     if (!force && ME.at && Date.now() - ME.at < 60000) return ME;
     try {
-      const x = await fb.fs.collection('pa').where('name', '==', acct.staffName).limit(1).get();
-      if (!x.empty) { ME.pa = x.docs[0].data(); ME.paId = x.docs[0].id; } else { ME.pa = null; ME.paId = ''; }
-    } catch(e){ ME.pa = null; }
+      if (acct.staffId) { const d = await SD.doc('pa/' + acct.staffId).get(); ME.paId = acct.staffId; ME.pa = d.exists ? d.data() : null; }
+      else { ME.pa = null; ME.paId = ''; }
+    } catch(e){ ME.pa = null; ME.paId = acct.staffId || ''; }
     ME.at = Date.now(); return ME;
   }
-  const myQ = c => fb.fs.collection(c).where('email', '==', acct.email);
+  const myQ = c => SD.collection(c).where('email', '==', acct.email);
   function myDuties(id){
     if (!id) return {sup: [], duty: [], dutyend: []};
     const c = cfg(), sup = [];
@@ -4428,7 +4587,7 @@ body{font-synthesis:weight style}
       loadMyPa(),
       loadFile(acct.email).then(x => file = x).catch(() => {}),
       loadUploads(acct.email).then(x => ups = x).catch(() => {}),
-      fb.fs.doc('evals/' + acct.email).get().then(x => ev = x.exists ? x.data() : null).catch(() => {}),
+      SD.doc('evals/' + acct.email).get().then(x => ev = x.exists ? x.data() : null).catch(() => {}),
       myQ('notes').get().then(x => notes = x.docs.map(d => ({id: d.id, ...d.data()}))).catch(() => {}),
       myQ('tasks').get().then(x => tasks = x.docs.map(d => ({id: d.id, ...d.data()}))).catch(() => {})
     ]);
@@ -4480,7 +4639,7 @@ body{font-synthesis:weight style}
     await Promise.all([
       loadFile(acct.email).then(x => file = x).catch(() => {}),
       loadUploads(acct.email).then(x => ups = x).catch(() => {}),
-      fb.fs.doc('evals/' + acct.email).get().then(x => ev = x.exists ? x.data() : null).catch(() => {}),
+      SD.doc('evals/' + acct.email).get().then(x => ev = x.exists ? x.data() : null).catch(() => {}),
       myQ('notes').get().then(x => notes = x.docs.map(d => ({id: d.id, ...d.data()}))).catch(() => {}),
       myQ('tasks').get().then(x => tasks = x.docs.map(d => ({id: d.id, ...d.data()}))).catch(() => {})
     ]);
@@ -4523,7 +4682,7 @@ body{font-synthesis:weight style}
   async function counselorPanel(){
     const box = document.getElementById('gc-panel'); if (!box) return;
     try {
-      const [p, c] = await Promise.all([fb.fs.collection('cprog').get(), fb.fs.collection('cases').get()]);
+      const [p, c] = await Promise.all([SD.collection('cprog').get(), SD.collection('cases').get()]);
       const progs = p.docs.map(d => d.data()), cases = c.docs.map(d => d.data()), done = progs.filter(x => x.status === 'done').length;
       box.innerHTML = `<h2><i data-lucide="compass"></i>مكتب التوجيه</h2><div class="cat-kpis tight"><div><b>${ar(progs.length)}</b><span>برنامج</span></div><div><b>${progs.length ? ar(Math.round(done / progs.length * 100)) + '٪' : '—'}</b><span>التنفيذ</span></div><div><b>${ar(cases.filter(x => x.status !== 'closed').length)}</b><span>حالة مفتوحة</span></div><div><b>${ar(cases.filter(x => x.status === 'closed').length)}</b><span>مغلقة</span></div></div><a class="btn btn-ghost btn-sm" href="#gc" style="margin-top:10px"><i data-lucide="arrow-left"></i>فتح مكتب التوجيه</a>`;
       icons();
@@ -4534,7 +4693,7 @@ body{font-synthesis:weight style}
   async function myEvalPage(){
     app.innerHTML = loading();
     let ev = null, ups = [];
-    try { const x = await fb.fs.doc('evals/' + acct.email).get(); ev = x.exists ? x.data() : null; } catch(e){ ev = null; }
+    try { const x = await SD.doc('evals/' + acct.email).get(); ev = x.exists ? x.data() : null; } catch(e){ ev = null; }
     try { ups = await loadUploads(acct.email); } catch(e){}
     const sec = secOfForm(acct.form), items = sec ? sec.items : [];
     const done = items.filter(it => ups.some(u => u.item === it.id)).length;
@@ -4603,7 +4762,7 @@ body{font-synthesis:weight style}
           <div><b>${esc(t.title)}</b>${t.details ? `<p>${esc(t.details)}</p>` : ''}<small>${t.due ? 'الموعد: ' + esc(t.due) + ' · ' : ''}أُسندت ${dateTxt(t.at)}${t.doneAt ? ' · أُنجزت ' + dateTxt(t.doneAt) : ''}</small></div>
           ${t.status === 'done' ? '<span class="spill ok">منجزة</span>' : '<button type="button" class="btn btn-primary btn-sm" data-done><i data-lucide="check"></i>تم الإنجاز</button>'}</div>`).join('') || '<p class="muted">لا توجد مهام مسندة إليك.</p>'}</div></section>`);
     icons();
-    app.querySelectorAll('[data-done]').forEach(b => b.onclick = async () => { const id = b.closest('[data-t]').dataset.t; b.disabled = true; try { await fb.fs.doc('tasks/' + id).update({status: 'done', doneAt: new Date().toISOString()}); toast('أحسنتِ! سُجّلت المهمة منجزة.', 'ok'); myTasksPage(); } catch(e){ b.disabled = false; toast(authMsg(e), 'err'); } });
+    app.querySelectorAll('[data-done]').forEach(b => b.onclick = async () => { const id = b.closest('[data-t]').dataset.t; b.disabled = true; try { await SD.doc('tasks/' + id).update({status: 'done', doneAt: new Date().toISOString()}); toast('أحسنتِ! سُجّلت المهمة منجزة.', 'ok'); myTasksPage(); } catch(e){ b.disabled = false; toast(authMsg(e), 'err'); } });
   }
 
   /* ---------- 💬 ملاحظات الإدارة ---------- */
@@ -4615,7 +4774,7 @@ body{font-synthesis:weight style}
         <div><div class="note-h"><b>${T2[0]}</b><small>${dateTxt(n.at)}</small>${n.seen ? '' : '<span class="spill wait">جديدة</span>'}</div><p>${esc(n.text).replace(/\n/g, '<br>')}</p>
         ${n.seen ? '<small class="muted">اطّلعتِ عليها</small>' : '<button type="button" class="btn btn-ghost btn-sm" data-seen><i data-lucide="check"></i>اطّلعت</button>'}</div></article>`; }).join('') || '<div class="panel"><p class="muted">لا توجد ملاحظات.</p></div>'}</div>`);
     icons();
-    app.querySelectorAll('[data-seen]').forEach(b => b.onclick = async () => { const id = b.closest('[data-n]').dataset.n; try { await fb.fs.doc('notes/' + id).update({seen: true}); myNotesPage(); } catch(e){ toast(authMsg(e), 'err'); } });
+    app.querySelectorAll('[data-seen]').forEach(b => b.onclick = async () => { const id = b.closest('[data-n]').dataset.n; try { await SD.doc('notes/' + id).update({seen: true}); myNotesPage(); } catch(e){ toast(authMsg(e), 'err'); } });
   }
 
   /* ---------- لوحة المديرة في ملف المنسوبة: تقييم، ملاحظة، مهمة ---------- */
@@ -4623,9 +4782,9 @@ body{font-synthesis:weight style}
     if (!acct || acct.role !== 'admin' || !x.m) return;
     const e = x.m.email, items = x.items;
     let ev = null, notes = [], tasks = [];
-    try { const d = await fb.fs.doc('evals/' + e).get(); ev = d.exists ? d.data() : null; } catch(er){}
-    try { notes = (await fb.fs.collection('notes').where('email', '==', e).get()).docs.map(d => ({id: d.id, ...d.data()})).sort((a, b) => a.at < b.at ? 1 : -1); } catch(er){}
-    try { tasks = (await fb.fs.collection('tasks').where('email', '==', e).get()).docs.map(d => ({id: d.id, ...d.data()})).sort((a, b) => a.at < b.at ? 1 : -1); } catch(er){}
+    try { const d = await SD.doc('evals/' + e).get(); ev = d.exists ? d.data() : null; } catch(er){}
+    try { notes = (await SD.collection('notes').where('email', '==', e).get()).docs.map(d => ({id: d.id, ...d.data()})).sort((a, b) => a.at < b.at ? 1 : -1); } catch(er){}
+    try { tasks = (await SD.collection('tasks').where('email', '==', e).get()).docs.map(d => ({id: d.id, ...d.data()})).sort((a, b) => a.at < b.at ? 1 : -1); } catch(er){}
     const sc = clone((ev && ev.scores) || {});
     const term = (ev && ev.term) || 'الفصل الدراسي الأول ' + (cur().settings.year || '');
     const box = document.createElement('div'); box.className = 'stack adm-tools';
@@ -4663,18 +4822,18 @@ body{font-synthesis:weight style}
       if (status === 'published' && r.covered < 100) { toast('قدّري جميع العناصر قبل الاعتماد والنشر.', 'err'); return; }
       const hist = ((ev && ev.history) || []).slice();
       if (status === 'published' && ev && ev.status === 'published' && ev.term && ev.term !== t) hist.push({term: ev.term, total: ev.total});
-      try { await fb.fs.doc('evals/' + e).set({email: e, name: x.s.name, form: x.form, scores: sc, total: r.total, term: t, status, history: hist, at: new Date().toISOString(), by: acct.email}); toast(status === 'published' ? 'اعتُمد التقييم ونُشر للمنسوبة.' : 'حُفظت المسودة.', 'ok'); personPage(x.s.id); }
+      try { await SD.doc('evals/' + e).set({email: e, name: x.s.name, form: x.form, scores: sc, total: r.total, term: t, status, history: hist, at: new Date().toISOString(), by: acct.email}); toast(status === 'published' ? 'اعتُمد التقييم ونُشر للمنسوبة.' : 'حُفظت المسودة.', 'ok'); personPage(x.s.id); }
       catch(er){ toast(authMsg(er), 'err'); }
     };
     const d1 = document.getElementById('ev-draft'); if (d1) d1.onclick = () => saveEval('draft');
     const d2 = document.getElementById('ev-pub'); if (d2) d2.onclick = () => saveEval('published');
     const d3 = document.getElementById('ev-print'); if (d3) d3.onclick = () => printEval(x, sc, document.getElementById('ev-term').value);
     document.getElementById('nt-send').onclick = async () => { const tx = document.getElementById('nt-text').value.trim(); if (!tx) return toast('اكتبي نص الملاحظة.', 'err');
-      try { await fb.fs.collection('notes').add({email: e, name: x.s.name, type: document.getElementById('nt-type').value, text: tx, seen: false, at: new Date().toISOString(), by: acct.email}); toast('أُرسلت الملاحظة.', 'ok'); personPage(x.s.id); } catch(er){ toast(authMsg(er), 'err'); } };
+      try { await SD.collection('notes').add({email: e, name: x.s.name, type: document.getElementById('nt-type').value, text: tx, seen: false, at: new Date().toISOString(), by: acct.email}); toast('أُرسلت الملاحظة.', 'ok'); personPage(x.s.id); } catch(er){ toast(authMsg(er), 'err'); } };
     document.getElementById('tk-add').onclick = async () => { const tt = document.getElementById('tk-title').value.trim(); if (!tt) return toast('اكتبي عنوان المهمة.', 'err');
-      try { await fb.fs.collection('tasks').add({email: e, name: x.s.name, title: tt, details: document.getElementById('tk-det').value.trim(), due: document.getElementById('tk-due').value, status: 'open', at: new Date().toISOString(), by: acct.email}); toast('أُسندت المهمة.', 'ok'); personPage(x.s.id); } catch(er){ toast(authMsg(er), 'err'); } };
-    box.querySelectorAll('[data-ndel]').forEach(b => armDelete(b, async () => { await fb.fs.doc('notes/' + b.dataset.ndel).delete(); personPage(x.s.id); }));
-    box.querySelectorAll('[data-tdel]').forEach(b => armDelete(b, async () => { await fb.fs.doc('tasks/' + b.dataset.tdel).delete(); personPage(x.s.id); }));
+      try { await SD.collection('tasks').add({email: e, name: x.s.name, title: tt, details: document.getElementById('tk-det').value.trim(), due: document.getElementById('tk-due').value, status: 'open', at: new Date().toISOString(), by: acct.email}); toast('أُسندت المهمة.', 'ok'); personPage(x.s.id); } catch(er){ toast(authMsg(er), 'err'); } };
+    box.querySelectorAll('[data-ndel]').forEach(b => armDelete(b, async () => { await SD.doc('notes/' + b.dataset.ndel).delete(); personPage(x.s.id); }));
+    box.querySelectorAll('[data-tdel]').forEach(b => armDelete(b, async () => { await SD.doc('tasks/' + b.dataset.tdel).delete(); personPage(x.s.id); }));
   }
   function printEval(x, sc, term){
     const s = cur().settings, items = x.items, r = evalTotal(items, sc);
@@ -4695,7 +4854,7 @@ body{font-synthesis:weight style}
     const gk = cadreGate(); if (gk) { app.innerHTML = pageWrap(pageHead('التقييم الوظيفي', 'star', '') + gk); return; }
     app.innerHTML = loading('جارٍ تحميل التقييمات…');
     let evs = [];
-    try { await cadreLoad(); evs = (await fb.fs.collection('evals').get()).docs.map(d => d.data()); } catch(e){ app.innerHTML = pageWrap(`<div class="msg err">${esc(authMsg(e))}</div>`); return; }
+    try { await cadreLoad(); evs = (await SD.collection('evals').get()).docs.map(d => d.data()); } catch(e){ app.innerHTML = pageWrap(`<div class="msg err">${esc(authMsg(e))}</div>`); return; }
     const rows = S.staff.map(personInfo).filter(x => x.items.length).map(x => Object.assign(x, {ev: x.m ? evs.find(v => v.email === x.m.email) : null}));
     const f = M.evF || 'all';
     const shown = rows.filter(x => f === 'all' || (f === 'none' && !x.ev) || (f === 'draft' && x.ev && x.ev.status === 'draft') || (f === 'pub' && x.ev && x.ev.status === 'published') || (f === 'noacc' && !x.m));
@@ -4720,7 +4879,7 @@ body{font-synthesis:weight style}
     if (!isCounselorAcct()) { app.innerHTML = pageWrap(`<div class="panel lock-panel"><i data-lucide="lock-keyhole"></i><div><h2>مكتب التوجيه</h2><p>خاص بالموجهة الطلابية وإدارة المدرسة.</p></div></div>`); icons(); return; }
     app.innerHTML = loading();
     let progs = [], cases = [];
-    try { [progs, cases] = await Promise.all([fb.fs.collection('cprog').get(), fb.fs.collection('cases').get()].map(p => p.then(x => x.docs.map(d => ({id: d.id, ...d.data()}))))); } catch(e){ app.innerHTML = pageWrap(`<div class="msg err">${esc(authMsg(e))}</div>`); return; }
+    try { [progs, cases] = await Promise.all([SD.collection('cprog').get(), SD.collection('cases').get()].map(p => p.then(x => x.docs.map(d => ({id: d.id, ...d.data()}))))); } catch(e){ app.innerHTML = pageWrap(`<div class="msg err">${esc(authMsg(e))}</div>`); return; }
     progs.sort((a, b) => String(a.date || '').localeCompare(String(b.date || ''))); cases.sort((a, b) => (a.status === 'closed') - (b.status === 'closed') || (a.opened < b.opened ? 1 : -1));
     const tab = M.gcTab || 'prog', done = progs.filter(p => p.status === 'done').length;
     app.innerHTML = pageWrap(`${pageHead('مكتب التوجيه الطلابي', 'compass', 'خطة البرامج وتنفيذها، والحالات الفردية ومتابعتها. الحالات سرية: لا يراها إلا الموجهة والإدارة.')}
@@ -4743,9 +4902,9 @@ body{font-synthesis:weight style}
           <button type="button" class="icon-btn sm danger" data-pdel aria-label="حذف"><i data-lucide="trash-2"></i></button></div>`).join('') || '<p class="muted">لم تُضف برامج بعد.</p>'}</div>`;
       icons();
       document.getElementById('p-add').onclick = async () => { const t = document.getElementById('p-title').value.trim(); if (!t) return toast('اكتبي عنوان البرنامج.', 'err');
-        try { await fb.fs.collection('cprog').add({title: t, kind: document.getElementById('p-kind').value, date: document.getElementById('p-date').value, target: document.getElementById('p-target').value.trim(), status: 'plan', at: new Date().toISOString(), by: acct.email}); gcPage(); } catch(e){ toast(authMsg(e), 'err'); } };
+        try { await SD.collection('cprog').add({title: t, kind: document.getElementById('p-kind').value, date: document.getElementById('p-date').value, target: document.getElementById('p-target').value.trim(), status: 'plan', at: new Date().toISOString(), by: acct.email}); gcPage(); } catch(e){ toast(authMsg(e), 'err'); } };
       body.querySelectorAll('[data-p]').forEach(r => {
-        const ref = fb.fs.doc('cprog/' + r.dataset.p), up = o => ref.update(o).then(() => toast('حُفظ.', 'ok')).catch(e => toast(authMsg(e), 'err'));
+        const ref = SD.doc('cprog/' + r.dataset.p), up = o => ref.update(o).then(() => toast('حُفظ.', 'ok')).catch(e => toast(authMsg(e), 'err'));
         r.querySelector('[data-ps]').onchange = e => up({status: e.target.value});
         r.querySelector('[data-pc]').onchange = e => up({count: +e.target.value || 0});
         r.querySelector('[data-pi]').onchange = e => up({impact: e.target.value.trim()});
@@ -4761,7 +4920,7 @@ body{font-synthesis:weight style}
           <span class="spill ${(CS[c.status] || CS.open)[1]}">${(CS[c.status] || CS.open)[0]}</span><i data-lucide="chevron-left" class="ppl-go"></i></button>`).join('') || '<p class="muted">لا توجد حالات.</p>'}</div>`;
       icons();
       document.getElementById('c-add').onclick = async () => { const n = document.getElementById('c-name').value.trim(); if (!n) return toast('اكتبي اسم الطالبة.', 'err');
-        try { await fb.fs.collection('cases').add({name: n, grade: document.getElementById('c-grade').value.trim(), kind: document.getElementById('c-kind').value, desc: document.getElementById('c-desc').value.trim(), status: 'open', opened: new Date().toISOString(), sessions: [], by: acct.email}); gcPage(); } catch(e){ toast(authMsg(e), 'err'); } };
+        try { await SD.collection('cases').add({name: n, grade: document.getElementById('c-grade').value.trim(), kind: document.getElementById('c-kind').value, desc: document.getElementById('c-desc').value.trim(), status: 'open', opened: new Date().toISOString(), sessions: [], by: acct.email}); gcPage(); } catch(e){ toast(authMsg(e), 'err'); } };
       body.querySelectorAll('[data-c]').forEach(b => b.onclick = () => caseDrawer(cases.find(c => c.id === b.dataset.c)));
     }
   }
@@ -4785,7 +4944,7 @@ body{font-synthesis:weight style}
     </div></div>`;
     icons();
     const close = () => { layer.innerHTML = ''; gcPage(); };
-    const ref = fb.fs.doc('cases/' + c.id);
+    const ref = SD.doc('cases/' + c.id);
     layer.querySelector('#dr-x').onclick = close; layer.querySelector('#dr-cancel').onclick = close;
     layer.querySelector('#dbg').addEventListener('click', e => { if (e.target.id === 'dbg') close(); });
     layer.querySelector('#cs-save').onclick = async () => { try { await ref.update({status: layer.querySelector('#cs-st').value, parent: layer.querySelector('#cs-parent').value.trim(), referral: layer.querySelector('#cs-ref').value.trim()}); toast('حُفظت الحالة.', 'ok'); close(); } catch(e){ toast(authMsg(e), 'err'); } };
@@ -4796,9 +4955,16 @@ body{font-synthesis:weight style}
   }
   function lockPage(){ app.innerHTML = pageWrap(`<div class="panel lock-panel"><i data-lucide="lock-keyhole"></i><div><h2>هذه الصفحة غير متاحة لحسابك</h2><p>صفحات المتابعة اليومية تديرها إدارة المدرسة. صفحاتك: <a href="#home">الرئيسية</a>، <a href="#mine">ملفي</a>، <a href="#myatt">حضوري</a>.</p></div></div>`); icons(); }
 
+  /* SaaS: قائمة الأسماء العامة للتسجيل (المعرّف والاسم والمسمى فقط)، تُحدَّث مع كل تعديل في سجل المنسوبات */
+  async function syncRoster(){
+    if (!fb || !acct || !(acct.role === 'admin' || myMods().includes('staff')) || !S.staffReady) return;
+    const list = S.staff.map(s => ({id: s.id, name: s.name, job: s.job || '', note: s.note || ''}));
+    if (JSON.stringify(list) === JSON.stringify(ROSTER)) return;
+    try { await SD.doc('meta/roster').set({list, at: new Date().toISOString()}); ROSTER = list; } catch(e){ console.warn('roster', e); }
+  }
+
   /* ================= لوحة المطوّر (مخفية): لصاحبة المنصة فقط — #dev ================= */
   /* الصلاحية من وثيقة supers/{email} التي لا تُنشأ من داخل المنصة. قواعد قاعدة البيانات تمنع غير المطوّر من كل ما هنا. */
-  let LIC = null;
   const WIPE = [['members', 'الحسابات وطلباتها'], ['links', 'ربط الأسماء بالحسابات'], ['files', 'ملفات Drive (المعرّفات فقط)'], ['uploads', 'سجلات الشواهد المرفوعة'],
     ['evals', 'التقييمات'], ['notes', 'ملاحظات الإدارة'], ['tasks', 'المهام'], ['cases', 'حالات التوجيه'], ['cprog', 'برامج التوجيه'], ['pa', 'الحضور الشخصي'],
     ['att', 'الحضور والغياب'], ['late', 'التأخر عن الحصص'], ['assembly', 'الاصطفاف'], ['suplog', 'سجل الإشراف'], ['duty', 'مناوبة البداية'], ['dutyend', 'مناوبة النهاية']];
@@ -4809,24 +4975,27 @@ body{font-synthesis:weight style}
       <button class="btn btn-ghost btn-block" type="button" id="bl-out"><i data-lucide="log-out"></i>تسجيل الخروج</button>`);
     icons(); document.getElementById('bl-out').onclick = () => fb.auth.signOut();
   }
-  const licOff = lic => !!lic && (lic.active === false || (lic.until && lic.until < today()));
-  async function devCount(col){ try { return (await fb.fs.collection(col).get()).size; } catch(e){ return '—'; } }
+  const licOff = lic => !!lic && (lic.active === false || (lic.untilMs ? lic.untilMs < Date.now() : (lic.until && lic.until < today())));
+  async function devCount(col){ try { return (await SD.collection(col).get()).size; } catch(e){ return '—'; } }
   async function devPage(){
     if (!acct || !acct.super) { location.hash = '#home'; return; }
     app.innerHTML = loading('جارٍ تحميل لوحة المطوّر…');
+    const plat = await platformSection();
+    if (!SID) { app.innerHTML = pageWrap(pageHead('لوحة المنصة', 'shield-half', 'إدارة المدارس المشتركة والاشتراكات وإعدادات المنصة.') + plat); icons(); wirePlatform(); return; }
     let owner = null, members = [];
-    try { const o = await fb.fs.doc('meta/owner').get(); owner = o.exists ? o.data() : null; } catch(e){}
-    try { members = (await fb.fs.collection('members').get()).docs.map(d => d.data()); } catch(e){}
-    try { const L = await fb.fs.doc('meta/license').get(); LIC = L.exists ? L.data() : null; } catch(e){}
-    let ACT = null; try { const A = await fb.fs.doc('meta/activation').get(); ACT = A.exists ? A.data() : null; } catch(e){}
+    try { const o = await SD.doc('meta/owner').get(); owner = o.exists ? o.data() : null; } catch(e){}
+    try { members = (await SD.collection('members').get()).docs.map(d => d.data()); } catch(e){}
+    try { const L = await SD.doc('meta/license').get(); LIC = L.exists ? L.data() : null; } catch(e){}
+    let ACT = null; try { const A = await SD.doc('meta/activation').get(); ACT = A.exists ? A.data() : null; } catch(e){}
     const [up, ev, st] = await Promise.all([devCount('uploads'), devCount('evals'), devCount('staff')]);
     const act = members.filter(m => m.active).length, pend = members.filter(m => !m.active && m.status === 'pending').length;
     const L = LIC || {active: true, until: '', msg: '', client: ''};
-    const s = cur().settings, url = (location.origin + location.pathname).replace(/#.*$/, '');
+    const s = cur().settings, url = (location.origin + location.pathname).replace(/#.*$/, '') + (SCHOOL && SCHOOL.code ? '?s=' + SCHOOL.code : '');
     const q = (M.devQ || '').trim();
     const rows = members.filter(m => !q || (m.name + ' ' + m.email).includes(q)).sort((a, b) => String(a.name).localeCompare(String(b.name), 'ar'));
-    app.innerHTML = pageWrap(`
-      ${pageHead('لوحة المطوّر', 'shield-half', 'إدارة المنصة كمزوّد خدمة: المالك، والحسابات، والترخيص، والتسليم. هذه الصفحة لا تظهر لأي مستخدم آخر.')}
+    app.innerHTML = pageWrap(plat + `
+      <div class="dev-school-h"><h2><i data-lucide="school"></i>المدرسة المفتوحة: ${esc((SCHOOL && SCHOOL.name) || SID)}</h2><button type="button" class="btn btn-ghost btn-sm" id="dv-close"><i data-lucide="x"></i>إغلاق المدرسة</button></div>
+      ${pageHead('إدارة المدرسة', 'shield-half', 'إدارة المنصة كمزوّد خدمة: المالك، والحسابات، والترخيص، والتسليم. هذه الصفحة لا تظهر لأي مستخدم آخر.')}
       <div class="cat-kpis"><div><b>${ar(act)}</b><span>حساب مفعّل</span></div><div><b>${ar(pend)}</b><span>طلب معلّق</span></div><div><b>${ar(st)}</b><span>منسوبة في السجل</span></div><div><b>${ar(up)}</b><span>شاهد مرفوع</span></div><div><b>${ar(ev)}</b><span>تقييم</span></div>
         <div class="k-${licOff(L) ? 'bad' : 'ok'}"><b>${licOff(L) ? 'متوقفة' : 'تعمل'}</b><span>حالة المنصة</span></div></div>
       <div class="dev-grid">
@@ -4849,7 +5018,7 @@ body{font-synthesis:weight style}
 رمز تفعيل حساب الإدارة: ${ACT.code}
 خطوات التفعيل:
 ١) افتحي الرابط واضغطي «إنشاء حساب جديد».
-٢) اختاري «مديرة المدرسة» واكتبي رمز التفعيل.
+٢) اضغطي «الانضمام إلى مدرستي» (رمز المدرسة مكتوب تلقائيًا)، ثم اختاري «مديرة المدرسة» واكتبي رمز التفعيل.
 ٣) اضغطي «تفعيل حساب الإدارة بحساب Google» واختاري حسابك، ثم ضعي كلمة مرور.
 ٤) من «لوحة التحكم ← الحسابات» أرسلي رسالة الدعوة للمنسوبات.`)}</textarea>
           <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn btn-ghost btn-sm" id="dv-inv-copy"><i data-lucide="copy"></i>نسخ الرسالة</button><a class="btn btn-ghost btn-sm" id="dv-inv-wa" target="_blank" rel="noopener" href="#"><i data-lucide="message-circle"></i>إرسال عبر واتساب</a></div>` : ''}</section>
@@ -4875,53 +5044,129 @@ body{font-synthesis:weight style}
           <span class="spill ${m.active ? (m.role === 'admin' ? 'ok' : 'info') : 'wait'}">${m.active ? (m.role === 'admin' ? 'إدارة' : m.ops ? 'متابعة يومية' : 'منسوبة') : (m.status === 'pending' ? 'معلّق' : 'موقوف')}</span>
           <div class="u-acts"><button type="button" class="btn btn-ghost btn-sm" data-d="active">${m.active ? 'إيقاف' : 'تفعيل'}</button><button type="button" class="btn btn-ghost btn-sm" data-d="role">${m.role === 'admin' ? 'إلغاء الإدارة' : 'منح الإدارة'}</button><button type="button" class="btn btn-ghost btn-sm danger" data-d="del">حذف</button></div></div>`).join('') || '<p class="muted">لا توجد حسابات.</p>'}</div></section>`);
     icons();
+    wirePlatform();
+    document.getElementById('dv-close').onclick = () => { ss.del('superSid'); location.hash = '#dev'; location.reload(); };
     const qi = document.getElementById('dv-q'); qi.onchange = () => { M.devQ = qi.value; devPage(); };
     document.getElementById('dv-gen').onclick = async () => {
       const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', r = n => Array.from(crypto.getRandomValues(new Uint32Array(n)), x => A[x % A.length]).join('');
       const code = r(4) + '-' + r(4);
-      try { await fb.fs.doc('meta/activation').set({code, at: new Date().toISOString(), by: acct.email}); toast('أُنشئ رمز التفعيل.', 'ok'); devPage(); } catch(e){ toast(authMsg(e), 'err'); }
+      try { await SD.doc('meta/activation').set({code, at: new Date().toISOString(), by: acct.email}); toast('أُنشئ رمز التفعيل.', 'ok'); devPage(); } catch(e){ toast(authMsg(e), 'err'); }
     };
     const inv = document.getElementById('dv-inv');
     if (inv) { document.getElementById('dv-inv-wa').href = 'https://wa.me/?text=' + encodeURIComponent(inv.value); document.getElementById('dv-inv-copy').onclick = () => navigator.clipboard.writeText(inv.value).then(() => toast('نُسخت الرسالة.', 'ok'), () => inv.select()); }
     document.getElementById('dv-lic').onclick = async () => {
-      const v = {active: document.getElementById('dv-act').checked, until: document.getElementById('dv-until').value, client: document.getElementById('dv-client').value.trim(), msg: document.getElementById('dv-msg').value.trim(), at: new Date().toISOString(), by: acct.email};
-      try { await fb.fs.doc('meta/license').set(v); toast('حُفظ الترخيص.', 'ok'); devPage(); } catch(e){ toast(authMsg(e), 'err'); }
+      const uu = document.getElementById('dv-until').value; const v = {active: document.getElementById('dv-act').checked, until: uu, untilMs: uu ? Date.parse(uu + 'T23:59:59+03:00') : Date.now() + 3650 * 86400000, plan: (LIC && LIC.plan === 'trial' && !uu) ? 'trial' : 'paid', client: document.getElementById('dv-client').value.trim(), msg: document.getElementById('dv-msg').value.trim(), at: new Date().toISOString(), by: acct.email};
+      try { await SD.doc('meta/license').set(v); toast('حُفظ الترخيص.', 'ok'); devPage(); } catch(e){ toast(authMsg(e), 'err'); }
     };
     document.getElementById('dv-own-go').onclick = async () => {
       const ne = document.getElementById('dv-own').value.trim().toLowerCase(); if (!emailOk(ne)) return toast('اكتبي بريدًا صحيحًا.', 'err');
-      try { const o = await fb.fs.doc('meta/owner').get(); if (o.exists) await fb.fs.doc('meta/owner').update({email: ne, name: o.data().name || ''}); else await fb.fs.doc('meta/owner').set({email: ne, name: '', at: new Date().toISOString()}); toast('نُقلت الملكية إلى ' + ne, 'ok'); devPage(); } catch(e){ toast(authMsg(e), 'err'); }
+      try { const o = await SD.doc('meta/owner').get(); if (o.exists) await SD.doc('meta/owner').update({email: ne, name: o.data().name || ''}); else await SD.doc('meta/owner').set({email: ne, name: '', at: new Date().toISOString()}); toast('نُقلت الملكية إلى ' + ne, 'ok'); devPage(); } catch(e){ toast(authMsg(e), 'err'); }
     };
-    const rs = document.getElementById('dv-own-reset'); if (rs) armDelete(rs, async () => { try { await fb.fs.doc('meta/owner').delete(); toast('أُلغي حساب الإدارة.', 'ok'); devPage(); } catch(e){ toast(authMsg(e), 'err'); } });
+    const rs = document.getElementById('dv-own-reset'); if (rs) armDelete(rs, async () => { try { await SD.doc('meta/owner').delete(); toast('أُلغي حساب الإدارة.', 'ok'); devPage(); } catch(e){ toast(authMsg(e), 'err'); } });
     document.getElementById('dv-wipe').onclick = async () => {
       if (document.getElementById('dv-confirm').value.trim() !== 'تسليم') return toast('اكتبي كلمة «تسليم» للتأكيد.', 'err');
       const box = document.getElementById('dv-wipe-msg'), picks = [...app.querySelectorAll('.danger-zone .mods input:checked')].map(i => i.value);
       const btn = document.getElementById('dv-wipe'); btn.disabled = true; let total = 0;
       for (const c of picks.filter(x => x !== '__owner')) {
         box.innerHTML = `<div class="msg info"><span class="spinner"></span>مسح ${esc((WIPE.find(w => w[0] === c) || [c, c])[1])}…</div>`;
-        try { for (;;) { const snap = await fb.fs.collection(c).limit(400).get(); if (snap.empty) break; const b = fb.fs.batch(); snap.docs.forEach(d => b.delete(d.ref)); await b.commit(); total += snap.size; if (snap.size < 400) break; } }
+        try { for (;;) { const snap = await SD.collection(c).limit(400).get(); if (snap.empty) break; const b = fb.fs.batch(); snap.docs.forEach(d => b.delete(d.ref)); await b.commit(); total += snap.size; if (snap.size < 400) break; } }
         catch(e){ box.innerHTML = `<div class="msg err">تعذّر مسح ${esc(c)}: ${esc(authMsg(e))}</div>`; btn.disabled = false; return; }
       }
-      if (picks.includes('__owner')) { try { await fb.fs.doc('meta/owner').delete(); } catch(e){} }
+      if (picks.includes('__owner')) { try { await SD.doc('meta/owner').delete(); } catch(e){} }
       try { ['staff-seeded', 'staff-seeded-' + ((FB && FB.projectId) || 'fb')].forEach(k => store.del(k)); } catch(e){}
       box.innerHTML = `<div class="msg ok">تم: حُذفت ${ar(total)} وثيقة. المنصة جاهزة للتسليم.</div>`; btn.disabled = false; CD.at = 0;
     };
     document.getElementById('dv-backup').onclick = async () => {
       const out = {at: new Date().toISOString(), project: FB && FB.projectId, data: {}};
-      for (const c of [...WIPE.map(w => w[0]), 'staff', 'config', 'site', 'meta']) { try { out.data[c] = {}; (await fb.fs.collection(c).get()).docs.forEach(d => { out.data[c][d.id] = d.data(); }); } catch(e){} }
+      for (const c of [...WIPE.map(w => w[0]), 'staff', 'config', 'site', 'meta']) { try { out.data[c] = {}; (await SD.collection(c).get()).docs.forEach(d => { out.data[c][d.id] = d.data(); }); } catch(e){} }
       saveBlob('نسخة-المنصة-' + today() + '.json', JSON.stringify(out, null, 1), 'application/json');
     };
     app.querySelectorAll('.u-row[data-e]').forEach(r => {
-      const e = r.dataset.e, m = members.find(x => x.email === e), ref = fb.fs.doc('members/' + e);
+      const e = r.dataset.e, m = members.find(x => x.email === e), ref = SD.doc('members/' + e);
       r.querySelectorAll('[data-d]').forEach(b => {
         const run = async () => {
           try {
             if (b.dataset.d === 'active') await ref.update({active: !m.active, status: m.active ? 'stopped' : 'active'});
             if (b.dataset.d === 'role') await ref.update({role: m.role === 'admin' ? 'member' : 'admin'});
-            if (b.dataset.d === 'del') { await ref.delete(); try { await fb.fs.doc('links/' + nameKey(m.staffName || m.name)).delete(); } catch(x){} }
+            if (b.dataset.d === 'del') { await ref.delete(); try { await SD.doc('links/' + nameKey(m.staffName || m.name)).delete(); } catch(x){} }
             devPage();
           } catch(err){ toast(authMsg(err), 'err'); }
         };
         if (b.dataset.d === 'del') armDelete(b, run); else b.onclick = run;
+      });
+    });
+  }
+
+  /* ================= لوحة المنصة (SaaS): المدارس والاشتراكات ================= */
+  const PLANS = {trial: 'تجربة مجانية', paid: 'مشترك', school: 'مشترك'};
+  async function platformSection(){
+    let cfg = {}, list = [];
+    try { const c = await fb.fs.doc('platform/config').get(); cfg = c.exists ? c.data() : {}; } catch(e){}
+    try { list = (await fb.fs.collection('schools').get()).docs.map(d => Object.assign({id: d.id}, d.data())); } catch(e){}
+    await Promise.all(list.map(async sc => { try { const L = await fb.fs.doc('schools/' + sc.id + '/meta/license').get(); sc.lic = L.exists ? L.data() : null; } catch(e){ sc.lic = null; } }));
+    list.sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
+    const now = Date.now(), st = sc => !sc.lic ? ['بلا ترخيص', 'none'] : sc.lic.active === false ? ['موقوفة', 'bad'] : (sc.lic.untilMs || 0) < now ? ['منتهية', 'bad'] : sc.lic.plan === 'trial' ? ['تجربة', 'wait'] : ['مشتركة', 'ok'];
+    const days = sc => sc.lic && sc.lic.untilMs ? Math.ceil((sc.lic.untilMs - now) / 86400000) : null;
+    const act = list.filter(x => st(x)[1] === 'ok').length, tri = list.filter(x => st(x)[1] === 'wait').length, exp = list.filter(x => st(x)[1] === 'bad').length;
+    PLAT = {cfg, list};
+    return `<section class="plat">
+      <div class="cat-kpis"><div><b>${ar(list.length)}</b><span>مدرسة</span></div><div class="k-ok"><b>${ar(act)}</b><span>مشتركة</span></div><div class="k-wait"><b>${ar(tri)}</b><span>في التجربة</span></div><div class="k-bad"><b>${ar(exp)}</b><span>منتهية أو موقوفة</span></div></div>
+      <div class="dev-grid">
+        <section class="panel"><h2><i data-lucide="settings-2"></i>إعدادات المنصة</h2>
+          <label class="mod-c big"><input type="checkbox" id="pl-open" ${cfg.signupOpen ? 'checked' : ''}><span>السماح للمدارس بالتسجيل الذاتي (تجربة ١٤ يومًا)</span></label>
+          <button type="button" class="btn btn-ghost btn-sm" id="pl-save" style="margin-top:8px"><i data-lucide="save"></i>حفظ</button>
+          <p class="hint">عند الإغلاق لا تُنشأ مدرسة إلا من هذه اللوحة برمز تفعيل.</p></section>
+        <section class="panel"><h2><i data-lucide="building-2"></i>إنشاء مدرسة</h2>
+          <div class="field"><label for="nc-name">اسم المدرسة</label><input class="in" id="nc-name"></div>
+          <div class="row2"><div class="field"><label for="nc-stage">المرحلة</label><select class="in" id="nc-stage"><option>رياض الأطفال</option><option selected>ابتدائي</option><option>متوسط</option><option>ثانوي</option><option>مجمع</option></select></div>
+            <div class="field"><label for="nc-gender">النوع</label><select class="in" id="nc-gender"><option value="f">بنات</option><option value="m">بنين</option></select></div></div>
+          <div class="row2"><div class="field"><label for="nc-office">إدارة التعليم</label><input class="in" id="nc-office"></div><div class="field"><label for="nc-city">المدينة</label><input class="in" id="nc-city"></div></div>
+          <div class="row2"><div class="field"><label for="nc-code">رمز المدرسة (اختياري)</label><input class="in ltr code-in" id="nc-code" placeholder="يُولَّد تلقائيًا"></div><div class="field"><label for="nc-until">ينتهي الاشتراك في</label><input class="in" id="nc-until" type="date"></div></div>
+          <button type="button" class="btn btn-primary btn-sm" id="nc-go"><i data-lucide="plus"></i>إنشاء المدرسة ورمز التفعيل</button>
+          <div id="nc-msg" aria-live="polite"></div></section>
+      </div>
+      <section class="panel"><h2><i data-lucide="school"></i>المدارس (${ar(list.length)})</h2>
+        <div class="u-list">${list.map(sc => { const S0 = st(sc), d = days(sc); return `<div class="u-row" data-sc="${esc(sc.id)}"><span class="avatar">${esc(initials(sc.name || '؟'))}</span>
+          <div class="u-t"><b>${esc(sc.name || sc.id)}</b><small>${esc([sc.stage, sc.gender === 'm' ? 'بنين' : 'بنات', sc.city].filter(Boolean).join(' · '))} · الرمز <span class="ltr">${esc(sc.code || '—')}</span> · <span class="ltr">${esc(sc.ownerEmail || 'لم تُفعَّل الإدارة')}</span></small></div>
+          <span class="spill ${S0[1]}">${S0[0]}${d != null && S0[1] !== 'bad' ? ' · ' + ar(d) + ' يومًا' : ''}</span>
+          <div class="u-acts"><button type="button" class="btn btn-primary btn-sm" data-pl="open"><i data-lucide="log-in"></i>فتح وإدارة</button>
+            <button type="button" class="btn btn-ghost btn-sm" data-pl="y1">تمديد سنة</button>
+            <button type="button" class="btn btn-ghost btn-sm" data-pl="toggle">${sc.lic && sc.lic.active === false ? 'تشغيل' : 'إيقاف'}</button></div></div>`; }).join('') || '<p class="muted">لا توجد مدارس بعد.</p>'}</div></section>
+    </section>`;
+  }
+  let PLAT = {cfg: {}, list: []};
+  function wirePlatform(){
+    const g = id => document.getElementById(id);
+    if (g('pl-save')) g('pl-save').onclick = async () => { try { await fb.fs.doc('platform/config').set({signupOpen: g('pl-open').checked, at: new Date().toISOString(), by: acct.email}, {merge: true}); toast('حُفظت إعدادات المنصة.', 'ok'); } catch(e){ toast(authMsg(e), 'err'); } };
+    if (g('nc-go')) g('nc-go').onclick = async () => {
+      const name = g('nc-name').value.trim(); if (name.length < 4) return toast('اكتبي اسم المدرسة.', 'err');
+      const code = (g('nc-code').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '')) || genCode(6), uu = g('nc-until').value;
+      const until = uu ? Date.parse(uu + 'T23:59:59+03:00') : Date.now() + 365 * 86400000;
+      const iso = d => { const x = new Date(d); return x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0'); };
+      try {
+        const ex = await fb.fs.doc('schoolCodes/' + code).get(); if (ex.exists) return toast('رمز المدرسة مستخدم. اختاري رمزًا آخر.', 'err');
+        const sid = fb.fs.collection('schools').doc().id, act = genCode(4) + '-' + genCode(4), P = 'schools/' + sid, b = fb.fs.batch(), now = new Date().toISOString();
+        b.set(fb.fs.doc(P), {name, stage: g('nc-stage').value, gender: g('nc-gender').value, office: g('nc-office').value.trim(), region: g('nc-office').value.trim(), city: g('nc-city').value.trim(), principal: '', ownerEmail: '', plan: 'paid', code, createdAt: now});
+        b.set(fb.fs.doc('schoolCodes/' + code), {sid, name});
+        b.set(fb.fs.doc(P + '/meta/license'), {active: true, plan: 'paid', until: iso(until), untilMs: until, client: name, msg: '', at: now, by: acct.email});
+        b.set(fb.fs.doc(P + '/meta/activation'), {code: act, at: now, by: acct.email});
+        await b.commit();
+        const url = (location.origin + location.pathname).replace(/#.*$/, '') + '?s=' + code;
+        const txt = `السلام عليكم ورحمة الله\nأهلًا بكم في ${PLATFORM} — ${name}.\nرابط المدرسة: ${url}\nرمز المدرسة: ${code}\nرمز تفعيل حساب الإدارة: ${act}\nخطوات التفعيل:\n١) افتح/ي الرابط واضغط/ي «الانضمام إلى مدرستي».\n٢) اختر/ي «مديرة المدرسة» واكتب/ي رمز التفعيل.\n٣) الدخول بحساب Google ثم وضع كلمة مرور.\n٤) من «لوحة التحكم ← الحسابات» تُرسل رسالة الدعوة للكادر.`;
+        g('nc-msg').innerHTML = `<div class="msg ok" style="margin-top:10px">أُنشئت المدرسة. أرسلي هذه الرسالة لمديرها:</div><textarea class="in" readonly style="min-height:170px;margin-top:6px" id="nc-txt">${esc(txt)}</textarea><div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap"><button type="button" class="btn btn-ghost btn-sm" id="nc-copy"><i data-lucide="copy"></i>نسخ</button><a class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(txt)}"><i data-lucide="message-circle"></i>واتساب</a><button type="button" class="btn btn-ghost btn-sm" id="nc-refresh"><i data-lucide="refresh-cw"></i>تحديث القائمة</button></div>`;
+        icons(); g('nc-copy').onclick = () => navigator.clipboard.writeText(g('nc-txt').value).then(() => toast('نُسخت.', 'ok'), () => g('nc-txt').select()); g('nc-refresh').onclick = () => devPage();
+      } catch(e){ toast(authMsg(e), 'err'); }
+    };
+    document.querySelectorAll('[data-sc]').forEach(r => {
+      const sid = r.dataset.sc, sc = PLAT.list.find(x => x.id === sid);
+      r.querySelectorAll('[data-pl]').forEach(b => b.onclick = async () => {
+        const a = b.dataset.pl, ref = fb.fs.doc('schools/' + sid + '/meta/license');
+        try {
+          if (a === 'open') { ss.set('superSid', sid); location.hash = '#dev'; location.reload(); return; }
+          if (a === 'y1') { const base = Math.max(Date.now(), (sc.lic && sc.lic.untilMs) || 0), u = base + 365 * 86400000, x = new Date(u); await ref.set({active: true, plan: 'paid', untilMs: u, until: x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0'), at: new Date().toISOString(), by: acct.email}, {merge: true}); toast('مُدّد الاشتراك سنة.', 'ok'); }
+          if (a === 'toggle') { await ref.set({active: !(sc.lic && sc.lic.active !== false)}, {merge: true}); toast('حُدّثت حالة المدرسة.', 'ok'); }
+          devPage();
+        } catch(e){ toast(authMsg(e), 'err'); }
       });
     });
   }
