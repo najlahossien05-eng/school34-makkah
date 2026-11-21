@@ -1387,6 +1387,128 @@ body.gated{overflow:hidden}
 .btn.danger{color:var(--bad)}
 @media (max-width:760px){.u-form{grid-template-columns:1fr}.gate-body{padding:18px}}
 
+/* ===== الدخول بحساب Google وطلب الحساب ===== */
+.btn-google{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:12px 16px;border-radius:999px;border:1px solid var(--line);background:#fff;color:#1f1f1f;font-family:var(--f-display);font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(11,61,74,.08);margin:6px 0 4px}
+.btn-google:hover{background:#F6F9FA}
+.btn-google[disabled]{opacity:.6}
+.gate-alt{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+.gate-alt summary{cursor:pointer;color:var(--muted);font-size:13.5px;padding:4px 0}
+.gate-alt[open] summary{margin-bottom:10px}
+.gate-who{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:var(--soft);margin:10px 0}
+.gate-who img{width:40px;height:40px;border-radius:50%}
+.gate-who div{display:flex;flex-direction:column;min-width:0}
+.gate-who small{color:var(--muted);overflow:hidden;text-overflow:ellipsis}
+.r-list{max-height:260px;overflow:auto;display:flex;flex-direction:column;gap:6px;padding:2px}
+.r-opt{display:flex;flex-direction:column;align-items:flex-start;text-align:start;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 12px;cursor:pointer;color:var(--ink);font-family:var(--f-body)}
+.r-opt b{font-family:var(--f-display);font-size:14.5px}
+.r-opt small{color:var(--muted);font-size:12px}
+.r-opt.on{border-color:var(--teal);background:var(--limebg);box-shadow:inset 0 0 0 1px var(--teal)}
+.gate-state{text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
+.gs-ico{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:var(--limebg);color:var(--teal)}
+.gs-ico.bad{background:var(--badbg);color:var(--bad)}
+.gs-ico svg{width:28px;height:28px}
+#gate .btn-block+.btn-block{margin-top:8px}
+.u-ph{width:40px;height:40px;border-radius:50%;object-fit:cover}
+.u-row.pend{background:var(--waitbg)}
+.in-sm{padding:6px 10px;font-size:13px;width:auto;max-width:100%}
+
+/* ===== ملفي / ملف المنسوبة ===== */
+.mf-head{background:var(--surface);border-radius:22px;box-shadow:var(--shadow);padding:18px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center}
+.mf-id{display:flex;align-items:center;gap:14px;min-width:0}
+.mf-ph{width:60px;height:60px;border-radius:50%;object-fit:cover}
+.avatar.lg{width:60px;height:60px;font-size:18px}
+.mf-id small{color:var(--muted);font-size:12.5px}
+.mf-id h1{font-size:22px;font-weight:800;margin:0;line-height:1.35}
+.mf-id span{font-size:13px;color:var(--muted)}
+.mf-stats{display:flex;align-items:center;gap:10px}
+.mf-stats>div:not(.mf-ring){display:flex;flex-direction:column;align-items:center;background:var(--soft);border-radius:14px;padding:8px 14px}
+.mf-stats b{font-family:var(--f-display);font-size:18px}
+.mf-stats span{font-size:11.5px;color:var(--muted)}
+.mf-ring{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--teal) calc(var(--p)*1%),var(--line) 0)}
+.mf-ring b{width:48px;height:48px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-size:14px}
+.mf-drive{grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;background:var(--waitbg);flex-wrap:wrap}
+.mf-drive.ok{background:var(--okbg)}
+.mf-drive>div{flex:1;min-width:200px;display:flex;flex-direction:column}
+.mf-drive b{font-family:var(--f-display)}
+.mf-drive small{font-size:12.5px;color:var(--muted);line-height:1.6}
+.mf-dico{width:40px;height:40px;border-radius:12px;background:var(--surface);display:grid;place-items:center;color:var(--wait)}
+.mf-drive.ok .mf-dico{color:var(--ok)}
+#mf-prog{grid-column:1/-1}
+#mf-prog .msg{display:flex;align-items:center;gap:8px}
+.mf-links{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap}
+.mf-sec h2{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.mf-sec h2 small{font-size:12.5px;color:var(--muted);font-weight:400}
+.mf-items{display:flex;flex-direction:column;gap:8px}
+.mf-it{border-radius:16px;background:var(--soft);overflow:hidden}
+.mf-it.has{background:color-mix(in srgb,var(--okbg) 60%,var(--soft))}
+.mf-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:10px;padding:10px 12px}
+.mf-n{width:32px;height:32px;border-radius:10px;background:var(--surface);display:grid;place-items:center;font-family:var(--f-display);font-weight:800;color:var(--petrol);font-size:14px}
+.mf-n.ic svg{width:17px;height:17px}
+.mf-t{all:unset;cursor:pointer;display:flex;flex-direction:column;min-width:0}
+.mf-t b{font-family:var(--f-display);font-size:14.5px;line-height:1.45}
+.mf-t small{font-size:12px;color:var(--muted)}
+.mf-t:focus-visible{outline:2px solid var(--teal);border-radius:8px}
+.mf-st svg{width:20px;height:20px;color:var(--muted)}
+.mf-it.has .mf-st svg{color:var(--ok)}
+.mf-acts{display:flex;align-items:center;gap:6px}
+.icon-btn.sm{width:34px;height:34px}
+.icon-btn.sm svg{width:16px;height:16px}
+.icon-btn.danger{color:var(--bad)}
+.mf-files{display:none;padding:0 12px 12px;flex-direction:column;gap:6px}
+.mf-it.open .mf-files{display:flex}
+.mf-f{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:8px;background:var(--surface);border-radius:12px;padding:6px 10px}
+.mf-f>svg{width:18px;height:18px;color:var(--teal)}
+.mf-f a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink)}
+.mf-f small{font-size:11.5px;color:var(--muted)}
+.mf-hint{font-size:12.5px;color:var(--muted);line-height:1.7;padding:4px 2px 0}
+
+/* ===== الكادر ===== */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.cat-card{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"i t n" "k k k";gap:10px 12px;align-items:center;background:var(--surface);border-radius:20px;box-shadow:var(--shadow);padding:16px;text-decoration:none;color:var(--ink);transition:transform .15s}
+.cat-card:hover{transform:translateY(-2px)}
+.cat-i{grid-area:i;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#0B3D4A,#138D90);color:#fff}
+.cat-i svg{width:22px;height:22px}
+.cat-t{grid-area:t;display:flex;flex-direction:column;min-width:0}
+.cat-t b{font-family:var(--f-display);font-size:16.5px}
+.cat-t small{font-size:12.5px;color:var(--muted)}
+.cat-n{grid-area:n;font-family:var(--f-display);font-weight:800;font-size:24px;color:var(--petrol)}
+.cat-kpi{grid-area:k;display:flex;flex-wrap:wrap;gap:6px}
+.cat-kpi span{display:inline-flex;align-items:center;gap:4px;background:var(--soft);border-radius:999px;padding:3px 10px;font-size:12px}
+.cat-kpi svg{width:13px;height:13px;color:var(--teal)}
+.cat-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.cat-kpis>div{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:12px 14px;display:flex;flex-direction:column}
+.cat-kpis b{font-family:var(--f-display);font-size:22px;color:var(--petrol)}
+.cat-kpis span{font-size:12.5px;color:var(--muted)}
+.ppl{display:flex;flex-direction:column;gap:8px}
+.ppl-row{display:grid;grid-template-columns:auto minmax(0,1.4fr) auto minmax(110px,.6fr) auto;align-items:center;gap:12px;background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:10px 14px;text-decoration:none;color:var(--ink)}
+.ppl-row:hover{background:var(--soft)}
+.ppl-t{display:flex;flex-direction:column;min-width:0}
+.ppl-t b{font-family:var(--f-display);font-size:15px}
+.ppl-t small{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ppl-chips{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.ppl-bar{display:flex;align-items:center;gap:6px}
+.ppl-bar .bar{flex:1;height:7px;border-radius:9px;background:var(--line);overflow:hidden}
+.ppl-bar .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--petrol))}
+.ppl-bar small{font-size:12px;color:var(--muted)}
+.ppl-go{width:18px;height:18px;color:var(--muted)}
+.banner .btn{margin-inline-start:auto}
+@media (max-width:760px){
+  .mf-head{grid-template-columns:1fr;padding:14px}
+  .mf-stats{justify-content:flex-start}
+  .mf-id h1{font-size:19px}
+  .mf-row{grid-template-columns:auto minmax(0,1fr) auto;padding:10px}
+  .mf-st{display:none}
+  .mf-acts .btn span{display:none}
+  .mf-acts .btn{padding:8px 10px}
+  .ppl-row{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"a t g" "c c c" "b b b";gap:6px 10px;padding:10px 12px}
+  .ppl-row>.avatar,.ppl-row>.u-ph{grid-area:a}
+  .ppl-t{grid-area:t}.ppl-chips{grid-area:c;justify-content:flex-start}.ppl-bar{grid-area:b}.ppl-go{grid-area:g}
+  .cat-grid{grid-template-columns:1fr;gap:8px}
+  .cat-card{padding:12px 14px}
+  .cat-kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+}
+.mf-av{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;flex:none;background:linear-gradient(135deg,#0B3D4A,#138D90);color:#fff;font-family:var(--f-display);font-weight:800;font-size:18px}
+
 /* ===== الخط: سكالا مجالا (من جهاز المستخدم) مع بديل Noto Naskh Arabic ===== */
 /* سكالا مجالا يظهر أصغر من غيره بالحجم نفسه، فيُكبَّر بـ size-adjust دون تغيير بقية الأحجام */
 /* وجه واحد عادي فقط: ملف «Sakkal Majalla Bold» يفصل «ر» عن «ا» (الر ابعة)، فيُولَّد العريض صناعيًا من العادي */
@@ -1490,6 +1612,8 @@ body{font-synthesis:weight style}
   /* ---------- الهيكل ---------- */
   const NAV = [
     {r: 'home', t: 'الرئيسية', i: 'house'},
+    {r: 'mine', t: 'ملفي', i: 'folder-open'},
+    {r: 'cadre', t: 'الكادر', i: 'users-round'},
     {r: 'profile', t: 'ملف المدرسة', i: 'school'},
     {r: 'ach', t: 'إنجازات المدرسة', i: 'trophy'},
     {r: 'staff', t: 'منسوبات المدرسة', i: 'users'},
@@ -1614,10 +1738,11 @@ body{font-synthesis:weight style}
     document.getElementById('admin-link').hidden = !showAdmin;
     document.getElementById('nav-school').textContent = st.school || 'وزارة التعليم';
     document.getElementById('region').textContent = st.region || (st.school ? 'وزارة التعليم' : 'المملكة العربية السعودية');
-    const items = NAV.concat(showAdmin ? [{r: 'admin', t: 'لوحة التحكم', i: 'settings-2'}] : []);
+    const items = NAV.filter(n => (n.r !== 'mine' && n.r !== 'cadre') || (useFb && (n.r === 'mine' || (acct && acct.role === 'admin')))).concat(showAdmin ? [{r: 'admin', t: 'لوحة التحكم', i: 'settings-2'}] : []);
+    const cadreOn = /^(cat-|pf-)/.test(activeRoute);
     const isEv = activeRoute === 'ev' || (/^i[a-z0-9]+$/.test(activeRoute) && !NAV.some(n => n.r === activeRoute));
     document.getElementById('nav-list').innerHTML = items.map(n => {
-      const on = n.r === activeRoute || (n.r === 'ev' && isEv);
+      const on = n.r === activeRoute || (n.r === 'ev' && isEv) || (n.r === 'cadre' && cadreOn);
       return `<a href="#${n.r === 'admin' ? 'admin' : hashFor(n.r)}" class="${on ? 'on' : ''}" ${on ? 'aria-current="page"' : ''}><i data-lucide="${n.i}"></i><span>${n.t}</span></a>`;
     }).join('');
     document.getElementById('nav-list').querySelectorAll('a').forEach(a => a.addEventListener('click', () => setNav(false)));
@@ -1632,7 +1757,7 @@ body{font-synthesis:weight style}
       return `<div class="pill-g"><button type="button" class="pill${on ? ' on' : ''}" aria-expanded="false" aria-haspopup="true">${on ? byR(activeRoute).t : p.g}<i data-lucide="chevron-down"></i></button><div class="pill-menu" hidden>${p.items.map(r => { const n = byR(r); return `<a href="${href(r)}" class="${r === activeRoute ? 'on' : ''}"><i data-lucide="${n.i}"></i>${n.t}</a>`; }).join('')}</div></div>`;
     }).join('');
     document.getElementById('tb-school').textContent = st.school || 'وزارة التعليم';
-    const BN = [['home', 'house', 'الرئيسية'], ['att', 'clipboard-check', 'الحضور'], ['staff', 'users', 'المنسوبات'], ['ev', 'award', 'الشواهد']];
+    const BN = [['home', 'house', 'الرئيسية'], ['mine', 'folder-open', 'ملفي'], ['att', 'clipboard-check', 'الحضور'], (acct && acct.role === 'admin') ? ['cadre', 'users-round', 'الكادر'] : ['ev', 'award', 'الشواهد']].filter(b => b[0] !== 'mine' || useFb);
     const bnav = document.getElementById('bnav');
     bnav.innerHTML = BN.map(([r, i, l]) => { const on = r === activeRoute || (r === 'ev' && isEv); return `<a href="${href(r)}" class="${on ? 'on' : ''}" ${on ? 'aria-current="page"' : ''}><i data-lucide="${i}"></i><span>${l}</span></a>`; }).join('') +
       `<button type="button" id="bn-more" aria-controls="nav" class="${BN.some(b => b[0] === activeRoute) || isEv ? '' : 'on'}"><i data-lucide="layout-grid"></i><span>القائمة</span></button>`;
@@ -1642,7 +1767,7 @@ body{font-synthesis:weight style}
     const out = document.getElementById('nav-out'); if (out) out.onclick = fbSignOut;
     const me = document.getElementById('me-chip');
     me.hidden = !st.person; me.innerHTML = st.person ? `<span class="avatar">${esc(initials(st.person))}</span><span class="me-name"><b>أ. ${esc(st.person)}</b><small>${esc(role())}</small></span>` : '';
-    const cur0 = items.find(n => n.r === activeRoute) || (isEv ? NAV.find(n => n.r === 'ev') : NAV[0]);
+    const cur0 = items.find(n => n.r === activeRoute) || (isEv ? NAV.find(n => n.r === 'ev') : cadreOn ? NAV.find(n => n.r === 'cadre') : NAV[0]);
     document.getElementById('page-title').textContent = cur0.t;
     document.getElementById('foot-l').textContent = (st.school || 'منصة المدرسة') + ' — ' + role();
     document.getElementById('foot-r').textContent = st.year ? 'العام الدراسي ' + st.year : '';
@@ -2161,6 +2286,7 @@ body{font-synthesis:weight style}
       clearTimeout(timer); if (dbState === 'slow') dbState = 'ok';
       S.staff = s.docs.map(x => ({id: x.id, ...x.data()})).sort((a, b) => (a.order || 0) - (b.order || 0) || String(a.name).localeCompare(String(b.name), 'ar'));
       S.staffReady = true; schoolRefresh('staff');
+      if (!S._routed && /^#(cadre|cat-|pf-|mine)/.test(location.hash)) { S._routed = 1; route(); }
       seedStaff(d);
     }, e => { clearTimeout(timer); dbState = 'none'; schoolRefresh(); });
     d.doc('config/main').onSnapshot(s => { if (isPending('config/main')) return; S.cfg = s.exists ? Object.assign({}, DEF_CFG, s.data()) : null; if (S.cfg && S.cfg.assemblyItems) S.cfg.assemblyItems = S.cfg.assemblyItems.map(fixItem); S.cfgReady = true; schoolRefresh('cfg'); }, () => {});
@@ -3307,17 +3433,16 @@ body{font-synthesis:weight style}
     tab.querySelectorAll('textarea,input').forEach(el => el.addEventListener('input', read));
   }
 
-  /* ================= الدخول بالإيميل وكلمة المرور (Firebase) — نسخة الاستضافة فقط ================= */
-  /* الحالة:
-     meta/owner        حساب الإدارة الأول (يُفعَّل مرة واحدة من شاشة الدخول)
-     members/{email}   حسابات المنسوبات (role: admin | member, active)
-     site/state        محتوى المنصة {json} يحل محل المضمَّن في الصفحة بعد الدخول */
+  /* ================= الدخول بحساب Google (والبريد احتياطًا) — نسخة الاستضافة فقط ================= */
+  /* meta/owner  مالكة المنصة · members/{email} حسابات المنسوبات (طلب ← اعتماد) · links/{اسم} ربط الاسم بحساب واحد
+     files/{email} ملف المنسوبة في درايفها · uploads الشواهد المرفوعة · site/state محتوى المنصة */
   const FB = cur().settings.firebase || null;
   const fbEmu = isLocal && /[?&]fb=emu\b/.test(location.search);
   const fbLive = isLocal && /[?&]fb=live\b/.test(location.search);
   const useFb = !!(FB && FB.apiKey) && (webHost || fbEmu || fbLive);
   let fb = null, acct = null;
   const FB_V = '10.12.5';
+  const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
   function loadScript(src){ return new Promise((ok, no) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = () => no(new Error('load ' + src)); document.head.appendChild(s); }); }
   async function fbLoad(){
     const b = `https://www.gstatic.com/firebasejs/${FB_V}/`;
@@ -3341,9 +3466,39 @@ body{font-synthesis:weight style}
     'auth/weak-password': 'كلمة المرور ضعيفة: ٨ أحرف على الأقل.',
     'auth/email-already-in-use': 'هذا البريد مسجّل من قبل.',
     'auth/network-request-failed': 'تعذّر الاتصال بالإنترنت.',
+    'auth/popup-blocked': 'المتصفح منع نافذة Google. اسمحي بالنوافذ المنبثقة ثم حاولي مرة أخرى.',
+    'auth/popup-closed-by-user': 'أُغلقت نافذة Google قبل إكمال الدخول.',
+    'auth/cancelled-popup-request': 'أُغلقت نافذة Google قبل إكمال الدخول.',
+    'auth/unauthorized-domain': 'هذا الرابط غير مسموح له بالدخول بحساب Google.',
+    'auth/operation-not-allowed': 'الدخول بحساب Google غير مفعّل بعد في المنصة.',
+    'auth/account-exists-with-different-credential': 'هذا البريد مسجّل بطريقة دخول أخرى. ادخلي بالبريد وكلمة المرور.',
+    'auth/credential-already-in-use': 'حساب Google هذا مرتبط بحساب آخر في المنصة.',
     'permission-denied': 'لا تملكين صلاحية هذا الإجراء.'
   };
-  const authMsg = e => AUTH_ERR[e && e.code] || 'حدث خطأ غير متوقع. حاولي مرة أخرى.';
+  const authMsg = e => AUTH_ERR[e && e.code] || (e && e.message && /drive/i.test(e.message) ? 'تعذّر الوصول إلى Google Drive. حاولي مرة أخرى.' : 'حدث خطأ غير متوقع. حاولي مرة أخرى.');
+  const nameKey = n => String(n || '').trim().replace(/\s+/g, '_').replace(/[\/.#$\[\]]/g, '');
+  const G_ICON = '<svg viewBox="0 0 48 48" width="20" height="20" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>';
+
+  /* ---------- رمز الوصول إلى Google Drive ---------- */
+  let gTok = (function(){ try { const v = JSON.parse(sessionStorage.getItem('gtok') || 'null'); return v && v.exp > Date.now() ? v : null; } catch(e){ return null; } })();
+  function keepTok(t, email){ if (!t) return; gTok = {t, exp: Date.now() + 50 * 60 * 1000, email}; try { sessionStorage.setItem('gtok', JSON.stringify(gTok)); } catch(e){} }
+  function gProvider(hint){
+    const p = new firebase.auth.GoogleAuthProvider();
+    p.addScope(DRIVE_SCOPE);
+    p.setCustomParameters(hint ? {login_hint: hint} : {prompt: 'select_account'});
+    return p;
+  }
+  const hasGoogle = u => !!(u && (u.providerData || []).some(p => p && p.providerId === 'google.com'));
+  /* يطلب رمز درايف (نافذة Google قصيرة عند الحاجة؛ يجب أن يُستدعى من ضغطة زر) */
+  async function driveToken(){
+    const u = fb.auth.currentUser; if (!u) throw {code: 'permission-denied'};
+    if (gTok && gTok.exp > Date.now() && gTok.email === u.email) return gTok.t;
+    if (fbEmu) { keepTok('emu-token', u.email); return gTok.t; }
+    const res = hasGoogle(u) ? await u.reauthenticateWithPopup(gProvider(u.email)) : await u.linkWithPopup(gProvider(u.email));
+    const t = res && res.credential && res.credential.accessToken;
+    if (!t) throw new Error('drive token');
+    keepTok(t, u.email); return t;
+  }
 
   /* ---------- شاشة الدخول ---------- */
   function gateEl(){ let g = document.getElementById('gate'); if (!g) { g = document.createElement('div'); g.id = 'gate'; document.body.appendChild(g); } document.body.classList.add('gated'); return g; }
@@ -3356,97 +3511,141 @@ body{font-synthesis:weight style}
       <p class="gate-foot">${esc(s.region || 'وزارة التعليم')}</p></div>`;
   }
   function gateLoading(t){ gateEl().innerHTML = gateShell(`<div class="gate-wait"><span class="spinner"></span>${esc(t || 'جارٍ التحميل…')}</div>`); }
+  let claimOwner = false;
+  async function googleSignIn(btn, msgEl){
+    if (btn) btn.disabled = true; if (msgEl) msgEl.innerHTML = '';
+    try {
+      const res = await fb.auth.signInWithPopup(gProvider());
+      const t = res && res.credential && res.credential.accessToken; if (t) keepTok(t, res.user.email);
+    } catch(err){ claimOwner = false; if (btn) btn.disabled = false; if (msgEl) msgEl.innerHTML = `<div class="msg err">${esc(authMsg(err))}</div>`; }
+  }
   async function gateLogin(note){
     const g = gateEl();
     let owner = null; try { owner = await fb.fs.doc('meta/owner').get(); } catch(e){}
     const first = owner && !owner.exists;
     g.innerHTML = gateShell(`
-      <h1>تسجيل الدخول</h1><p class="gate-sub">ادخلي ببريدك الإلكتروني وكلمة المرور التي أعطتك إياها إدارة المدرسة.</p>
+      <h1>الدخول إلى المنصة</h1><p class="gate-sub">ادخلي بحساب Google. أول دخول يُنشئ طلب حساب تعتمده إدارة المدرسة، ثم يُنشأ ملفك في Google Drive الخاص بك.</p>
       ${note ? `<div class="msg info">${esc(note)}</div>` : ''}
-      <form id="g-login" class="gate-form" novalidate>
-        <label class="field"><span>البريد الإلكتروني</span><input class="in ltr" id="g-email" type="email" autocomplete="username" inputmode="email" required></label>
-        <label class="field"><span>كلمة المرور</span><span class="pw"><input class="in ltr" id="g-pass" type="password" autocomplete="current-password" required><button type="button" class="pw-eye" data-eye="g-pass" aria-label="إظهار كلمة المرور"><i data-lucide="eye"></i></button></span></label>
-        <div id="g-msg" aria-live="polite"></div>
-        <button class="btn btn-primary btn-block" type="submit"><i data-lucide="log-in"></i>دخول</button>
-        <button class="btn btn-ghost btn-block" type="button" id="g-forgot">نسيت كلمة المرور</button>
-      </form>
-      ${first ? `<div class="gate-first"><b><i data-lucide="shield-check"></i>أول استخدام للمنصة</b><p>لم يُفعَّل حساب الإدارة بعد. تفعّله مديرة المدرسة مرة واحدة فقط، ثم تضيف حسابات المنسوبات من لوحة التحكم.</p><button class="btn btn-ghost btn-block" type="button" id="g-setup"><i data-lucide="user-cog"></i>تفعيل حساب الإدارة</button></div>` : ''}`);
+      <div id="g-msg" aria-live="polite"></div>
+      <button class="btn-google" type="button" id="g-google">${G_ICON}<span>الدخول بحساب Google</span></button>
+      ${first ? `<div class="gate-first"><b><i data-lucide="shield-check"></i>أول استخدام للمنصة</b><p>لم يُفعَّل حساب الإدارة بعد. تفعّله مديرة المدرسة مرة واحدة بحسابها في Google، ثم تعتمد طلبات المنسوبات.</p><button class="btn btn-ghost btn-block" type="button" id="g-setup"><i data-lucide="user-cog"></i>تفعيل حساب الإدارة بحساب Google</button></div>` : ''}
+      <details class="gate-alt"><summary>الدخول بالبريد وكلمة المرور</summary>
+        <form id="g-login" class="gate-form" novalidate>
+          <label class="field"><span>البريد الإلكتروني</span><input class="in ltr" id="g-email" type="email" autocomplete="username" inputmode="email"></label>
+          <label class="field"><span>كلمة المرور</span><span class="pw"><input class="in ltr" id="g-pass" type="password" autocomplete="current-password"><button type="button" class="pw-eye" data-eye="g-pass" aria-label="إظهار كلمة المرور"><i data-lucide="eye"></i></button></span></label>
+          <div id="g-msg2" aria-live="polite"></div>
+          <button class="btn btn-primary btn-block" type="submit"><i data-lucide="log-in"></i>دخول</button>
+          <button class="btn btn-ghost btn-block" type="button" id="g-forgot">نسيت كلمة المرور</button>
+        </form></details>`);
     wireEyes(g); icons();
-    const msg = m => { document.getElementById('g-msg').innerHTML = m ? `<div class="msg err">${esc(m)}</div>` : ''; };
+    const m1 = document.getElementById('g-msg');
+    document.getElementById('g-google').onclick = e => googleSignIn(e.currentTarget, m1);
+    const st = document.getElementById('g-setup'); if (st) st.onclick = e => { claimOwner = true; googleSignIn(e.currentTarget, m1); };
+    const msg = m => { document.getElementById('g-msg2').innerHTML = m ? `<div class="msg err">${esc(m)}</div>` : ''; };
     document.getElementById('g-login').onsubmit = async ev => {
       ev.preventDefault();
       const e = document.getElementById('g-email').value.trim(), p = document.getElementById('g-pass').value;
       if (!emailOk(e)) return msg('اكتبي البريد الإلكتروني بشكل صحيح.');
       if (!p) return msg('اكتبي كلمة المرور.');
-      const btn = ev.submitter || g.querySelector('[type=submit]'); btn.disabled = true; msg('');
+      const btn = g.querySelector('#g-login [type=submit]'); btn.disabled = true; msg('');
       try { await fb.auth.signInWithEmailAndPassword(e, p); } catch(err){ msg(authMsg(err)); btn.disabled = false; }
     };
     document.getElementById('g-forgot').onclick = async () => {
       const e = document.getElementById('g-email').value.trim();
       if (!emailOk(e)) return msg('اكتبي بريدك الإلكتروني أولًا ثم اضغطي «نسيت كلمة المرور».');
       try { await fb.auth.sendPasswordResetEmail(e); } catch(err){ if (err.code !== 'auth/user-not-found') return msg(authMsg(err)); }
-      document.getElementById('g-msg').innerHTML = '<div class="msg ok">إن كان البريد مسجّلًا فستصلك رسالة لتعيين كلمة مرور جديدة. تحققي من البريد غير الهام أيضًا.</div>';
-    };
-    const st = document.getElementById('g-setup'); if (st) st.onclick = gateSetup;
-  }
-  function gateSetup(){
-    const g = gateEl();
-    g.innerHTML = gateShell(`
-      <h1>تفعيل حساب الإدارة</h1><p class="gate-sub">يُنشأ هذا الحساب مرة واحدة فقط ويملك كل الصلاحيات: إضافة المنسوبات، وتعديل المنصة.</p>
-      <form id="g-setup-f" class="gate-form" novalidate>
-        <label class="field"><span>الاسم</span><input class="in" id="s-name" value="${esc(cur().settings.person || '')}" autocomplete="name"></label>
-        <label class="field"><span>البريد الإلكتروني</span><input class="in ltr" id="s-email" type="email" autocomplete="username" inputmode="email"></label>
-        <label class="field"><span>كلمة المرور (٨ أحرف على الأقل)</span><span class="pw"><input class="in ltr" id="s-pass" type="password" autocomplete="new-password"><button type="button" class="pw-eye" data-eye="s-pass" aria-label="إظهار كلمة المرور"><i data-lucide="eye"></i></button></span></label>
-        <label class="field"><span>تأكيد كلمة المرور</span><input class="in ltr" id="s-pass2" type="password" autocomplete="new-password"></label>
-        <div id="s-msg" aria-live="polite"></div>
-        <button class="btn btn-primary btn-block" type="submit"><i data-lucide="check"></i>تفعيل الحساب والدخول</button>
-        <button class="btn btn-ghost btn-block" type="button" id="s-back">رجوع</button>
-      </form>`);
-    wireEyes(g); icons();
-    const msg = m => { document.getElementById('s-msg').innerHTML = m ? `<div class="msg err">${esc(m)}</div>` : ''; };
-    document.getElementById('s-back').onclick = () => gateLogin();
-    document.getElementById('g-setup-f').onsubmit = async ev => {
-      ev.preventDefault();
-      const name = document.getElementById('s-name').value.trim(), e = document.getElementById('s-email').value.trim().toLowerCase();
-      const p = document.getElementById('s-pass').value, p2 = document.getElementById('s-pass2').value;
-      if (!name) return msg('اكتبي الاسم.');
-      if (!emailOk(e)) return msg('اكتبي البريد الإلكتروني بشكل صحيح.');
-      if (p.length < 8) return msg('كلمة المرور ٨ أحرف على الأقل.');
-      if (p !== p2) return msg('كلمتا المرور غير متطابقتين.');
-      const btn = g.querySelector('[type=submit]'); btn.disabled = true; msg('');
-      settingUp = true;
-      try {
-        let cred;
-        try { cred = await fb.auth.createUserWithEmailAndPassword(e, p); }
-        catch(err){ if (err.code === 'auth/email-already-in-use') cred = await fb.auth.signInWithEmailAndPassword(e, p); else throw err; }
-        try { await cred.user.updateProfile({displayName: name}); } catch(x){}
-        await fb.fs.doc('meta/owner').set({email: e, name, at: new Date().toISOString()});
-        settingUp = false; onUser(cred.user);
-      } catch(err){
-        settingUp = false; btn.disabled = false;
-        if (err && err.code === 'permission-denied') { await fb.auth.signOut(); return gateLogin('فُعِّل حساب الإدارة من قبل. ادخلي بالحساب المفعّل.'); }
-        msg(authMsg(err));
-      }
+      document.getElementById('g-msg2').innerHTML = '<div class="msg ok">إن كان البريد مسجّلًا فستصلك رسالة لتعيين كلمة مرور جديدة.</div>';
     };
   }
   function wireEyes(root){
     root.querySelectorAll('[data-eye]').forEach(b => b.onclick = () => { const i = document.getElementById(b.dataset.eye); const show = i.type === 'password'; i.type = show ? 'text' : 'password'; b.innerHTML = `<i data-lucide="${show ? 'eye-off' : 'eye'}"></i>`; icons(); });
   }
+  function who(u){ return `<div class="gate-who">${u.photoURL ? `<img src="${esc(u.photoURL)}" alt="" referrerpolicy="no-referrer">` : `<span class="avatar">${esc(initials(u.displayName || u.email))}</span>`}<div><b>${esc(u.displayName || '')}</b><small class="ltr">${esc(u.email)}</small></div></div>`; }
+
+  /* ---------- طلب الانضمام ---------- */
+  function seedList(){ return (SP().staffSeed || []).filter(x => x && x.name); }
+  function gateRegister(u, note){
+    const g = gateEl(), list = seedList();
+    g.innerHTML = gateShell(`
+      <h1>طلب حساب في المنصة</h1>${who(u)}
+      <p class="gate-sub">اختاري اسمك من قائمة منسوبات المدرسة، ثم أرسلي الطلب. تعتمده إدارة المدرسة، وبعدها يُنشأ ملفك في Google Drive.</p>
+      ${note ? `<div class="msg info">${esc(note)}</div>` : ''}
+      <form id="r-form" class="gate-form" novalidate>
+        <label class="field"><span>ابحثي عن اسمك</span><input class="in" id="r-q" type="search" placeholder="اكتبي جزءًا من الاسم…" autocomplete="off"></label>
+        <div class="r-list" id="r-list" role="listbox" aria-label="منسوبات المدرسة"></div>
+        <div id="r-msg" aria-live="polite"></div>
+        <button class="btn btn-primary btn-block" type="submit" disabled><i data-lucide="send"></i>إرسال الطلب</button>
+        <button class="btn btn-ghost btn-block" type="button" id="r-out"><i data-lucide="log-out"></i>الدخول بحساب آخر</button>
+      </form>`);
+    icons();
+    let pick = null;
+    const box = document.getElementById('r-list'), q = document.getElementById('r-q'), sub = g.querySelector('#r-form [type=submit]');
+    const draw = () => {
+      const t = q.value.trim();
+      const rows = list.filter(x => !t || x.name.includes(t)).slice(0, t ? 40 : 80);
+      box.innerHTML = rows.map(x => `<button type="button" role="option" class="r-opt${pick === x ? ' on' : ''}" aria-selected="${pick === x}" data-n="${esc(x.name)}"><b>${esc(x.name)}</b><small>${esc(g2(x.job))}${x.note ? ' · ' + esc(x.note) : ''}</small></button>`).join('') || '<p class="muted">لا يوجد اسم مطابق. تواصلي مع إدارة المدرسة لإضافة اسمك.</p>';
+      box.querySelectorAll('[data-n]').forEach(b => b.onclick = () => { pick = list.find(x => x.name === b.dataset.n); sub.disabled = false; draw(); });
+    };
+    q.oninput = draw; draw();
+    document.getElementById('r-out').onclick = () => fb.auth.signOut();
+    document.getElementById('r-form').onsubmit = async ev => {
+      ev.preventDefault(); if (!pick) return;
+      const msg = m => { document.getElementById('r-msg').innerHTML = m ? `<div class="msg err">${esc(m)}</div>` : ''; };
+      sub.disabled = true; msg('');
+      const e = String(u.email).toLowerCase(), k = nameKey(pick.name);
+      try {
+        const l = await fb.fs.doc('links/' + k).get();
+        if (l.exists && l.data().email !== e) { sub.disabled = false; return msg('هذا الاسم مرتبط بحساب آخر. إن كان اسمك فتواصلي مع إدارة المدرسة.'); }
+        if (!l.exists) await fb.fs.doc('links/' + k).set({email: e, name: pick.name, at: new Date().toISOString()});
+        const c = catOf(pick.job);
+        await fb.fs.doc('members/' + e).set({email: e, name: pick.name, staffName: pick.name, job: pick.job, cat: c, form: defForm(pick.job), role: 'member', active: false, status: 'pending', photo: u.photoURL || '', at: new Date().toISOString()});
+        gatePending(u, pick.name);
+      } catch(err){ sub.disabled = false; msg(authMsg(err)); }
+    };
+  }
+  const g2 = s => String(s || '').replace(/\{([^|{}]*)\|([^|{}]*)\}/g, (_, m, f) => f);
+  function gatePending(u, name, stopped){
+    const g = gateEl();
+    g.innerHTML = gateShell(`
+      <div class="gate-state"><span class="gs-ico ${stopped ? 'bad' : ''}"><i data-lucide="${stopped ? 'user-x' : 'hourglass'}"></i></span>
+        <h1>${stopped ? 'الحساب موقوف' : 'طلبك بانتظار الاعتماد'}</h1>
+        <p class="gate-sub">${stopped ? 'أوقفت إدارة المدرسة هذا الحساب. تواصلي معها لإعادة تفعيله.' : `أُرسل طلبك باسم «${esc(name || '')}». ستفتح المنصة تلقائيًا بعد أن تعتمده إدارة المدرسة.`}</p></div>
+      ${who(u)}
+      <button class="btn btn-ghost btn-block" type="button" id="p-refresh"><i data-lucide="refresh-cw"></i>تحقق الآن</button>
+      ${stopped ? '' : '<button class="btn btn-ghost btn-block danger" type="button" id="p-cancel"><i data-lucide="x"></i>إلغاء الطلب واختيار اسم آخر</button>'}
+      <button class="btn btn-ghost btn-block" type="button" id="p-out"><i data-lucide="log-out"></i>تسجيل الخروج</button>`);
+    icons();
+    document.getElementById('p-refresh').onclick = () => onUser(fb.auth.currentUser);
+    document.getElementById('p-out').onclick = () => fb.auth.signOut();
+    const c = document.getElementById('p-cancel');
+    if (c) c.onclick = async () => { const e = String(u.email).toLowerCase(); try { await fb.fs.doc('links/' + nameKey(name)).delete(); } catch(x){} try { await fb.fs.doc('members/' + e).delete(); } catch(x){} gateRegister(u); };
+    clearInterval(pendTimer); if (!stopped) pendTimer = setInterval(() => { if (fb.auth.currentUser && !acct) checkActive(fb.auth.currentUser); }, 20000);
+  }
+  let pendTimer = 0;
+  async function checkActive(u){ try { const m = await fb.fs.doc('members/' + String(u.email).toLowerCase()).get(); if (m.exists && m.data().active) { clearInterval(pendTimer); onUser(u); } } catch(e){} }
 
   /* ---------- بعد الدخول ---------- */
-  let settingUp = false, fbReady = false;
+  let fbReady = false, unsubMe = null;
   async function onUser(u){
-    if (settingUp) return;
-    if (!u) { acct = null; fbReady = false; gateLogin(); return; }
+    if (!u) { acct = null; fbReady && location.reload(); gateLogin(); return; }
     gateLoading('جارٍ التحقق من الحساب…');
     const e = String(u.email || '').toLowerCase();
     try {
       const o = await fb.fs.doc('meta/owner').get();
-      if (o.exists && o.data().email === e) acct = {email: e, name: o.data().name || u.displayName || '', role: 'admin', owner: true};
-      else {
+      if (!o.exists && claimOwner) {
+        await fb.fs.doc('meta/owner').set({email: e, name: u.displayName || cur().settings.person || '', photo: u.photoURL || '', at: new Date().toISOString()});
+        claimOwner = false; return onUser(u);
+      }
+      claimOwner = false;
+      if (o.exists && o.data().email === e) {
+        const lead = seedList().find(x => /مدير/.test(x.job)) || {};
+        acct = {email: e, name: lead.name || o.data().name || u.displayName || '', role: 'admin', owner: true, cat: 'lead', form: 'principal', staffName: lead.name || o.data().name || '', photo: u.photoURL || ''};
+      } else {
         const m = await fb.fs.doc('members/' + e).get();
-        if (!m.exists || !m.data().active) { acct = null; await fb.auth.signOut(); gateLogin(m.exists ? 'حسابك موقوف حاليًا. تواصلي مع إدارة المدرسة.' : 'هذا الحساب غير مضاف إلى المنصة. تواصلي مع إدارة المدرسة لإضافتك.'); return; }
-        acct = {email: e, name: m.data().name || '', role: m.data().role === 'admin' ? 'admin' : 'member', owner: false};
+        if (!m.exists) { acct = null; gateRegister(u); return; }
+        const d = m.data();
+        if (!d.active) { acct = null; gatePending(u, d.staffName || d.name, d.status === 'stopped'); return; }
+        acct = {email: e, name: d.name || '', role: d.role === 'admin' ? 'admin' : 'member', owner: false, cat: d.cat || catOf(d.job), form: d.form || defForm(d.job), staffName: d.staffName || d.name || '', job: d.job || '', photo: d.photo || u.photoURL || ''};
       }
       try { const s = await fb.fs.doc('site/state').get(); if (s.exists && s.data().json) { const v = JSON.parse(s.data().json); if (v && v.settings && Array.isArray(v.sections)) { v.settings.firebase = FB; PUBLISHED = v; } } } catch(x){}
     } catch(err){ gateLogin(authMsg(err)); return; }
@@ -3458,15 +3657,21 @@ body{font-synthesis:weight style}
     gateLoading();
     try { await fbLoad(); } catch(e){ gateEl().innerHTML = gateShell('<div class="msg err">تعذّر تحميل خدمة الدخول. تحققي من الاتصال ثم حدّثي الصفحة.</div>'); return; }
     fb.auth.onAuthStateChanged(onUser);
+    if (fbEmu) window.__emuGoogle = (email, name, owner) => { claimOwner = !!owner; return fb.auth.signInWithCredential(firebase.auth.GoogleAuthProvider.credential(JSON.stringify({sub: email, email, email_verified: true, name}))); };
   }
-  async function fbSignOut(){ try { await fb.auth.signOut(); } catch(e){} location.hash = '#home'; }
+  async function fbSignOut(){ try { sessionStorage.removeItem('gtok'); } catch(e){} try { await fb.auth.signOut(); } catch(e){} location.hash = '#home'; }
   async function fbSaveState(st){
     const clean = clone(st); delete clean.settings.firebase;
     await fb.fs.doc('site/state').set({json: JSON.stringify(clean), at: new Date().toISOString(), by: acct.email});
   }
 
-  /* ---------- لوحة التحكم: المستخدمات ---------- */
+  /* ---------- لوحة التحكم: الحسابات والطلبات ---------- */
   let secApp = null;
+  const ROLE_LBL = m => !m.active ? (m.status === 'pending' ? 'بانتظار الاعتماد' : 'موقوف') : m.role === 'admin' ? 'إدارة' : 'منسوبة';
+  function formSel(id, val, cat){
+    const opts = FORMS_OF(cat);
+    return opts.length ? `<select class="in in-sm" id="${id}" aria-label="نموذج التقييم">${opts.map(f => `<option value="${f}" ${f === val ? 'selected' : ''}>${esc(FORM_LBL[f])}</option>`).join('')}</select>` : '';
+  }
   async function tabUsers(){
     const tab = document.getElementById('tab');
     if (!fb || !acct) { tab.innerHTML = `<div class="panel"><p class="muted">إدارة الحسابات تعمل في نسخة المنصة المستضافة بعد تسجيل الدخول.</p></div>`; return; }
@@ -3475,66 +3680,335 @@ body{font-synthesis:weight style}
     try { list = (await fb.fs.collection('members').get()).docs.map(d => d.data()).sort((a, b) => String(a.name).localeCompare(String(b.name), 'ar')); }
     catch(e){ tab.innerHTML = `<div class="msg err">${esc(authMsg(e))}</div>`; return; }
     let owner = null; try { const o = await fb.fs.doc('meta/owner').get(); owner = o.exists ? o.data() : null; } catch(e){}
-    const staffOpts = S.staff.map(s => `<option value="${esc(s.name)}">`).join('');
+    const pend = list.filter(m => !m.active && m.status === 'pending'), rest = list.filter(m => !(!m.active && m.status === 'pending'));
+    const share = (location.origin + location.pathname).replace(/#.*$/, '');
     tab.innerHTML = `<div class="stack">
-      <div class="panel"><h2><i data-lucide="user-plus"></i>إضافة حساب</h2>
-        <p class="ev-note" style="margin:0 0 12px!important">أنشئي حسابًا بالبريد وكلمة مرور مؤقتة، ثم أرسليها للمنسوبة؛ وتستطيع تغييرها من «نسيت كلمة المرور».</p>
-        <form id="u-add" class="u-form" novalidate>
-          <div class="field"><label for="u-name">الاسم</label><input class="in" id="u-name" list="u-staff" autocomplete="off"><datalist id="u-staff">${staffOpts}</datalist></div>
-          <div class="field"><label for="u-email">البريد الإلكتروني</label><input class="in ltr" id="u-email" type="email" inputmode="email" autocomplete="off"></div>
-          <div class="field"><label for="u-pass">كلمة مرور مؤقتة (٨ أحرف على الأقل)</label><span class="pw"><input class="in ltr" id="u-pass" type="password" autocomplete="new-password"><button type="button" class="pw-eye" data-eye="u-pass" aria-label="إظهار كلمة المرور"><i data-lucide="eye"></i></button></span></div>
-          <div class="field"><label for="u-role">الصلاحية</label><select class="in" id="u-role"><option value="member">منسوبة: السجلات والشواهد</option><option value="admin">إدارة: كل الصلاحيات</option></select></div>
-          <div id="u-msg" class="u-full" aria-live="polite"></div>
-          <div class="u-full"><button class="btn btn-primary" type="submit"><i data-lucide="user-plus"></i>إضافة الحساب</button></div>
-        </form></div>
-      <div class="panel"><h2><i data-lucide="users"></i>الحسابات (${ar(list.length + (owner ? 1 : 0))})</h2>
+      <div class="panel invite"><h2><i data-lucide="send"></i>دعوة المنسوبات</h2>
+        <p class="ev-note" style="margin:0 0 10px!important">أرسلي هذه الرسالة في مجموعة المنسوبات؛ كل منسوبة تدخل بحساب Google وتختار اسمها، ثم تعتمدين طلبها من هنا.</p>
+        <textarea class="in" id="inv-txt" readonly style="min-height:120px">${esc(`السلام عليكم ورحمة الله\nمنصة ${cur().settings.school || 'المدرسة'} للأداء الوظيفي:\n${share}\n١) اضغطي «الدخول بحساب Google».\n٢) اختاري اسمك من القائمة وأرسلي الطلب.\n٣) بعد اعتماد الطلب افتحي «ملفي» واضغطي «إنشاء ملفي في Google Drive»، ثم ارفعي شواهدك من المنصة.`)}</textarea>
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn btn-ghost btn-sm" id="inv-copy"><i data-lucide="copy"></i>نسخ الرسالة</button><a class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="#" id="inv-wa"><i data-lucide="message-circle"></i>إرسال عبر واتساب</a></div></div>
+      <div class="panel"><h2><i data-lucide="user-check"></i>طلبات بانتظار الاعتماد (${ar(pend.length)})</h2>
+        <div class="u-list">${pend.map(m => `<div class="u-row pend" data-e="${esc(m.email)}">${m.photo ? `<img class="u-ph" src="${esc(m.photo)}" alt="" referrerpolicy="no-referrer">` : `<span class="avatar">${esc(initials(m.name))}</span>`}<div class="u-t"><b>${esc(m.name)}</b><small>${esc(g2(m.job))} · <span class="ltr">${esc(m.email)}</span></small></div>
+          <span class="spill wait">جديد</span>
+          <div class="u-acts">${formSel('pf-' + cssId(m.email), m.form, m.cat)}
+            <select class="in in-sm" data-role aria-label="الصلاحية"><option value="member">منسوبة</option><option value="admin">إدارة</option></select>
+            <button type="button" class="btn btn-primary btn-sm" data-u="approve"><i data-lucide="check"></i>اعتماد</button>
+            <button type="button" class="btn btn-ghost btn-sm danger" data-u="reject">رفض</button></div></div>`).join('') || '<p class="muted">لا توجد طلبات جديدة.</p>'}</div></div>
+      <div class="panel"><h2><i data-lucide="users"></i>الحسابات (${ar(rest.length + (owner ? 1 : 0))})</h2>
         <div class="u-list">
           ${owner ? `<div class="u-row"><span class="avatar">${esc(initials(owner.name))}</span><div class="u-t"><b>${esc(owner.name)}</b><small class="ltr">${esc(owner.email)}</small></div><span class="spill ok">مالكة المنصة</span></div>` : ''}
-          ${list.map(m => `<div class="u-row" data-e="${esc(m.email)}"><span class="avatar">${esc(initials(m.name))}</span><div class="u-t"><b>${esc(m.name)}</b><small class="ltr">${esc(m.email)}</small></div>
-            <span class="spill ${m.active ? (m.role === 'admin' ? 'ok' : 'info') : 'none'}">${m.active ? (m.role === 'admin' ? 'إدارة' : 'منسوبة') : 'موقوف'}</span>
-            <div class="u-acts">
+          ${rest.map(m => `<div class="u-row" data-e="${esc(m.email)}">${m.photo ? `<img class="u-ph" src="${esc(m.photo)}" alt="" referrerpolicy="no-referrer">` : `<span class="avatar">${esc(initials(m.name))}</span>`}<div class="u-t"><b>${esc(m.name)}</b><small>${esc(g2(m.job || ''))}${m.form ? ' · ' + esc(FORM_LBL[m.form] || '') : ''} · <span class="ltr">${esc(m.email)}</span></small></div>
+            <span class="spill ${m.active ? (m.role === 'admin' ? 'ok' : 'info') : 'none'}">${ROLE_LBL(m)}</span>
+            <div class="u-acts">${formSel('pf-' + cssId(m.email), m.form, m.cat || catOf(m.job))}
               <button type="button" class="btn btn-ghost btn-sm" data-u="role">${m.role === 'admin' ? 'جعلها منسوبة' : 'منح الإدارة'}</button>
               <button type="button" class="btn btn-ghost btn-sm" data-u="active">${m.active ? 'إيقاف' : 'تفعيل'}</button>
-              <button type="button" class="btn btn-ghost btn-sm" data-u="reset">إرسال رابط كلمة المرور</button>
               ${m.email !== acct.email ? `<button type="button" class="btn btn-ghost btn-sm danger" data-u="del">حذف</button>` : ''}
             </div></div>`).join('') || (owner ? '' : '<p class="muted">لا توجد حسابات بعد.</p>')}
         </div></div></div>`;
-    wireEyes(tab); icons();
-    const msg = (m, ok) => { document.getElementById('u-msg').innerHTML = m ? `<div class="msg ${ok ? 'ok' : 'err'}">${esc(m)}</div>` : ''; };
-    document.getElementById('u-add').onsubmit = async ev => {
-      ev.preventDefault();
-      const name = document.getElementById('u-name').value.trim(), e = document.getElementById('u-email').value.trim().toLowerCase();
-      const p = document.getElementById('u-pass').value, role = document.getElementById('u-role').value;
-      if (!name) return msg('اكتبي الاسم.');
-      if (!emailOk(e)) return msg('اكتبي البريد الإلكتروني بشكل صحيح.');
-      if (p.length < 8) return msg('كلمة المرور المؤقتة ٨ أحرف على الأقل.');
-      const btn = ev.target.querySelector('[type=submit]'); btn.disabled = true; msg('');
-      let existed = false;
-      try {
-        if (!secApp) { secApp = firebase.initializeApp(FB, 'users-admin'); if (fbEmu) secApp.auth().useEmulator('http://127.0.0.1:9119', {disableWarnings: true}); }
-        try { await secApp.auth().createUserWithEmailAndPassword(e, p); } catch(err){ if (err.code === 'auth/email-already-in-use') existed = true; else throw err; }
-        try { await secApp.auth().signOut(); } catch(x){}
-        await fb.fs.doc('members/' + e).set({email: e, name, role, active: true, at: new Date().toISOString(), by: acct.email});
-        toast(existed ? 'البريد مسجّل من قبل: أُضيف إلى المنصة بكلمة مروره الحالية.' : 'تمت إضافة الحساب.', 'ok');
-        tabUsers();
-      } catch(err){ btn.disabled = false; msg(authMsg(err)); }
-    };
+    icons();
+    const txt = document.getElementById('inv-txt');
+    document.getElementById('inv-wa').href = 'https://wa.me/?text=' + encodeURIComponent(txt.value);
+    document.getElementById('inv-copy').onclick = () => navigator.clipboard.writeText(txt.value).then(() => toast('نُسخت الرسالة.', 'ok'), () => { txt.select(); });
     tab.querySelectorAll('.u-row[data-e]').forEach(row => {
       const e = row.dataset.e, m = list.find(x => x.email === e);
+      const fsel = row.querySelector('select[id^="pf-"]');
+      if (fsel && m.active) fsel.onchange = async () => { try { await fb.fs.doc('members/' + e).update({form: fsel.value}); toast('حُدّث نموذج التقييم.', 'ok'); } catch(err){ toast(authMsg(err), 'err'); } };
       row.querySelectorAll('[data-u]').forEach(b => {
         const act = b.dataset.u;
         const run = async () => {
           try {
-            if (act === 'role') await fb.fs.doc('members/' + e).update({role: m.role === 'admin' ? 'member' : 'admin'});
-            if (act === 'active') await fb.fs.doc('members/' + e).update({active: !m.active});
-            if (act === 'reset') { await fb.auth.sendPasswordResetEmail(e); toast('أُرسل رابط تعيين كلمة المرور إلى ' + e, 'ok'); return; }
-            if (act === 'del') await fb.fs.doc('members/' + e).delete();
+            const ref = fb.fs.doc('members/' + e);
+            if (act === 'approve') { const role = row.querySelector('[data-role]').value; await ref.update({active: true, status: 'active', role, form: fsel ? fsel.value : (m.form || ''), by: acct.email}); toast('اعتُمد حساب ' + m.name, 'ok'); }
+            if (act === 'reject') { await ref.delete(); try { await fb.fs.doc('links/' + nameKey(m.staffName || m.name)).delete(); } catch(x){} toast('رُفض الطلب.', 'ok'); }
+            if (act === 'role') await ref.update({role: m.role === 'admin' ? 'member' : 'admin'});
+            if (act === 'active') await ref.update({active: !m.active, status: m.active ? 'stopped' : 'active'});
+            if (act === 'del') { await ref.delete(); try { await fb.fs.doc('links/' + nameKey(m.staffName || m.name)).delete(); } catch(x){} }
             tabUsers();
           } catch(err){ toast(authMsg(err), 'err'); }
         };
-        if (act === 'del') armDelete(b, run); else b.onclick = run;
+        if (act === 'del' || act === 'reject') armDelete(b, run); else b.onclick = run;
       });
     });
+  }
+  const cssId = s => String(s).replace(/[^a-z0-9]/gi, '_');
+
+  /* ================= الكادر: ملف كل فئة، وملف كل منسوبة في Google Drive الخاص بها ================= */
+  const CATS = [
+    {k: 'lead', t: 'القيادة المدرسية', d: 'مديرة المدرسة', i: 'landmark'},
+    {k: 'deputy', t: 'الوكيلات', d: 'الشؤون التعليمية وشؤون الطالبات', i: 'briefcase'},
+    {k: 'counselor', t: 'التوجيه الطلابي', d: 'الموجهة الطلابية', i: 'compass'},
+    {k: 'teacher', t: 'المعلمات', d: 'الهيئة التعليمية', i: 'graduation-cap'},
+    {k: 'admin', t: 'الإداريات', d: 'المساعدات الإداريات', i: 'folder-kanban'},
+    {k: 'service', t: 'المستخدمات', d: 'الخدمات المساندة', i: 'hand-helping'}];
+  const FORM_LBL = {principal: 'نموذج ٨ — مديرة المدرسة', deputy: 'نموذج ٧ — وكيلة المدرسة', counselor: 'نموذج ٦ — الموجهة الطلابية', teacher: 'نموذج ١ — المعلمة',
+    activity: 'نموذج ٢ — معلمة مسند لها نشاط طلابي', health: 'نموذج ٣ — معلمة مسند لها توجيه صحي', kg: 'نموذج ٤ — معلمة رياض الأطفال', lab: 'نموذج ٥ — محضرة المختبر'};
+  const FORM_SEC = {principal: 's1', deputy: 's-deputy', counselor: 's-counselor', teacher: 's-teacher', activity: 's-activity', health: 's-health', kg: 's-kg', lab: 's-lab'};
+  const FORMS_OF = c => ({lead: ['principal'], deputy: ['deputy'], counselor: ['counselor'], teacher: ['teacher', 'activity', 'health', 'kg', 'lab']})[c] || [];
+  const plain = s => String(s || '').replace(/\{([^|{}]*)\|([^|{}]*)\}/g, (_, m, f) => f);
+  function catOf(job){
+    const j = plain(job);
+    if (/مدير/.test(j)) return 'lead';
+    if (/وكيل/.test(j)) return 'deputy';
+    if (/الموجهة الطلابية|الموجه الطلابي|موجهة طلابية/.test(j)) return 'counselor';
+    if (/معلم|رياض|محضر|مختبر|الموجهة الصحية|أمينة مصادر/.test(j)) return 'teacher';
+    if (/عاملة|عامل|حارس|مستخدم/.test(j)) return 'service';
+    return 'admin';
+  }
+  function defForm(job){
+    const j = plain(job), c = catOf(job);
+    if (c === 'lead') return 'principal'; if (c === 'deputy') return 'deputy'; if (c === 'counselor') return 'counselor';
+    if (c !== 'teacher') return '';
+    if (/رياض/.test(j)) return 'kg'; if (/محضر|مختبر/.test(j)) return 'lab'; if (/الصحية|صحي/.test(j)) return 'health';
+    return 'teacher';
+  }
+  const secOfForm = f => cur().sections.find(s => s.id === FORM_SEC[f]) || null;
+  const TOP = cat => [['info', '01 البيانات الشخصية والسيرة الذاتية'], ...(FORMS_OF(cat).length ? [['ev', '02 شواهد الأداء الوظيفي']] : []), ['pd', '03 التطوير المهني والشهادات'],
+    ['plans', '04 الخطط والبرامج'], ['reports', '05 التقارير'], ['thanks', '06 الشكر والإنجازات'], ...(cat === 'counselor' ? [['cases', '07 الحالات (سري)']] : [])];
+  const TOP_ICON = {info: 'id-card', ev: 'award', pd: 'graduation-cap', plans: 'calendar-range', reports: 'file-text', thanks: 'medal', cases: 'lock-keyhole'};
+  const fname = s => plain(s).replace(/[\\/:*?"<>|]/g, '-').trim().slice(0, 110);
+
+  /* ---------- Google Drive (REST) ---------- */
+  const DAPI = 'https://www.googleapis.com/drive/v3/files', UAPI = 'https://www.googleapis.com/upload/drive/v3/files';
+  const emuId = () => 'emu' + Math.random().toString(36).slice(2, 12);
+  async function dreq(url, opt, again){
+    const t = await driveToken();
+    const r = await fetch(url, Object.assign({}, opt, {headers: Object.assign({Authorization: 'Bearer ' + t}, (opt && opt.headers) || {})}));
+    if (r.status === 401 && !again) { gTok = null; try { sessionStorage.removeItem('gtok'); } catch(e){} return dreq(url, opt, true); }
+    if (!r.ok) { const tx = await r.text().catch(() => ''); const e = new Error('drive ' + r.status + ' ' + tx.slice(0, 160)); e.status = r.status; throw e; }
+    return r.status === 204 ? null : r.json();
+  }
+  async function dFolder(name, parent){
+    if (fbEmu) return {id: emuId(), webViewLink: 'https://drive.google.com/drive/folders/emu'};
+    return dreq(DAPI + '?fields=id,webViewLink', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({name, mimeType: 'application/vnd.google-apps.folder', ...(parent ? {parents: [parent]} : {})})});
+  }
+  async function dShare(id, email){
+    if (fbEmu || !email) return;
+    await dreq(`${DAPI}/${id}/permissions?sendNotificationEmail=false`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({role: 'reader', type: 'user', emailAddress: email})});
+  }
+  async function dUpload(file, parent){
+    if (fbEmu) return {id: emuId(), name: file.name, webViewLink: 'https://drive.google.com/file/d/emu/view', mimeType: file.type, size: file.size};
+    const meta = {name: file.name, parents: [parent]}, F = 'fields=id,name,webViewLink,mimeType,size';
+    if (file.size <= 4.5 * 1024 * 1024) {
+      const b = 's34-' + Date.now().toString(36);
+      const body = new Blob([`--${b}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(meta)}\r\n--${b}\r\nContent-Type: ${file.type || 'application/octet-stream'}\r\n\r\n`, file, `\r\n--${b}--`]);
+      return dreq(`${UAPI}?uploadType=multipart&${F}`, {method: 'POST', headers: {'Content-Type': 'multipart/related; boundary=' + b}, body});
+    }
+    const t = await driveToken();
+    const s = await fetch(`${UAPI}?uploadType=resumable&${F}`, {method: 'POST', headers: {Authorization: 'Bearer ' + t, 'Content-Type': 'application/json; charset=UTF-8', 'X-Upload-Content-Type': file.type || 'application/octet-stream'}, body: JSON.stringify(meta)});
+    const loc = s.headers.get('Location'); if (!s.ok || !loc) throw new Error('drive resumable ' + s.status);
+    const r = await fetch(loc, {method: 'PUT', headers: {'Content-Type': file.type || 'application/octet-stream'}, body: file});
+    if (!r.ok) throw new Error('drive put ' + r.status);
+    return r.json();
+  }
+  async function dTrash(id){ if (fbEmu) return; await dreq(`${DAPI}/${id}?fields=id`, {method: 'PATCH', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({trashed: true})}); }
+
+  /* ---------- البيانات ---------- */
+  async function loadFile(email){ const d = await fb.fs.doc('files/' + email).get(); return d.exists ? d.data() : null; }
+  async function loadUploads(email){ const q = email ? fb.fs.collection('uploads').where('email', '==', email) : fb.fs.collection('uploads'); return (await q.get()).docs.map(d => ({id: d.id, ...d.data()})).sort((a, b) => (a.at < b.at ? 1 : -1)); }
+  const staffByName = n => S.staff.find(s => s.name === n) || null;
+  const fileIcon = m => /pdf/.test(m || '') ? 'file-text' : /image/.test(m || '') ? 'image' : /video/.test(m || '') ? 'video' : /sheet|excel/.test(m || '') ? 'sheet' : /word|document/.test(m || '') ? 'file-type' : 'file';
+  const sizeTxt = n => !n ? '' : n > 1048576 ? ar((n / 1048576).toFixed(1)) + ' م.ب' : ar(Math.max(1, Math.round(n / 1024))) + ' ك.ب';
+  const dateTxt = s => { try { const d = new Date(s); return ar(d.getDate()) + '/' + ar(d.getMonth() + 1) + '/' + ar(d.getFullYear()); } catch(e){ return ''; } };
+  function needFb(){
+    if (fb && acct) return '';
+    return `<div class="panel lock-panel"><i data-lucide="lock-keyhole"></i><div><h2>متاح بعد تسجيل الدخول</h2><p>ملفات المنسوبات وربطها بـ Google Drive تعمل في المنصة المستضافة بعد الدخول بحساب Google.</p></div></div>`;
+  }
+
+  /* ---------- ملفي ---------- */
+  const MF = {file: null, ups: [], open: {}, busy: ''};
+  async function minePage(){
+    if (needFb()) { app.innerHTML = `<div class="wrap page">${pageHead('ملفي', 'folder-open', '')}${needFb()}</div>`; return; }
+    app.innerHTML = `<div class="wrap page"><div class="panel muted-panel"><span class="spinner"></span>جارٍ تحميل ملفك…</div></div>`;
+    try { [MF.file, MF.ups] = await Promise.all([loadFile(acct.email), loadUploads(acct.email)]); }
+    catch(e){ app.innerHTML = `<div class="wrap page"><div class="msg err">${esc(authMsg(e))}</div></div>`; return; }
+    drawFile(app, {self: true, name: acct.staffName || acct.name, job: acct.job || (acct.owner ? '{مدير|مديرة} المدرسة' : ''), cat: acct.cat, form: acct.form, email: acct.email, photo: acct.photo, file: MF.file, ups: MF.ups});
+  }
+  function drawFile(host, P){
+    const sec = secOfForm(P.form), items = sec ? sec.items : [], st = staffByName(P.name);
+    const byItem = k => P.ups.filter(u => u.item === k);
+    const done = items.filter(it => byItem(it.id).length).length, pct = items.length ? Math.round(done / items.length * 100) : 0;
+    const linked = !!(P.file && P.file.root);
+    const top = TOP(P.cat).filter(([k]) => k !== 'ev');
+    host.innerHTML = `<div class="wrap page mf">
+      <section class="mf-head">
+        <div class="mf-id">${P.photo ? `<img class="mf-ph" src="${esc(P.photo)}" alt="" referrerpolicy="no-referrer">` : `<span class="mf-av">${esc(initials(P.name))}</span>`}
+          <div><small>${P.self ? 'ملفي' : 'ملف ' + esc((CATS.find(c => c.k === P.cat) || {}).t || '')}</small><h1>${esc(P.name || '')}</h1>
+            <span>${esc(g(P.job || ''))}${P.form ? ' · ' + esc(FORM_LBL[P.form] || '') : ''}</span></div></div>
+        <div class="mf-stats">
+          <div><b>${ar(P.ups.length)}</b><span>الملفات المرفوعة</span></div>
+          ${items.length ? `<div><b>${ar(done)}/${ar(items.length)}</b><span>عنصرًا بشواهد</span></div><div class="mf-ring" style="--p:${pct}"><b>${ar(pct)}٪</b></div>` : ''}
+        </div>
+        <div class="mf-drive ${linked ? 'ok' : ''}"><span class="mf-dico"><i data-lucide="${linked ? 'cloud-upload' : 'cloud-off'}"></i></span>
+          <div><b>${linked ? 'الملف مرتبط بـ Google Drive' : (P.self ? 'لم يُنشأ ملفك في Google Drive بعد' : 'لم تنشئ ملفها في Google Drive بعد')}</b><small>${linked ? 'كل ما ترفعينه يُحفظ في مجلدات الملف تلقائيًا.' : (P.self ? 'ينشئ مجلدًا رئيسيًا باسمك ومجلدًا لكل عنصر من عناصر نموذجك، ويشاركه مع مديرة المدرسة للاطلاع.' : 'يظهر هنا بعد أن تنشئه المنسوبة من «ملفي».')}</small></div>
+          ${linked ? `<a class="btn btn-ghost btn-sm" href="${esc(P.file.rootLink)}" target="_blank" rel="noopener"><i data-lucide="external-link"></i>فتح في Drive</a>` : (P.self ? `<button type="button" class="btn btn-primary" id="mf-create"><i data-lucide="folder-plus"></i>إنشاء ملفي في Google Drive</button>` : '')}
+        </div>
+        <div id="mf-prog" aria-live="polite"></div>
+        ${st ? `<div class="mf-links"><button type="button" class="btn btn-ghost btn-sm" id="mf-att"><i data-lucide="clipboard-check"></i>الحضور والتكليفات</button></div>` : ''}
+      </section>
+      ${items.length ? `<section class="panel mf-sec"><h2><i data-lucide="award"></i>شواهد الأداء الوظيفي <small>${esc(sec ? g(sec.name) : '')}</small></h2>
+        <div class="mf-items">${items.map((it, i) => itemRow(it, i, byItem(it.id), P, linked && P.file.items && P.file.items[it.id])).join('')}</div></section>` : ''}
+      <section class="panel mf-sec"><h2><i data-lucide="folder-tree"></i>مجلدات الملف</h2>
+        <div class="mf-items">${top.map(([k, n], i) => itemRow({id: 'x:' + k, name: n.replace(/^\d+ /, ''), icon: TOP_ICON[k]}, -1, byItem('x:' + k), P, linked && P.file.folders && P.file.folders[k])).join('')}</div></section>
+    </div>`;
+    icons();
+    const cb = document.getElementById('mf-create'); if (cb) cb.onclick = () => createMyFile(cb);
+    const ab = document.getElementById('mf-att'); if (ab) ab.onclick = () => staffProfile(st.id);
+    host.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { const k = b.dataset.open; MF.open[k] = !MF.open[k]; b.closest('.mf-it').classList.toggle('open', !!MF.open[k]); b.setAttribute('aria-expanded', !!MF.open[k]); });
+    if (P.self) {
+      host.querySelectorAll('[data-up]').forEach(b => b.onclick = async () => {
+        const inp = b.parentElement.querySelector('input[type=file]');
+        if (!gTok || gTok.exp < Date.now()) { try { await driveToken(); } catch(e){ toast(authMsg(e), 'err'); return; } }
+        inp.click();
+      });
+      host.querySelectorAll('input[type=file][data-k]').forEach(inp => inp.onchange = () => uploadFiles(inp.dataset.k, [...inp.files], inp));
+      host.querySelectorAll('[data-del]').forEach(b => armDelete(b, async () => {
+        const u = MF.ups.find(x => x.id === b.dataset.del); if (!u) return;
+        try { try { await dTrash(u.fileId); } catch(e){ if (e.status !== 404) throw e; } await fb.fs.doc('uploads/' + u.id).delete(); MF.ups = MF.ups.filter(x => x !== u); toast('حُذف الملف (نُقل إلى سلة Drive).', 'ok'); minePageDraw(); }
+        catch(e){ toast(authMsg(e), 'err'); }
+      }));
+    }
+  }
+  function itemRow(it, i, ups, P, folderId){
+    const k = it.id, open = !!MF.open[k];
+    return `<div class="mf-it${open ? ' open' : ''}${ups.length ? ' has' : ''}">
+      <div class="mf-row">
+        ${i >= 0 ? `<span class="mf-n">${ar(i + 1)}</span>` : `<span class="mf-n ic"><i data-lucide="${esc(it.icon || 'folder')}"></i></span>`}
+        <button type="button" class="mf-t" data-open="${esc(k)}" aria-expanded="${open}"><b>${esc(g(it.name))}</b><small>${it.weight ? 'الوزن ' + ar(it.weight) + '٪ · ' : ''}${ups.length ? ar(ups.length) + ' ' + (ups.length === 1 ? 'ملف' : ups.length === 2 ? 'ملفان' : 'ملفات') : 'لا توجد ملفات'}</small></button>
+        <span class="mf-st">${ups.length ? '<i data-lucide="circle-check"></i>' : '<i data-lucide="circle-dashed"></i>'}</span>
+        <div class="mf-acts">
+          ${P.self && folderId ? `<button type="button" class="btn btn-primary btn-sm" data-up><i data-lucide="upload"></i><span>رفع</span></button><input type="file" data-k="${esc(k)}" multiple accept="image/*,application/pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,video/*" hidden>` : ''}
+          ${folderId && !fbEmu ? `<a class="icon-btn sm" href="https://drive.google.com/drive/folders/${esc(folderId)}" target="_blank" rel="noopener" aria-label="فتح المجلد في Drive"><i data-lucide="folder-open"></i></a>` : ''}
+        </div>
+      </div>
+      <div class="mf-files">${ups.length ? ups.map(u => `<div class="mf-f"><i data-lucide="${fileIcon(u.mime)}"></i><a href="${esc(u.link)}" target="_blank" rel="noopener">${esc(u.name)}</a><small>${dateTxt(u.at)}${u.size ? ' · ' + sizeTxt(u.size) : ''}</small>${P.self ? `<button type="button" class="icon-btn sm danger" data-del="${esc(u.id)}" aria-label="حذف الملف"><i data-lucide="trash-2"></i></button>` : ''}</div>`).join('') : `<p class="muted">${P.self ? (folderId ? 'لم ترفعي ملفات بعد. اضغطي «رفع» واختاري صورة أو ملف PDF أو صوّري مباشرة.' : 'أنشئي ملفك في Google Drive أولًا لتتمكني من الرفع.') : 'لم تُرفع ملفات لهذا العنصر.'}</p>`}
+        ${it.evidence && it.evidence.length ? `<div class="mf-hint"><b>الشواهد المقترحة:</b> ${it.evidence.map(x => esc(g(x))).join(' • ')}</div>` : ''}</div>
+    </div>`;
+  }
+  function minePageDraw(){ drawFile(app, {self: true, name: acct.staffName || acct.name, job: acct.job || (acct.owner ? '{مدير|مديرة} المدرسة' : ''), cat: acct.cat, form: acct.form, email: acct.email, photo: acct.photo, file: MF.file, ups: MF.ups}); }
+  async function createMyFile(btn){
+    const prog = m => { const el = document.getElementById('mf-prog'); if (el) el.innerHTML = m ? `<div class="msg info"><span class="spinner"></span>${esc(m)}</div>` : ''; };
+    btn.disabled = true;
+    try {
+      await driveToken();
+      const sec = secOfForm(acct.form), items = sec ? sec.items : [], year = cur().settings.year || '';
+      const f = MF.file || {folders: {}, items: {}};
+      f.folders = f.folders || {}; f.items = f.items || {};
+      const save = () => fb.fs.doc('files/' + acct.email).set(Object.assign(f, {email: acct.email, name: acct.staffName || acct.name, form: acct.form || '', cat: acct.cat || '', at: new Date().toISOString()}));
+      if (!f.root) { prog('إنشاء المجلد الرئيسي…'); const r = await dFolder(`ملف ${plain(acct.staffName || acct.name)} — ${plain(acct.job || 'مديرة المدرسة')} — ${year}`); f.root = r.id; f.rootLink = r.webViewLink; await save(); }
+      const tops = TOP(acct.cat);
+      for (const [k, n] of tops) if (!f.folders[k]) { prog('إنشاء مجلد ' + n.replace(/^\d+ /, '') + '…'); f.folders[k] = (await dFolder(n, f.root)).id; await save(); }
+      let n = 0;
+      for (const it of items) { n++; if (f.items[it.id]) continue; prog(`مجلدات العناصر ${ar(n)} من ${ar(items.length)}…`); f.items[it.id] = (await dFolder(String(n).padStart(2, '0') + ' ' + fname(g(it.name)), f.folders.ev)).id; if (n % 4 === 0) await save(); }
+      await save();
+      try { const o = await fb.fs.doc('meta/owner').get(); const oe = o.exists ? o.data().email : ''; if (oe && oe !== acct.email && !f.sharedWith) { prog('مشاركة الملف مع مديرة المدرسة…'); await dShare(f.root, oe); f.sharedWith = oe; await save(); } } catch(e){}
+      MF.file = f; prog(''); toast('أُنشئ ملفك في Google Drive.', 'ok'); minePageDraw();
+    } catch(e){ prog(''); btn.disabled = false; toast(authMsg(e), 'err'); console.error(e); }
+  }
+  async function uploadFiles(k, files, inp){
+    if (!files.length) return;
+    const f = MF.file; const parent = k.startsWith('x:') ? (f.folders || {})[k.slice(2)] : (f.items || {})[k];
+    if (!parent) { toast('أنشئي ملفك في Google Drive أولًا.', 'err'); return; }
+    const row = inp.closest('.mf-it'); const btn = row.querySelector('[data-up]'); btn.disabled = true;
+    let ok = 0;
+    for (const file of files) {
+      if (file.size > 50 * 1024 * 1024) { toast(`«${file.name}» أكبر من ٥٠ ميجابايت.`, 'err'); continue; }
+      btn.querySelector('span').textContent = `جارٍ الرفع ${ar(ok + 1)}/${ar(files.length)}`;
+      try {
+        const r = await dUpload(file, parent);
+        const rec = {email: acct.email, staffName: acct.staffName || acct.name, item: k, name: r.name || file.name, fileId: r.id, link: r.webViewLink || '', mime: r.mimeType || file.type || '', size: +r.size || file.size, at: new Date().toISOString()};
+        const d = await fb.fs.collection('uploads').add(rec); MF.ups.unshift({id: d.id, ...rec}); ok++;
+      } catch(e){ toast(authMsg(e), 'err'); console.error(e); break; }
+    }
+    inp.value = ''; MF.open[k] = true;
+    if (ok) toast(ok === 1 ? 'رُفع الملف إلى Google Drive.' : `رُفع ${ar(ok)} ملفات إلى Google Drive.`, 'ok');
+    minePageDraw();
+  }
+
+  /* ---------- الكادر (للإدارة) ---------- */
+  const CD = {members: [], files: [], ups: [], at: 0};
+  async function cadreLoad(force){
+    if (!force && Date.now() - CD.at < 60000) return;
+    const [m, f, u] = await Promise.all([fb.fs.collection('members').get(), fb.fs.collection('files').get(), fb.fs.collection('uploads').get()]);
+    CD.members = m.docs.map(d => d.data()); CD.files = f.docs.map(d => d.data()); CD.ups = u.docs.map(d => ({id: d.id, ...d.data()})); CD.at = Date.now();
+    try { const o = await fb.fs.doc('meta/owner').get(); if (o.exists) { const lead = S.staff.find(s => catOf(jobOf(s)) === 'lead'); CD.owner = Object.assign({}, o.data(), {staffName: lead ? lead.name : o.data().name, active: true, form: 'principal', cat: 'lead'}); } } catch(e){}
+  }
+  function personInfo(s){
+    const all = CD.owner ? CD.members.concat([CD.owner]) : CD.members;
+    const m = all.find(x => (x.staffName || x.name) === s.name) || null;
+    const file = m ? CD.files.find(x => x.email === m.email) || null : null;
+    const ups = m ? CD.ups.filter(u => u.email === m.email) : [];
+    const form = (m && m.form) || defForm(jobOf(s)), sec = secOfForm(form), items = sec ? sec.items : [];
+    const done = items.filter(it => ups.some(u => u.item === it.id)).length;
+    return {s, m, file, ups, form, items, done, pct: items.length ? Math.round(done / items.length * 100) : 0};
+  }
+  function cadreGate(){
+    if (needFb()) return needFb();
+    if (!acct || acct.role !== 'admin') return `<div class="panel lock-panel"><i data-lucide="lock-keyhole"></i><div><h2>للإدارة فقط</h2><p>متابعة ملفات الكادر متاحة لمديرة المدرسة ومن تمنحها صلاحية الإدارة.</p></div></div>`;
+    return gate();
+  }
+  async function cadrePage(){
+    const gk = cadreGate(); if (gk) { app.innerHTML = `<div class="wrap page">${pageHead('الكادر', 'users-round', '')}${gk}</div>`; return; }
+    app.innerHTML = `<div class="wrap page"><div class="panel muted-panel"><span class="spinner"></span>جارٍ تحميل ملفات الكادر…</div></div>`;
+    try { await cadreLoad(); } catch(e){ app.innerHTML = `<div class="wrap page"><div class="msg err">${esc(authMsg(e))}</div></div>`; return; }
+    const pend = CD.members.filter(m => !m.active && m.status === 'pending').length;
+    const att = (T.att && T.att.rec) || {};
+    app.innerHTML = `<div class="wrap page">
+      ${pageHead('الكادر', 'users-round', 'ملف مستقل لكل فئة: منسوباتها، وحساباتهن، وملفاتهن في Google Drive، وشواهدهن، وحضورهن.', `<button type="button" class="btn btn-ghost" id="cd-ref"><i data-lucide="refresh-cw"></i>تحديث</button>`)}
+      ${pend ? `<a class="banner" href="#admin" id="cd-pend"><i data-lucide="user-check"></i><span class="grow">لديك ${ar(pend)} ${pend === 1 ? 'طلب حساب جديد' : 'طلبات حسابات جديدة'} بانتظار الاعتماد.</span><span class="btn btn-primary btn-sm">مراجعة الطلبات</span></a>` : ''}
+      <div class="cat-grid">${CATS.map(c => {
+        const list = S.staff.filter(s => catOf(jobOf(s)) === c.k), info = list.map(personInfo);
+        const acc = info.filter(x => x.m && x.m.active).length, files = info.filter(x => x.file && x.file.root).length;
+        const withItems = info.filter(x => x.items.length), pct = withItems.length ? Math.round(withItems.reduce((a, x) => a + x.pct, 0) / withItems.length) : null;
+        const present = list.filter(s => att[s.id] && (att[s.id].s === 'p' || att[s.id].s === 'l')).length;
+        return `<a class="cat-card" href="#cat-${c.k}"><span class="cat-i"><i data-lucide="${c.i}"></i></span><div class="cat-t"><b>${c.t}</b><small>${c.d}</small></div><span class="cat-n">${ar(list.length)}</span>
+          <div class="cat-kpi"><span><i data-lucide="user-check"></i>${ar(acc)} حساب</span><span><i data-lucide="cloud"></i>${ar(files)} ملف Drive</span>${pct != null ? `<span><i data-lucide="award"></i>الشواهد ${ar(pct)}٪</span>` : ''}<span><i data-lucide="clipboard-check"></i>حضور اليوم ${ar(present)}</span></div></a>`;
+      }).join('')}</div></div>`;
+    icons();
+    document.getElementById('cd-ref').onclick = async () => { await cadreLoad(true); cadrePage(); };
+    const pb = document.getElementById('cd-pend'); if (pb) pb.onclick = () => { adminTab = 'users'; };
+  }
+  async function catPage(k){
+    const c = CATS.find(x => x.k === k); if (!c) return cadrePage();
+    const gk = cadreGate(); if (gk) { app.innerHTML = `<div class="wrap page">${pageHead(c.t, c.i, '')}${gk}</div>`; return; }
+    app.innerHTML = `<div class="wrap page"><div class="panel muted-panel"><span class="spinner"></span>جارٍ التحميل…</div></div>`;
+    try { await cadreLoad(); } catch(e){ app.innerHTML = `<div class="wrap page"><div class="msg err">${esc(authMsg(e))}</div></div>`; return; }
+    const list = S.staff.filter(s => catOf(jobOf(s)) === k).map(personInfo);
+    const q = (M.catQ || '').trim(), rows = list.filter(x => !q || x.s.name.includes(q));
+    const att = (T.att && T.att.rec) || {};
+    const acc = list.filter(x => x.m && x.m.active).length, files = list.filter(x => x.file && x.file.root).length, ups = list.reduce((a, x) => a + x.ups.length, 0);
+    const wi = list.filter(x => x.items.length), pct = wi.length ? Math.round(wi.reduce((a, x) => a + x.pct, 0) / wi.length) : null;
+    const forms = [...new Set(list.map(x => x.form).filter(Boolean))];
+    app.innerHTML = `<div class="wrap page">
+      <nav class="crumbs"><a href="#cadre"><i data-lucide="arrow-right"></i>الكادر</a><span>/</span><span>${c.t}</span></nav>
+      ${pageHead('ملف ' + c.t, c.i, c.d + (forms.length ? ' · ' + forms.map(f => FORM_LBL[f]).join('، ') : ''))}
+      <div class="cat-kpis">
+        <div><b>${ar(list.length)}</b><span>منسوبة</span></div><div><b>${ar(acc)}</b><span>حساب مفعّل</span></div>
+        <div><b>${ar(files)}</b><span>ملف في Drive</span></div><div><b>${ar(ups)}</b><span>ملفًا مرفوعًا</span></div>
+        ${pct != null ? `<div><b>${ar(pct)}٪</b><span>متوسط اكتمال الشواهد</span></div>` : ''}
+      </div>
+      <div class="toolbar"><label class="search"><i data-lucide="search"></i><input id="cat-q" type="search" value="${esc(q)}" placeholder="ابحثي بالاسم…" aria-label="بحث"></label></div>
+      <div class="ppl">${rows.map(x => {
+        const a = att[x.s.id], A = a && ATT.find(z => z.k === a.s);
+        const accChip = !x.m ? '<span class="spill none">بلا حساب</span>' : !x.m.active ? `<span class="spill wait">${x.m.status === 'pending' ? 'بانتظار الاعتماد' : 'موقوف'}</span>` : '<span class="spill ok">حساب مفعّل</span>';
+        return `<a class="ppl-row" href="#pf-${esc(x.s.id)}">${x.m && x.m.photo ? `<img class="u-ph" src="${esc(x.m.photo)}" alt="" referrerpolicy="no-referrer">` : `<span class="avatar">${esc(initials(x.s.name))}</span>`}
+          <div class="ppl-t"><b>${esc(x.s.name)}</b><small>${esc(g(jobOf(x.s)))}${x.form ? ' · ' + esc((FORM_LBL[x.form] || '').split('—')[0].trim()) : ''}</small></div>
+          <div class="ppl-chips">${accChip}${x.file && x.file.root ? '<span class="spill info">Drive</span>' : ''}${A ? `<span class="spill ${A.c}">${esc(g(A.t))}</span>` : ''}</div>
+          ${x.items.length ? `<div class="ppl-bar" title="اكتمال الشواهد"><span class="bar"><i style="width:${x.pct}%"></i></span><small>${ar(x.done)}/${ar(x.items.length)}</small></div>` : `<div class="ppl-bar"><small>${ar(x.ups.length)} ملف</small></div>`}
+          <i data-lucide="chevron-left" class="ppl-go"></i></a>`;
+      }).join('') || '<p class="muted">لا توجد منسوبات في هذه الفئة.</p>'}</div></div>`;
+    icons();
+    const qi = document.getElementById('cat-q'); qi.oninput = () => { M.catQ = qi.value; const p = qi.selectionStart; catPage(k).then(() => { const n = document.getElementById('cat-q'); if (n) { n.focus(); n.setSelectionRange(p, p); } }); };
+  }
+  async function personPage(id){
+    const gk = cadreGate(); if (gk) { app.innerHTML = `<div class="wrap page">${gk}</div>`; return; }
+    app.innerHTML = `<div class="wrap page"><div class="panel muted-panel"><span class="spinner"></span>جارٍ التحميل…</div></div>`;
+    try { await cadreLoad(); } catch(e){ app.innerHTML = `<div class="wrap page"><div class="msg err">${esc(authMsg(e))}</div></div>`; return; }
+    const s = S.staff.find(x => x.id === id); if (!s) { app.innerHTML = `<div class="wrap page">${S.staffReady ? '<div class="msg err">لم تُوجد المنسوبة.</div>' : '<div class="panel muted-panel"><span class="spinner"></span>جارٍ التحميل…</div>'}</div>`; return; }
+    const x = personInfo(s), c = catOf(jobOf(s));
+    drawFile(app, {self: false, name: s.name, job: jobOf(s), cat: c, form: x.form, email: x.m ? x.m.email : '', photo: x.m ? x.m.photo : '', file: x.file, ups: x.ups});
+    const head = app.querySelector('.mf'); if (head) head.insertAdjacentHTML('afterbegin', `<nav class="crumbs"><a href="#cadre"><i data-lucide="arrow-right"></i>الكادر</a><span>/</span><a href="#cat-${c}">${esc((CATS.find(z => z.k === c) || {}).t || '')}</a><span>/</span><span>${esc(s.name)}</span></nav>
+      ${!x.m ? '<div class="msg info">لم تنشئ هذه المنسوبة حسابًا في المنصة بعد. أرسلي لها رسالة الدعوة من «لوحة التحكم ← الحسابات».</div>' : ''}`);
+    icons();
   }
 
   /* ---------- التوجيه ---------- */
@@ -3547,7 +4021,7 @@ body{font-synthesis:weight style}
     const old = /^e(\d{1,2})$/.exec(h); if (old) h = 'i' + old[1];
     if (!h) h = 'home';
     const school = SCHOOL_ROUTES.includes(h);
-    const pg = h === 'profile' || h === 'ach';
+    const pg = h === 'profile' || h === 'ach' || h === 'mine' || h === 'cadre' || /^cat-[a-z]+$/.test(h) || /^pf-[\w-]+$/.test(h);
     const item = !school && !pg && h !== 'admin' && h !== 'ev' && /^[a-z][a-z0-9]{1,24}$/.test(h);
     activeRoute = (school || item || pg || h === 'admin' || h === 'ev') ? h : 'home';
     chrome();
@@ -3556,6 +4030,10 @@ body{font-synthesis:weight style}
     else if (h === 'ev') evHome();
     else if (h === 'profile') profilePage();
     else if (h === 'ach') achPage();
+    else if (h === 'mine') minePage();
+    else if (h === 'cadre') cadrePage();
+    else if (h.startsWith('cat-')) catPage(h.slice(4));
+    else if (h.startsWith('pf-')) personPage(h.slice(3));
     else if (school) renderSchool(h);
     else if (item) element(h);
     else renderSchool('home');
