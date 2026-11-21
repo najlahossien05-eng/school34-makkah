@@ -5732,6 +5732,7 @@ body{font-synthesis:weight style}
     o.querySelector('#tr-d').textContent = s.d;
     o.querySelector('#tr-bar').style.width = Math.round((TOUR.i + 1) / total * 100) + '%';
     o.querySelector('#tr-prev').hidden = TOUR.i === 0;
+    const pgb = o.querySelector('#tr-page'); if (pgb) pgb.hidden = true;
     const nx = o.querySelector('#tr-next'); nx.innerHTML = last ? '<i data-lucide="check"></i>إنهاء' : 'التالي<i data-lucide="arrow-left"></i>'; icons();
     o.classList.toggle('center', !el);
     o.classList.remove('busy');
