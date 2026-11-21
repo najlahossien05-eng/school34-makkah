@@ -1508,6 +1508,7 @@ body.gated{overflow:hidden}
   .cat-kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 }
 .mf-av{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;flex:none;background:linear-gradient(135deg,#0B3D4A,#138D90);color:#fff;font-family:var(--f-display);font-weight:800;font-size:18px}
+.gate-brand .gate-tag{font-style:normal;font-size:13px;opacity:.9;margin-top:2px;color:#d8f3ef}
 
 /* ===================== صفحة الدخول ببابين + صفحات المنسوبة + التقييم + مكتب التوجيه ===================== */
 .doors{display:grid;gap:10px;margin-top:6px}
@@ -1873,7 +1874,7 @@ body{font-synthesis:weight style}
       <div class="main-col">
         <header class="topbar"><div class="topbar-in">
           <button type="button" class="icon-btn menu-btn" id="menu-btn" aria-label="فتح القائمة" aria-controls="nav" aria-expanded="false"><i data-lucide="menu"></i></button>
-          <a class="tb-brand" href="#home"><span class="tb-logo"><img class="logo-l" src="${ASSETS.logo}" alt="شعار وزارة التعليم"><img class="logo-d" src="${ASSETS.logoW}" alt=""></span><span class="tb-brand-t"><b id="tb-school"></b><small>منصة إدارة المدرسة</small></span></a>
+          <a class="tb-brand" href="#home"><span class="tb-logo"><img class="logo-l" src="${ASSETS.logo}" alt="شعار وزارة التعليم"><img class="logo-d" src="${ASSETS.logoW}" alt=""></span><span class="tb-brand-t"><b id="tb-school"></b><small>${esc((cur().settings.solo && cur().settings.solo.brand) || 'منصة إدارة المدرسة')}</small></span></a>
           <nav class="pills" id="pills" aria-label="التنقل الرئيسي"></nav>
           <div class="tb-title"><b id="page-title"></b><span id="save-state" class="save-state" aria-live="polite"></span></div>
           <div class="gsearch" id="gsearch"><i data-lucide="search"></i><input id="gq" type="search" placeholder="ابحث عن اسم موظف أو رقم وظيفي…" autocomplete="off" aria-label="بحث في المنصة" aria-controls="gres"><div class="gres" id="gres" role="listbox" hidden></div></div>
@@ -2004,7 +2005,7 @@ body{font-synthesis:weight style}
       `<button type="button" id="bn-more" aria-controls="nav" class="${BN.some(b => b[0] === activeRoute) || isEv ? '' : 'on'}"><i data-lucide="layout-grid"></i><span>القائمة</span></button>`;
     document.getElementById('bn-more').onclick = () => setNav(true);
     document.getElementById('fab').setAttribute('href', href('att'));
-    document.getElementById('nav-foot').innerHTML = `${st.person ? `<div class="nav-me"><span class="avatar">${esc(initials(st.person))}</span><span><b>أ. ${esc(st.person)}</b><small>${esc(role())}</small></span></div>` : ''}<small>منصة إدارة المنسوبين${st.year ? ' · ' + esc(st.year) : ''}</small>${acct ? `<div class="nav-acct"><span class="ltr">${esc(acct.email)}</span><button type="button" id="nav-out"><i data-lucide="log-out"></i>تسجيل الخروج</button></div>` : ''}`;
+    document.getElementById('nav-foot').innerHTML = `${st.person ? `<div class="nav-me"><span class="avatar">${esc(initials(st.person))}</span><span><b>أ. ${esc(st.person)}</b><small>${esc(role())}</small></span></div>` : ''}<small>${esc(PLATFORM)}${st.year ? ' · ' + esc(st.year) : ''}</small>${acct ? `<div class="nav-acct"><span class="ltr">${esc(acct.email)}</span><button type="button" id="nav-out"><i data-lucide="log-out"></i>تسجيل الخروج</button></div>` : ''}`;
     const out = document.getElementById('nav-out'); if (out) out.onclick = fbSignOut;
     const me = document.getElementById('me-chip');
     me.hidden = !st.person; me.innerHTML = st.person ? `<span class="avatar">${esc(initials(st.person))}</span><span class="me-name"><b>أ. ${esc(st.person)}</b><small>${esc(role())}</small></span>` : '';
@@ -2768,7 +2769,7 @@ body{font-synthesis:weight style}
         ${cur().settings.badge ? `<span class="hb-num" aria-hidden="true">${esc(cur().settings.badge)}</span>` : ''}
         <div class="hb-top">
           <img src="${ASSETS.logoW}" alt="شعار وزارة التعليم" class="hb-logo">
-          <div class="hb-id"><small>منصة إدارة المدرسة${s.year ? ' · ' + esc(s.year) : ''}</small><h1>${esc(P.name || s.school || 'المدرسة')}</h1>
+          <div class="hb-id"><small>${esc(PLATFORM)}${TAGLINE ? ' — ' + esc(TAGLINE) : ''}${s.year ? ' · ' + esc(s.year) : ''}</small><h1>${esc(P.name || s.school || 'المدرسة')}</h1>
             <span>${[info('المدينة'), info('المرحلة')].filter(Boolean).map(esc).join(' · ')}</span></div>
           <button type="button" class="hb-ref" id="d-refresh" title="تحديث" aria-label="تحديث"><i data-lucide="refresh-cw"></i></button>
         </div>
@@ -3686,11 +3687,13 @@ body{font-synthesis:weight style}
   const fbLive = isLocal && /[?&]fb=live\b/.test(location.search);
   const useFb = !!(FB && FB.apiKey) && (webHost || fbEmu || fbLive);
   let fb = null, acct = null;
+  /* نسخة مستقلة لمدرسة واحدة (مشروع Firebase خاص): لا تسجيل مدارس ولا رموز ولا اشتراكات ولا أي إشارة للدفع */
+  const SOLO = cur().settings.solo || null;
   /* ===== SaaS: المدرسة الحالية — كل بيانات المدرسة تحت schools/{SID}/… ===== */
   let SID = '', SCHOOL = null, ROSTER = [], LIC = null;
   const PUBLISHED0 = JSON.parse(JSON.stringify(PUBLISHED));
   const SD = {doc: p => fb.fs.doc('schools/' + SID + '/' + p), collection: c => fb.fs.collection('schools/' + SID + '/' + c), batch: () => fb.fs.batch()};
-  const PLATFORM = 'منصة إدارة المدرسة';
+  const PLATFORM = (SOLO && SOLO.brand) || 'منصة إدارة المدرسة', TAGLINE = (SOLO && SOLO.tagline) || '';
   const ss = {get(k){ try { return sessionStorage.getItem(k) || ''; } catch(e){ return ''; } }, set(k, v){ try { sessionStorage.setItem(k, v); } catch(e){} }, del(k){ try { sessionStorage.removeItem(k); } catch(e){} }};
   (function(){ try { const c = new URLSearchParams(location.search).get('s'); if (c) ss.set('joinCode', c.trim().toUpperCase()); } catch(e){} })();
   const genCode = n => { const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; return Array.from(crypto.getRandomValues(new Uint32Array(n)), x => A[x % A.length]).join(''); };
@@ -3709,6 +3712,7 @@ body{font-synthesis:weight style}
   function applySchool(sc){
     if (!sc) return;
     const st = PUBLISHED.settings;
+    if (SOLO) st.year = ''; /* طلب العميلة: اسم المنصة دون سنة */
     st.school = sc.name || st.school; if (sc.principal && !st.person) st.person = sc.principal;
     st.editions = sc.gender === 'm' ? 'm' : 'f'; st.defaultEdition = st.editions;
     if (sc.office || sc.region) st.region = sc.office || sc.region;
@@ -3774,14 +3778,14 @@ body{font-synthesis:weight style}
   }
 
   /* ---------- شاشة الدخول ---------- */
-  function gateEl(){ let g = document.getElementById('gate'); if (!g) { g = document.createElement('div'); g.id = 'gate'; document.body.appendChild(g); } document.body.classList.add('gated'); document.title = PLATFORM; return g; }
+  function gateEl(){ let g = document.getElementById('gate'); if (!g) { g = document.createElement('div'); g.id = 'gate'; document.body.appendChild(g); } document.body.classList.add('gated'); document.title = SOLO ? PLATFORM + ' — ' + SOLO.name : PLATFORM; return g; }
   function hideGate(){ const g = document.getElementById('gate'); if (g) g.remove(); document.body.classList.remove('gated'); }
   function gateShell(inner){
-    const s = cur().settings, nm = SCHOOL ? SCHOOL.name : (ss.get('joinName') || '');
+    const s = cur().settings, nm = SCHOOL ? SCHOOL.name : (ss.get('joinName') || (SOLO && SOLO.name) || '');
     return `<div class="gate-in"><div class="gate-card">
-      <div class="gate-brand"><img src="${ASSETS.logoW}" alt="شعار وزارة التعليم"><div><small>${nm ? PLATFORM + (s.year ? ' · ' + esc(s.year) : '') : 'نظام إدارة الكادر والأداء الوظيفي'}</small><b>${esc(nm || PLATFORM)}</b></div></div>
+      <div class="gate-brand"><img src="${ASSETS.logoW}" alt="شعار وزارة التعليم"><div>${SOLO ? `<small>${esc(nm || '')}</small><b>${esc(PLATFORM)}</b>${TAGLINE ? `<em class="gate-tag">${esc(TAGLINE)}</em>` : ''}` : `<small>${nm ? esc(PLATFORM) + (s.year ? ' · ' + esc(s.year) : '') : 'نظام إدارة الكادر والأداء الوظيفي'}</small><b>${esc(nm || PLATFORM)}</b>`}</div></div>
       <div class="gate-body">${inner}</div></div>
-      <p class="gate-foot">${esc(SCHOOL ? (SCHOOL.office || SCHOOL.region || '') : 'لمدارس المملكة العربية السعودية')}</p></div>`;
+      <p class="gate-foot">${esc(SCHOOL ? (SCHOOL.office || SCHOOL.region || '') : SOLO ? (SOLO.office || '') : 'لمدارس المملكة العربية السعودية')}</p></div>`;
   }
   function gateLoading(t){ gateEl().innerHTML = gateShell(`<div class="gate-wait"><span class="spinner"></span>${esc(t || 'جارٍ التحميل…')}</div>`); }
   let claimOwner = false;
@@ -3813,9 +3817,9 @@ body{font-synthesis:weight style}
     wireEyes(g); icons();
     const m1 = document.getElementById('g-msg');
     document.getElementById('g-google').onclick = e => { claimOwner = false; googleSignIn(e.currentTarget, m1); };
-    document.getElementById('g-create').onclick = () => gateJoin();
+    document.getElementById('g-create').onclick = () => SOLO ? soloJoin() : gateJoin();
     document.getElementById('g-signup').onclick = () => gateSignup();
-    fb.fs.doc('platform/config').get().then(c => { const p = document.getElementById('g-signup-p'); if (p && c.exists && c.data().signupOpen) p.hidden = false; }).catch(() => {});
+    if (!SOLO) fb.fs.doc('platform/config').get().then(c => { const p = document.getElementById('g-signup-p'); if (p && c.exists && c.data().signupOpen) p.hidden = false; }).catch(() => {});
     if (ss.get('joinCode') && !note) { const p = g.querySelector('.gate-sub'); if (p) p.insertAdjacentHTML('afterend', `<div class="msg info">وصلتك دعوة للانضمام إلى مدرسة. إن لم يكن لك حساب فاختاري «الانضمام إلى مدرستي».</div>`); }
     const msg = (m, ok) => { document.getElementById('g-msg2').innerHTML = m ? `<div class="msg ${ok ? 'ok' : 'err'}">${esc(m)}</div>` : ''; };
     document.getElementById('g-login').onsubmit = async ev => {
@@ -3841,14 +3845,14 @@ body{font-synthesis:weight style}
     const noOwner = true; /* المالكة تُفعَّل بالرمز؛ إن وُجدت يُرفض الطلب برسالة واضحة */
     const list = TITLES.filter(t => t.k !== 'lead' || noOwner);
     g.innerHTML = gateShell(`
-      <button type="button" class="gate-back" id="g-back"><i data-lucide="arrow-right"></i>تغيير المدرسة</button>
+      <button type="button" class="gate-back" id="g-back"><i data-lucide="arrow-right"></i>${SOLO ? 'رجوع' : 'تغيير المدرسة'}</button>
       <h1>إنشاء حساب جديد</h1>${ss.get('joinName') ? `<div class="msg ok">المدرسة: <b>${esc(ss.get('joinName'))}</b></div>` : ''}<p class="gate-sub">اختاري مسماك الوظيفي، ثم أنشئي الحساب بحساب Google. بعدها تختارين اسمك وتضعين كلمة مرور، ويُرسل طلبك لمديرة المدرسة لاعتماده.</p>
       <div class="title-pick">${list.map(t => `<button type="button" class="tp" data-tk="${t.k}"><span class="cp-i"><i data-lucide="${t.i}"></i></span><b>${t.t}</b><small>${t.k === 'lead' ? 'برمز التفعيل' : ''}</small></button>`).join('')}</div>
       <label class="field" id="g-code-wrap" hidden><span>رمز تفعيل حساب الإدارة</span><input class="in ltr code-in" id="g-code" autocomplete="off" autocapitalize="characters" placeholder="مثال: MK34-7Q2X"><small class="muted">يصلك الرمز من مزوّد المنصة مع رابطها.</small></label>
       <div id="g-msg" aria-live="polite"></div>
       <button class="btn-google" type="button" id="g-google" disabled>${G_ICON}<span>اختاري مسماك الوظيفي أولًا</span></button>`);
     icons();
-    document.getElementById('g-back').onclick = () => gateJoin();
+    document.getElementById('g-back').onclick = () => SOLO ? gateLogin() : gateJoin();
     const gb = document.getElementById('g-google');
     let pick = '';
     g.querySelectorAll('[data-tk]').forEach(b => b.onclick = () => {
@@ -3897,7 +3901,14 @@ body{font-synthesis:weight style}
     };
   }
   /* حساب مسجّل بلا مدرسة */
+  /* النسخة المستقلة: الانضمام دائمًا إلى المدرسة نفسها دون رمز */
+  async function soloJoin(u){
+    ss.set('joinSid', SOLO.sid); ss.set('joinName', SOLO.name || '');
+    if (u) { try { await fb.fs.doc('userSchools/' + String(u.email).toLowerCase()).set({sid: SOLO.sid, role: 'member', at: new Date().toISOString()}); } catch(e){} return onUser(u); }
+    gateCreate();
+  }
   async function gateNoSchool(u){
+    if (SOLO) return soloJoin(u);
     const g = gateEl();
     let open = false; try { const c = await fb.fs.doc('platform/config').get(); open = c.exists && !!c.data().signupOpen; } catch(e){}
     g.innerHTML = gateShell(`
@@ -4100,7 +4111,7 @@ body{font-synthesis:weight style}
       ss.set('joinName', SCHOOL.name || '');
       try { const r = await SD.doc('meta/roster').get(); ROSTER = r.exists ? (r.data().list || []) : []; } catch(x){ ROSTER = []; }
       try { const L = await SD.doc('meta/license').get(); LIC = L.exists ? L.data() : null; } catch(x){ LIC = null; }
-      if (!sup && licOff(LIC)) { acct = null; gateBlocked(u, LIC); return; }
+      if (!sup && !SOLO && licOff(LIC)) { acct = null; gateBlocked(u, LIC); return; }
       const o = await SD.doc('meta/owner').get();
       if (sup && !claimOwner) {
         acct = {email: e, name: u.displayName || 'مطوّر المنصة', role: 'admin', owner: false, super: true, ops: true, cat: '', form: '', staffName: '', job: '', photo: u.photoURL || ''};
@@ -4128,7 +4139,7 @@ body{font-synthesis:weight style}
     } catch(err){ gateLogin(authMsg(err)); return; }
     canWrite = true; deviceMode = false; canEdit = acct.role === 'admin'; art = null;
     if (!fbReady) { fbReady = true; initDb(SD); }
-    if (LIC && LIC.plan === 'trial' && acct.role === 'admin' && !ss.get('trialNote')) { ss.set('trialNote', '1'); const left = Math.max(0, Math.ceil(((LIC.untilMs || 0) - Date.now()) / dayMs)); setTimeout(() => toast(`تجربة مجانية: تبقّى ${ar(left)} يومًا. للاشتراك تواصلي مع مزوّد المنصة.`, 'info'), 1200); }
+    if (!SOLO && LIC && LIC.plan === 'trial' && acct.role === 'admin' && !ss.get('trialNote')) { ss.set('trialNote', '1'); const left = Math.max(0, Math.ceil(((LIC.untilMs || 0) - Date.now()) / dayMs)); setTimeout(() => toast(`تجربة مجانية: تبقّى ${ar(left)} يومًا. للاشتراك تواصلي مع مزوّد المنصة.`, 'info'), 1200); }
     { const h0 = (location.hash || '').replace('#', ''); const base = h0.replace(/^(cat-|pf-).*/, 'cadre');
       if ((h0 === 'admin' && acct.role !== 'admin') || (h0 && NAV.some(n => n.r === base) && !navAllowed(base))) history.replaceState(null, '', location.pathname + location.search + '#home'); }
     hideGate(); chrome(); renderBar(); route();
@@ -4160,7 +4171,7 @@ body{font-synthesis:weight style}
     try { list = (await SD.collection('members').get()).docs.map(d => d.data()).sort((a, b) => String(a.name).localeCompare(String(b.name), 'ar')); }
     catch(e){ tab.innerHTML = `<div class="msg err">${esc(authMsg(e))}</div>`; return; }
     let owner = null; try { const o = await SD.doc('meta/owner').get(); owner = o.exists ? o.data() : null; } catch(e){}
-    const seeds = seedList(), share = (location.origin + location.pathname).replace(/#.*$/, '') + (SCHOOL && SCHOOL.code ? '?s=' + SCHOOL.code : '');
+    const seeds = seedList(), share = (location.origin + location.pathname).replace(/#.*$/, '') + (SCHOOL && SCHOOL.code && !SOLO ? '?s=' + SCHOOL.code : '');
     const catOfM = m => m.cat || catOf(m.job);
     const pend = list.filter(m => !m.active && m.status === 'pending');
     const row = (m, isPend) => `<div class="u-row${isPend ? ' pend' : ''}" data-e="${esc(m.email)}">${m.photo ? `<img class="u-ph" src="${esc(m.photo)}" alt="" referrerpolicy="no-referrer">` : `<span class="avatar">${esc(initials(m.name))}</span>`}
@@ -4189,7 +4200,7 @@ body{font-synthesis:weight style}
         ${CATS.filter(c => c.k !== 'lead').map(c => { const ms = list.filter(m => !(!m.active && m.status === 'pending') && catOfM(m) === c.k); return ms.length ? `<h3 class="u-grp"><i data-lucide="${c.i}"></i>${c.t} (${ar(ms.length)})</h3><div class="u-list">${ms.map(m => row(m, false)).join('')}</div>` : ''; }).join('') || '<p class="muted">لا توجد حسابات بعد.</p>'}</div>
       <div class="panel invite"><h2><i data-lucide="send"></i>دعوة المنسوبات</h2>
         <p class="ev-note" style="margin:0 0 10px!important">أرسلي هذه الرسالة في مجموعة المنسوبات.</p>
-        <textarea class="in" id="inv-txt" readonly style="min-height:130px">${esc(`السلام عليكم ورحمة الله\nمنصة ${cur().settings.school || 'المدرسة'} للأداء الوظيفي:\n${share}\nرمز المدرسة: ${SCHOOL && SCHOOL.code ? SCHOOL.code : ''}\n١) افتحي الرابط واضغطي «الانضمام إلى مدرستي».\n٢) اختاري مسماك، وادخلي بحساب Google، واختاري اسمك، وأرسلي الطلب.\n٣) بعد القبول افتحي «ملفي» واضغطي «إنشاء ملفي في Google Drive»، ثم ارفعي شواهدك.`)}</textarea>
+        <textarea class="in" id="inv-txt" readonly style="min-height:130px">${esc(`السلام عليكم ورحمة الله\nمنصة ${cur().settings.school || 'المدرسة'} للأداء الوظيفي:\n${share}${SOLO ? '' : '\nرمز المدرسة: ' + (SCHOOL && SCHOOL.code ? SCHOOL.code : '')}\n١) افتحي الرابط واضغطي «الانضمام إلى مدرستي».\n٢) اختاري مسماك، وادخلي بحساب Google، واختاري اسمك، وأرسلي الطلب.\n٣) بعد القبول افتحي «ملفي» واضغطي «إنشاء ملفي في Google Drive»، ثم ارفعي شواهدك.`)}</textarea>
         <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn btn-ghost btn-sm" id="inv-copy"><i data-lucide="copy"></i>نسخ الرسالة</button><a class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="#" id="inv-wa"><i data-lucide="message-circle"></i>إرسال عبر واتساب</a></div></div>
     </div>`;
     icons();
@@ -5376,8 +5387,8 @@ body{font-synthesis:weight style}
     const done = STEPS.filter(s => stepDone(s.k)).length, allReq = reqSteps().every(s => stepDone(s.k));
     const open = SETUP.open || (STEPS.find(s => !stepDone(s.k)) || {}).k || '';
     const sc = SCHOOL || {}, cf = cfg(), c = SETUP.cache || {};
-    const url = (location.origin + location.pathname).replace(/#.*$/, '') + (sc.code ? '?s=' + sc.code : '');
-    const inviteTxt = `السلام عليكم ورحمة الله\nمنصة ${sc.name || 'المدرسة'} لإدارة المدرسة والأداء الوظيفي:\n${url}\nرمز المدرسة: ${sc.code || ''}\n١) افتحي الرابط واضغطي «الانضمام إلى مدرستي».\n٢) اختاري مسماك، وادخلي بحساب Google، واختاري اسمك، وأرسلي الطلب.\n٣) بعد القبول افتحي «ملفي» وأنشئي ملفك في Google Drive، ثم ارفعي شواهدك.`;
+    const url = (location.origin + location.pathname).replace(/#.*$/, '') + (sc.code && !SOLO ? '?s=' + sc.code : '');
+    const inviteTxt = `السلام عليكم ورحمة الله\nمنصة ${sc.name || 'المدرسة'} لإدارة المدرسة والأداء الوظيفي:\n${url}${SOLO ? '' : '\nرمز المدرسة: ' + (sc.code || '')}\n١) افتحي الرابط واضغطي «الانضمام إلى مدرستي».\n٢) اختاري مسماك، وادخلي بحساب Google، واختاري اسمك، وأرسلي الطلب.\n٣) بعد القبول افتحي «ملفي» وأنشئي ملفك في Google Drive، ثم ارفعي شواهدك.`;
     const body = k => {
       if (k === 'school') return `<div class="row2"><div class="field"><label for="su-name">اسم المدرسة</label><input class="in" id="su-name" value="${esc(sc.name || '')}"></div>
           <div class="field"><label for="su-pr">اسم المدير / المديرة</label><input class="in" id="su-pr" value="${esc(sc.principal || '')}"></div></div>
@@ -5401,7 +5412,7 @@ body{font-synthesis:weight style}
           <div class="field"><label for="su-due">آخر موعد لرفع الشواهد (اختياري)</label><input class="in" id="su-due" type="date" value="${esc(cf.evidenceDue || '')}"></div></div>
         <p class="hint">تظهر الفترة تلقائيًا في نماذج التقييم، والموعد يظهر للمنسوبات في رئيسيتهن.</p>
         <button type="button" class="btn btn-primary btn-sm" data-save="term"><i data-lucide="save"></i>حفظ فترة التقييم</button>`;
-      if (k === 'invite') return `<div class="inv-grid"><div><div class="act-code"><span class="ltr">${esc(sc.code || '—')}</span></div><p class="muted">رمز المدرسة · الرابط: <span class="ltr">${esc(url)}</span></p>
+      if (k === 'invite') return `<div class="inv-grid"><div>${SOLO ? '' : `<div class="act-code"><span class="ltr">${esc(sc.code || '—')}</span></div>`}<p class="muted">${SOLO ? '' : 'رمز المدرسة · '}الرابط: <span class="ltr">${esc(url)}</span></p>
           <textarea class="in" id="su-inv" readonly style="min-height:150px">${esc(inviteTxt)}</textarea>
           <div class="su-acts"><button type="button" class="btn btn-ghost btn-sm" id="su-copy"><i data-lucide="copy"></i>نسخ الرسالة</button><a class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(inviteTxt)}" id="su-wa"><i data-lucide="message-circle"></i>إرسال عبر واتساب</a>
           <button type="button" class="btn btn-primary btn-sm" data-save="invite"><i data-lucide="check"></i>أرسلتُ الدعوة</button></div></div>
