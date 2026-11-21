@@ -1694,6 +1694,9 @@ body.gated{overflow:hidden}
 .danger-zone h2 svg{color:var(--bad)}
 .mod-c.big{font-size:14.5px;padding:6px 14px}
 @media (max-width:900px){.dev-grid{grid-template-columns:1fr}}
+.act-code{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:4px 0 6px}
+.act-code span{font-family:Consolas,"Courier New",monospace;font-size:24px;font-weight:700;letter-spacing:3px;color:var(--petrol);background:var(--soft);border:1px dashed var(--teal);border-radius:12px;padding:6px 14px}
+.code-in{font-family:Consolas,"Courier New",monospace;letter-spacing:2px;text-transform:uppercase}
 
 /* ===== الخط: سكالا مجالا (من جهاز المستخدم) مع بديل Noto Naskh Arabic ===== */
 /* سكالا مجالا يظهر أصغر من غيره بالحجم نفسه، فيُكبَّر بـ size-adjust دون تغيير بقية الأحجام */
@@ -3722,6 +3725,7 @@ body{font-synthesis:weight style}
   }
   async function gateLogin(note){
     const g = gateEl();
+    if (!note) { try { note = sessionStorage.getItem('gnote') || ''; sessionStorage.removeItem('gnote'); } catch(e){} }
     g.innerHTML = gateShell(`
       <h1>تسجيل الدخول</h1><p class="gate-sub">ادخلي ببريدك الإلكتروني وكلمة المرور.</p>
       ${note ? `<div class="msg info">${esc(note)}</div>` : ''}
@@ -3757,7 +3761,7 @@ body{font-synthesis:weight style}
       msg('إن كان البريد مسجّلًا فستصلك رسالة لتعيين كلمة مرور جديدة. تحققي من البريد غير الهام أيضًا.', true);
     };
   }
-  let doorWanted = '';
+  let doorWanted = '', ownerCode = '';
   /* إنشاء حساب جديد: اختيار الفئة ثم Google */
   async function gateCreate(){
     const g = gateEl(), seeds = seedList();
@@ -3768,6 +3772,7 @@ body{font-synthesis:weight style}
       <button type="button" class="gate-back" id="g-back"><i data-lucide="arrow-right"></i>تسجيل الدخول</button>
       <h1>إنشاء حساب جديد</h1><p class="gate-sub">اختاري مسماك الوظيفي، ثم أنشئي الحساب بحساب Google. بعدها تختارين اسمك وتضعين كلمة مرور، ويُرسل طلبك لمديرة المدرسة لاعتماده.</p>
       <div class="title-pick">${list.map(t => `<button type="button" class="tp" data-tk="${t.k}"><span class="cp-i"><i data-lucide="${t.i}"></i></span><b>${t.t}</b><small>${t.k === 'lead' ? 'تفعيل حساب الإدارة' : ar(seeds.filter(x => t.m(x.job)).length)}</small></button>`).join('')}</div>
+      <label class="field" id="g-code-wrap" hidden><span>رمز تفعيل حساب الإدارة</span><input class="in ltr code-in" id="g-code" autocomplete="off" autocapitalize="characters" placeholder="مثال: MK34-7Q2X"><small class="muted">يصلك الرمز من مزوّد المنصة مع رابطها.</small></label>
       <div id="g-msg" aria-live="polite"></div>
       <button class="btn-google" type="button" id="g-google" disabled>${G_ICON}<span>اختاري مسماك الوظيفي أولًا</span></button>`);
     icons();
@@ -3778,9 +3783,13 @@ body{font-synthesis:weight style}
       pick = b.dataset.tk;
       g.querySelectorAll('[data-tk]').forEach(x => x.classList.toggle('on', x === b));
       try { sessionStorage.setItem('regcat', pick === 'lead' ? '' : pick); } catch(e){}
-      gb.disabled = false; gb.querySelector('span').textContent = 'إنشاء الحساب بحساب Google';
+      gb.disabled = false; gb.querySelector('span').textContent = pick === 'lead' ? 'تفعيل حساب الإدارة بحساب Google' : 'إنشاء الحساب بحساب Google';
+      document.getElementById('g-code-wrap').hidden = pick !== 'lead'; if (pick === 'lead') document.getElementById('g-code').focus();
     });
-    gb.onclick = e => { claimOwner = pick === 'lead'; doorWanted = 'new'; googleSignIn(e.currentTarget, document.getElementById('g-msg')); };
+    gb.onclick = e => {
+      if (pick === 'lead') { ownerCode = document.getElementById('g-code').value.trim().toUpperCase(); if (!ownerCode) { document.getElementById('g-msg').innerHTML = '<div class="msg err">اكتبي رمز التفعيل الذي وصلك مع رابط المنصة.</div>'; return; } }
+      claimOwner = pick === 'lead'; doorWanted = 'new'; googleSignIn(e.currentTarget, document.getElementById('g-msg'));
+    };
   }
   /* تعيين كلمة مرور لحساب أُنشئ بـ Google (للدخول لاحقًا بالبريد وكلمة المرور) */
   const hasPw = u => !!(u && (u.providerData || []).some(p => p && p.providerId === 'password'));
@@ -3904,8 +3913,9 @@ body{font-synthesis:weight style}
       if (sup && !claimOwner) {
         acct = {email: e, name: u.displayName || 'مطوّر المنصة', role: 'admin', owner: false, super: true, ops: true, cat: '', form: '', staffName: '', job: '', photo: u.photoURL || ''};
       } else if (!o.exists && claimOwner) {
-        await fb.fs.doc('meta/owner').set({email: e, name: u.displayName || cur().settings.person || '', photo: u.photoURL || '', at: new Date().toISOString()});
-        claimOwner = false; return onUser(u);
+        try { await fb.fs.doc('meta/owner').set({email: e, name: u.displayName || cur().settings.person || '', photo: u.photoURL || '', code: ownerCode, at: new Date().toISOString()}); }
+        catch(err){ claimOwner = false; ownerCode = ''; try { sessionStorage.setItem('gnote', 'رمز تفعيل حساب الإدارة غير صحيح. تأكدي من الرمز الذي وصلك مع رابط المنصة، ثم أعيدي المحاولة من «إنشاء حساب جديد».'); } catch(x){} await fb.auth.signOut(); return; }
+        claimOwner = false; ownerCode = ''; return onUser(u);
       }
       else { claimOwner = false; }
       if (acct && acct.super) {}
@@ -3931,7 +3941,7 @@ body{font-synthesis:weight style}
     gateLoading();
     try { await fbLoad(); } catch(e){ gateEl().innerHTML = gateShell('<div class="msg err">تعذّر تحميل خدمة الدخول. تحققي من الاتصال ثم حدّثي الصفحة.</div>'); return; }
     fb.auth.onAuthStateChanged(onUser);
-    if (fbEmu) window.__emuGoogle = (email, name, owner) => { claimOwner = !!owner; return fb.auth.signInWithCredential(firebase.auth.GoogleAuthProvider.credential(JSON.stringify({sub: email, email, email_verified: true, name}))); };
+    if (fbEmu) window.__emuGoogle = (email, name, owner, code) => { claimOwner = !!owner; if (code != null) ownerCode = String(code).toUpperCase(); return fb.auth.signInWithCredential(firebase.auth.GoogleAuthProvider.credential(JSON.stringify({sub: email, email, email_verified: true, name}))); };
   }
   async function fbSignOut(){ try { sessionStorage.removeItem('gtok'); } catch(e){} try { await fb.auth.signOut(); } catch(e){} location.hash = '#home'; }
   async function fbSaveState(st){
@@ -4808,6 +4818,7 @@ body{font-synthesis:weight style}
     try { const o = await fb.fs.doc('meta/owner').get(); owner = o.exists ? o.data() : null; } catch(e){}
     try { members = (await fb.fs.collection('members').get()).docs.map(d => d.data()); } catch(e){}
     try { const L = await fb.fs.doc('meta/license').get(); LIC = L.exists ? L.data() : null; } catch(e){}
+    let ACT = null; try { const A = await fb.fs.doc('meta/activation').get(); ACT = A.exists ? A.data() : null; } catch(e){}
     const [up, ev, st] = await Promise.all([devCount('uploads'), devCount('evals'), devCount('staff')]);
     const act = members.filter(m => m.active).length, pend = members.filter(m => !m.active && m.status === 'pending').length;
     const L = LIC || {active: true, until: '', msg: '', client: ''};
@@ -4827,6 +4838,21 @@ body{font-synthesis:weight style}
           <div class="field" style="margin-top:10px"><label for="dv-own">نقل الملكية إلى بريد آخر</label><div class="row2"><input class="in ltr" id="dv-own" type="email" placeholder="principal@gmail.com"><button type="button" class="btn btn-ghost" id="dv-own-go"><i data-lucide="arrow-left-right"></i>نقل الملكية</button></div>
             <span class="hint">تدخل صاحبة البريد الجديد بحسابها في Google أو بكلمة مرور بالبريد نفسه، فتصبح المالكة فورًا.</span></div>
           ${owner ? '<button type="button" class="btn btn-ghost btn-sm danger" id="dv-own-reset"><i data-lucide="user-x"></i>إلغاء حساب الإدارة (يُفعّل من جديد عند أول تسجيل)</button>' : ''}</section>
+        <section class="panel act-p"><h2><i data-lucide="ticket"></i>رمز تفعيل حساب الإدارة</h2>
+          ${owner ? `<div class="msg ok">حساب الإدارة مفعّل${owner.code ? ' بالرمز ' + esc(owner.code) : ''}. لإصدار رمز لمديرة جديدة ألغي حساب الإدارة الحالي أولًا من بطاقة «مالكة المنصة».</div>` : ''}
+          <div class="act-code"><span class="ltr" id="dv-code">${ACT && ACT.code ? esc(ACT.code) : '— لا يوجد رمز —'}</span>
+            <button type="button" class="btn btn-ghost btn-sm" id="dv-gen"><i data-lucide="refresh-cw"></i>${ACT && ACT.code ? 'رمز جديد' : 'إنشاء رمز'}</button></div>
+          <p class="hint">الرمز يُستخدم مرة واحدة: بعد أن تفعّل المديرة حسابها به لا يصلح لغيرها. إنشاء رمز جديد يُبطل القديم.</p>
+          ${ACT && ACT.code && !owner ? `<textarea class="in" id="dv-inv" readonly style="min-height:150px">${esc(`السلام عليكم ورحمة الله
+أهلًا بكِ في منصة ${s.school || 'المدرسة'} لإدارة المدرسة والأداء الوظيفي.
+رابط المنصة: ${url}
+رمز تفعيل حساب الإدارة: ${ACT.code}
+خطوات التفعيل:
+١) افتحي الرابط واضغطي «إنشاء حساب جديد».
+٢) اختاري «مديرة المدرسة» واكتبي رمز التفعيل.
+٣) اضغطي «تفعيل حساب الإدارة بحساب Google» واختاري حسابك، ثم ضعي كلمة مرور.
+٤) من «لوحة التحكم ← الحسابات» أرسلي رسالة الدعوة للمنسوبات.`)}</textarea>
+          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn btn-ghost btn-sm" id="dv-inv-copy"><i data-lucide="copy"></i>نسخ الرسالة</button><a class="btn btn-ghost btn-sm" id="dv-inv-wa" target="_blank" rel="noopener" href="#"><i data-lucide="message-circle"></i>إرسال عبر واتساب</a></div>` : ''}</section>
         <section class="panel"><h2><i data-lucide="key-round"></i>الترخيص والاشتراك</h2>
           <div class="field"><label class="mod-c big"><input type="checkbox" id="dv-act" ${L.active !== false ? 'checked' : ''}><span>المنصة تعمل</span></label></div>
           <div class="row2"><div class="field"><label for="dv-until">ينتهي الاشتراك في</label><input class="in" id="dv-until" type="date" value="${esc(L.until || '')}"></div>
@@ -4850,6 +4876,13 @@ body{font-synthesis:weight style}
           <div class="u-acts"><button type="button" class="btn btn-ghost btn-sm" data-d="active">${m.active ? 'إيقاف' : 'تفعيل'}</button><button type="button" class="btn btn-ghost btn-sm" data-d="role">${m.role === 'admin' ? 'إلغاء الإدارة' : 'منح الإدارة'}</button><button type="button" class="btn btn-ghost btn-sm danger" data-d="del">حذف</button></div></div>`).join('') || '<p class="muted">لا توجد حسابات.</p>'}</div></section>`);
     icons();
     const qi = document.getElementById('dv-q'); qi.onchange = () => { M.devQ = qi.value; devPage(); };
+    document.getElementById('dv-gen').onclick = async () => {
+      const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', r = n => Array.from(crypto.getRandomValues(new Uint32Array(n)), x => A[x % A.length]).join('');
+      const code = r(4) + '-' + r(4);
+      try { await fb.fs.doc('meta/activation').set({code, at: new Date().toISOString(), by: acct.email}); toast('أُنشئ رمز التفعيل.', 'ok'); devPage(); } catch(e){ toast(authMsg(e), 'err'); }
+    };
+    const inv = document.getElementById('dv-inv');
+    if (inv) { document.getElementById('dv-inv-wa').href = 'https://wa.me/?text=' + encodeURIComponent(inv.value); document.getElementById('dv-inv-copy').onclick = () => navigator.clipboard.writeText(inv.value).then(() => toast('نُسخت الرسالة.', 'ok'), () => inv.select()); }
     document.getElementById('dv-lic').onclick = async () => {
       const v = {active: document.getElementById('dv-act').checked, until: document.getElementById('dv-until').value, client: document.getElementById('dv-client').value.trim(), msg: document.getElementById('dv-msg').value.trim(), at: new Date().toISOString(), by: acct.email};
       try { await fb.fs.doc('meta/license').set(v); toast('حُفظ الترخيص.', 'ok'); devPage(); } catch(e){ toast(authMsg(e), 'err'); }
