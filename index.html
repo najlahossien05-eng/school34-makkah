@@ -1509,6 +1509,158 @@ body.gated{overflow:hidden}
 }
 .mf-av{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;flex:none;background:linear-gradient(135deg,#0B3D4A,#138D90);color:#fff;font-family:var(--f-display);font-weight:800;font-size:18px}
 
+/* ===================== صفحة الدخول ببابين + صفحات المنسوبة + التقييم + مكتب التوجيه ===================== */
+.doors{display:grid;gap:10px;margin-top:6px}
+.door{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"i b" "i s";gap:2px 14px;align-items:center;text-align:start;border:1px solid var(--line);background:var(--surface);border-radius:18px;padding:14px 16px;cursor:pointer;color:var(--ink);transition:border-color .15s,box-shadow .15s,transform .15s}
+.door:hover{border-color:var(--teal);box-shadow:0 10px 24px rgba(11,61,74,.12);transform:translateY(-1px)}
+.door b{grid-area:b;font-family:var(--f-display);font-size:17px}
+.door small{grid-area:s;color:var(--muted);font-size:12.5px;line-height:1.6}
+.door-i{grid-area:i;width:50px;height:50px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,#0B3D4A,#138D90);color:#fff}
+.door-i.alt{background:linear-gradient(135deg,#138D90,#1FB5AC)}
+.door-i svg{width:24px;height:24px}
+.gate-back{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:4px;color:var(--muted);font-size:13px;margin-bottom:6px}
+.gate-back svg{width:16px;height:16px}
+.cat-pick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:4px 0 12px}
+.cp{display:flex;flex-direction:column;align-items:center;gap:4px;border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:12px 6px;cursor:pointer;color:var(--ink);text-align:center}
+.cp b{font-family:var(--f-display);font-size:14.5px}
+.cp small{font-size:11.5px;color:var(--muted)}
+.cp.on{border-color:var(--teal);background:var(--limebg);box-shadow:inset 0 0 0 1px var(--teal)}
+.cp-i{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--soft);color:var(--teal)}
+.cp.on .cp-i{background:var(--teal);color:#fff}
+.cp-i svg{width:20px;height:20px}
+.cp:last-child:nth-child(odd){grid-column:1/-1}
+/* الحسابات */
+.acc-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.acc-s{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:12px;display:grid;grid-template-columns:auto 1fr;grid-template-areas:"i b" "i s" "r r";gap:2px 10px;align-items:center}
+.acc-s .cp-i{grid-area:i}
+.acc-s b{grid-area:b;font-family:var(--f-display)}
+.acc-s>span:not(.cp-i){grid-area:s;font-size:12px;color:var(--muted)}
+.acc-s em{font-style:normal;color:var(--wait);font-weight:700}
+.acc-bar{grid-area:r;display:block;height:6px;border-radius:9px;background:var(--line);overflow:hidden;margin-top:8px}
+.acc-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--petrol))}
+.u-grp{display:flex;align-items:center;gap:6px;font-size:15px;margin:14px 0 8px;color:var(--petrol)}
+.u-grp svg{width:17px;height:17px}
+/* رئيسية المنسوبة */
+.my-hb .my-ph{width:58px;height:58px;border-radius:50%;border:2px solid rgba(255,255,255,.5)}
+.my-hb .mf-av{background:rgba(255,255,255,.18)}
+.my-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.my-svc{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+/* التقييم */
+.ev-tbl{display:flex;flex-direction:column;gap:6px}
+.ev-r{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;background:var(--soft);border-radius:14px;padding:10px 12px}
+.ev-r.ed{grid-template-columns:auto minmax(0,1fr) minmax(0,auto)}
+.ev-t{display:flex;flex-direction:column;min-width:0}
+.ev-t b{font-family:var(--f-display);font-size:14.5px}
+.ev-t small{font-size:12px;color:var(--muted)}
+.ev-s{font-family:var(--f-display);font-weight:700;font-size:13px;border-radius:999px;padding:3px 12px;background:var(--surface);white-space:nowrap}
+.ev-s.s5,.ev-s.s4{background:var(--okbg);color:var(--ok)}
+.ev-s.s3{background:var(--limebg);color:var(--lime-ink)}
+.ev-s.s2,.ev-s.s1{background:var(--badbg);color:var(--bad)}
+.ev-in{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.ev-seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:2px}
+.ev-seg button{border:0;background:transparent;width:34px;height:30px;border-radius:999px;font-family:var(--f-display);font-weight:700;cursor:pointer;color:var(--ink)}
+.ev-seg button[aria-checked="true"]{background:var(--petrol);color:#fff}
+.ev-in .in-sm{width:220px}
+.ev-foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.ev-foot>div{display:flex;flex-direction:column;margin-inline-end:auto}
+.ev-foot b{font-family:var(--f-display);font-size:24px;color:var(--petrol)}
+.ev-foot small{font-size:12px;color:var(--muted)}
+.ev-score{font-family:var(--f-display);font-size:18px;color:var(--petrol)}
+.eval-p h2 .spill{margin-inline-start:auto}
+.hist{display:flex;align-items:flex-end;gap:14px;height:150px;padding-top:10px}
+.hist>div{display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;min-width:56px}
+.hist .bar{width:34px;height:100px;background:var(--soft);border-radius:10px;display:flex;align-items:flex-end;overflow:hidden}
+.hist .bar i{display:block;width:100%;background:linear-gradient(180deg,var(--teal),var(--petrol));border-radius:10px}
+.hist small{font-size:11px;color:var(--muted);text-align:center}
+/* الحضور */
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-head h2{margin:0}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cal-h{text-align:center;font-size:12px;color:var(--muted);font-family:var(--f-display)}
+.cal-d{position:relative;min-height:54px;border-radius:12px;background:var(--soft);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px}
+.cal-d b{font-family:var(--f-display);font-size:14px}
+.cal-d small{font-size:10px;line-height:1.2}
+.cal-d.ok{background:var(--okbg);color:var(--ok)}
+.cal-d.wait{background:var(--waitbg);color:var(--wait)}
+.cal-d.bad{background:var(--badbg);color:var(--bad)}
+.cal-d.info{background:var(--infobg);color:var(--info)}
+.cal-d.wk{opacity:.45}
+.cal-d.now{box-shadow:inset 0 0 0 2px var(--teal)}
+.cal-late,.lg.late-dot{position:absolute;top:5px;left:5px;width:7px;height:7px;border-radius:50%;background:var(--wait)}
+.lg.late-dot{position:static;display:inline-block}
+.cal-leg{flex-wrap:wrap;margin-top:10px}
+.lg.wait{background:var(--wait)}.lg.bad{background:var(--bad)}.lg.info{background:var(--info)}
+.cat-kpis .k-ok b{color:var(--ok)}.cat-kpis .k-wait b{color:var(--wait)}.cat-kpis .k-bad b{color:var(--bad)}.cat-kpis .k-info b{color:var(--info)}
+/* التكليفات والمهام */
+.wk-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.wk-d{background:var(--soft);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:6px;min-height:90px}
+.wk-d.now{box-shadow:inset 0 0 0 2px var(--teal)}
+.wk-d>b{font-family:var(--f-display)}
+.wk-d .sched{padding:6px 8px;font-size:12px}
+.task-list{display:flex;flex-direction:column;gap:8px}
+.task-list.sm{margin-top:12px}
+.task{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;background:var(--soft);border-radius:14px;padding:10px 12px}
+.task b{font-family:var(--f-display)}
+.task p{margin:2px 0;font-size:13px}
+.task small{font-size:12px;color:var(--muted)}
+.task.done{opacity:.7}
+.task.done b{text-decoration:line-through}
+.task-c svg{width:20px;height:20px;color:var(--teal)}
+/* الملاحظات */
+.note-list{display:flex;flex-direction:column;gap:10px}
+.note-list.sm{margin-top:12px;gap:6px}
+.note{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;background:var(--surface);border-radius:18px;box-shadow:var(--shadow);padding:14px 16px}
+.note.new{box-shadow:inset 0 0 0 2px var(--teal),var(--shadow)}
+.note-i{width:42px;height:42px;border-radius:13px;display:grid;place-items:center}
+.note-i.ok{background:var(--okbg);color:var(--ok)}.note-i.info{background:var(--infobg);color:var(--info)}.note-i.wait{background:var(--waitbg);color:var(--wait)}.note-i.bad{background:var(--badbg);color:var(--bad)}
+.note-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.note-h b{font-family:var(--f-display)}
+.note-h small{color:var(--muted)}
+.note p{margin:6px 0;line-height:1.8}
+.note-mini{position:relative;background:var(--soft);border-radius:12px;padding:8px 12px 8px 44px}
+.note-mini p{margin:2px 0 0;font-size:13px}
+.note-mini .icon-btn{position:absolute;left:6px;top:6px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+/* مكتب التوجيه */
+.gc-form{display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;gap:8px}
+.gc-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto auto auto;align-items:center;gap:8px;background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:10px 12px;border:0;text-align:start;color:var(--ink);width:100%;font:inherit}
+.gc-row.case{grid-template-columns:auto minmax(0,1fr) auto auto;cursor:pointer}
+.gc-row .in-sm{width:120px}
+.cat-i.sm{width:38px;height:38px;border-radius:12px}
+.cat-i.sm svg{width:18px;height:18px}
+@media (max-width:900px){.my-grid{grid-template-columns:1fr}.gc-form{grid-template-columns:1fr 1fr}}
+@media (max-width:760px){
+  .my-svc{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  .ev-r.ed{grid-template-columns:auto minmax(0,1fr)}
+  .ev-r.ed .ev-in{grid-column:1/-1;align-items:stretch}
+  .ev-in .in-sm{width:100%}
+  .ev-seg{justify-content:space-between}
+  .ev-seg button{flex:1}
+  .wk-grid{grid-template-columns:1fr}
+  .wk-d{min-height:0;flex-direction:row;flex-wrap:wrap;align-items:center}
+  .wk-d>b{width:72px}
+  .cal-d{min-height:44px}
+  .cal-d small{display:none}
+  .gc-row{grid-template-columns:auto minmax(0,1fr) auto;row-gap:6px}
+  .gc-row .in-sm{width:auto;grid-column:span 1}
+  .gc-row [data-pc],.gc-row [data-pi]{grid-column:1/-1}
+  .gc-form{grid-template-columns:1fr}
+  .row2{grid-template-columns:1fr}
+  .cat-pick{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+.cat-kpis .k-term b{font-size:15px;line-height:1.5}
+@media (max-width:760px){
+  .cat-kpis.tight{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+  .cat-kpis.tight>div{padding:8px 6px;align-items:center;text-align:center}
+  .cat-kpis.tight b{font-size:18px}
+  .cat-kpis.tight span{font-size:10.5px;line-height:1.35}
+  .acc-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .acc-s{padding:10px;grid-template-columns:auto 1fr;gap:2px 8px}
+  .acc-s .cp-i{width:32px;height:32px}
+  .acc-s b{font-size:13.5px}
+  .acc-s>span:not(.cp-i){font-size:11px}
+}
+
 /* ===== الخط: سكالا مجالا (من جهاز المستخدم) مع بديل Noto Naskh Arabic ===== */
 /* سكالا مجالا يظهر أصغر من غيره بالحجم نفسه، فيُكبَّر بـ size-adjust دون تغيير بقية الأحجام */
 /* وجه واحد عادي فقط: ملف «Sakkal Majalla Bold» يفصل «ر» عن «ا» (الر ابعة)، فيُولَّد العريض صناعيًا من العادي */
@@ -1614,6 +1766,12 @@ body{font-synthesis:weight style}
     {r: 'home', t: 'الرئيسية', i: 'house'},
     {r: 'mine', t: 'ملفي', i: 'folder-open'},
     {r: 'cadre', t: 'الكادر', i: 'users-round'},
+    {r: 'evals', t: 'التقييم الوظيفي', i: 'star'},
+    {r: 'myeval', t: 'تقييمي وتقدمي', i: 'star'},
+    {r: 'myatt', t: 'حضوري', i: 'calendar-check'},
+    {r: 'mytasks', t: 'تكليفاتي', i: 'list-checks'},
+    {r: 'mynotes', t: 'ملاحظات الإدارة', i: 'message-square-text'},
+    {r: 'gc', t: 'مكتب التوجيه', i: 'compass'},
     {r: 'profile', t: 'ملف المدرسة', i: 'school'},
     {r: 'ach', t: 'إنجازات المدرسة', i: 'trophy'},
     {r: 'staff', t: 'منسوبات المدرسة', i: 'users'},
@@ -1738,7 +1896,7 @@ body{font-synthesis:weight style}
     document.getElementById('admin-link').hidden = !showAdmin;
     document.getElementById('nav-school').textContent = st.school || 'وزارة التعليم';
     document.getElementById('region').textContent = st.region || (st.school ? 'وزارة التعليم' : 'المملكة العربية السعودية');
-    const items = NAV.filter(n => (n.r !== 'mine' && n.r !== 'cadre') || (useFb && (n.r === 'mine' || (acct && acct.role === 'admin')))).concat(showAdmin ? [{r: 'admin', t: 'لوحة التحكم', i: 'settings-2'}] : []);
+    const items = NAV.filter(n => navAllowed(n.r)).concat(showAdmin ? [{r: 'admin', t: 'لوحة التحكم', i: 'settings-2'}] : []);
     const cadreOn = /^(cat-|pf-)/.test(activeRoute);
     const isEv = activeRoute === 'ev' || (/^i[a-z0-9]+$/.test(activeRoute) && !NAV.some(n => n.r === activeRoute));
     document.getElementById('nav-list').innerHTML = items.map(n => {
@@ -1757,7 +1915,11 @@ body{font-synthesis:weight style}
       return `<div class="pill-g"><button type="button" class="pill${on ? ' on' : ''}" aria-expanded="false" aria-haspopup="true">${on ? byR(activeRoute).t : p.g}<i data-lucide="chevron-down"></i></button><div class="pill-menu" hidden>${p.items.map(r => { const n = byR(r); return `<a href="${href(r)}" class="${r === activeRoute ? 'on' : ''}"><i data-lucide="${n.i}"></i>${n.t}</a>`; }).join('')}</div></div>`;
     }).join('');
     document.getElementById('tb-school').textContent = st.school || 'وزارة التعليم';
-    const BN = [['home', 'house', 'الرئيسية'], ['mine', 'folder-open', 'ملفي'], ['att', 'clipboard-check', 'الحضور'], (acct && acct.role === 'admin') ? ['cadre', 'users-round', 'الكادر'] : ['ev', 'award', 'الشواهد']].filter(b => b[0] !== 'mine' || useFb);
+    const R0 = roleNow();
+    const BN = R0 === 'staff' ? [['home', 'house', 'الرئيسية'], ['mine', 'folder-open', 'ملفي'], ['myeval', 'star', 'تقييمي'], ['myatt', 'calendar-check', 'حضوري']]
+      : R0 === 'ops' ? [['home', 'house', 'الرئيسية'], ['mine', 'folder-open', 'ملفي'], ['att', 'clipboard-check', 'الحضور'], ['myeval', 'star', 'تقييمي']]
+      : R0 === 'admin' ? [['home', 'house', 'الرئيسية'], ['cadre', 'users-round', 'الكادر'], ['att', 'clipboard-check', 'الحضور'], ['evals', 'star', 'التقييم']]
+      : [['home', 'house', 'الرئيسية'], ['att', 'clipboard-check', 'الحضور'], ['staff', 'users', 'المنسوبات'], ['ev', 'award', 'الشواهد']];
     const bnav = document.getElementById('bnav');
     bnav.innerHTML = BN.map(([r, i, l]) => { const on = r === activeRoute || (r === 'ev' && isEv); return `<a href="${href(r)}" class="${on ? 'on' : ''}" ${on ? 'aria-current="page"' : ''}><i data-lucide="${i}"></i><span>${l}</span></a>`; }).join('') +
       `<button type="button" id="bn-more" aria-controls="nav" class="${BN.some(b => b[0] === activeRoute) || isEv ? '' : 'on'}"><i data-lucide="layout-grid"></i><span>القائمة</span></button>`;
@@ -2280,13 +2442,15 @@ body{font-synthesis:weight style}
   function initDb(d){
     db = d; dbState = d ? 'ok' : 'none';
     if (!d) { schoolRefresh(); return; }
+    if (staffOnly()) { S.staff = []; S.staffReady = true; d.doc('config/main').onSnapshot(s => { S.cfg = s.exists ? Object.assign({}, DEF_CFG, s.data()) : null; S.cfgReady = true; }, () => {}); return; }
     subToday(d);
     const timer = setTimeout(() => { if (!S.staffReady) { dbState = 'slow'; schoolRefresh(); } }, 10000);
     d.collection('staff').onSnapshot(s => {
       clearTimeout(timer); if (dbState === 'slow') dbState = 'ok';
       S.staff = s.docs.map(x => ({id: x.id, ...x.data()})).sort((a, b) => (a.order || 0) - (b.order || 0) || String(a.name).localeCompare(String(b.name), 'ar'));
       S.staffReady = true; schoolRefresh('staff');
-      if (!S._routed && /^#(cadre|cat-|pf-|mine)/.test(location.hash)) { S._routed = 1; route(); }
+      if (!S._routed && /^#(cadre|cat-|pf-|mine|evals)/.test(location.hash)) { S._routed = 1; route(); }
+      if (useFb) setTimeout(() => syncPersonal(), 1500);
       seedStaff(d);
     }, e => { clearTimeout(timer); dbState = 'none'; schoolRefresh(); });
     d.doc('config/main').onSnapshot(s => { if (isPending('config/main')) return; S.cfg = s.exists ? Object.assign({}, DEF_CFG, s.data()) : null; if (S.cfg && S.cfg.assemblyItems) S.cfg.assemblyItems = S.cfg.assemblyItems.map(fixItem); S.cfgReady = true; schoolRefresh('cfg'); }, () => {});
@@ -2337,7 +2501,7 @@ body{font-synthesis:weight style}
     }
   }
   async function put(path, data){
-    try { await db.doc(path).set(data); return true; }
+    try { await db.doc(path).set(data); if (useFb && /^(att|late|assembly)\//.test(path)) mirrorPersonal(path, data); return true; }
     catch(e){ writeErr(e); return false; }
   }
   async function remove(path){ try { await db.doc(path).delete(); return true; } catch(e){ writeErr(e); return false; } }
@@ -2663,6 +2827,7 @@ body{font-synthesis:weight style}
 
   /* ---------- التنبيهات ---------- */
   function alertsList(){
+    if (staffOnly()) return [];
     if (dbState !== 'ok' || !S.staffReady) return [];
     const out = [], di = dayIdx(today());
     if (!S.staff.length) out.push(['users', 'أضف أسماء الطاقم لتفعيل السجلات.', 'staff']);
@@ -3519,16 +3684,29 @@ body{font-synthesis:weight style}
       const t = res && res.credential && res.credential.accessToken; if (t) keepTok(t, res.user.email);
     } catch(err){ claimOwner = false; if (btn) btn.disabled = false; if (msgEl) msgEl.innerHTML = `<div class="msg err">${esc(authMsg(err))}</div>`; }
   }
-  async function gateLogin(note){
+  async function gateLogin(note, door){
     const g = gateEl();
     let owner = null; try { owner = await fb.fs.doc('meta/owner').get(); } catch(e){}
     const first = owner && !owner.exists;
+    door = door || '';
+    if (!door) {
+      g.innerHTML = gateShell(`
+        <h1>الدخول إلى المنصة</h1><p class="gate-sub">اختاري طريقة الدخول المناسبة لك.</p>
+        ${note ? `<div class="msg info">${esc(note)}</div>` : ''}
+        <div class="doors">
+          <button type="button" class="door" data-door="p"><span class="door-i"><i data-lucide="landmark"></i></span><b>دخول مديرة المدرسة</b><small>الإدارة والمتابعة والتقييم ولوحة التحكم</small></button>
+          <button type="button" class="door" data-door="s"><span class="door-i alt"><i data-lucide="users-round"></i></span><b>دخول الكادر</b><small>الوكيلات، والموجهة، والمعلمات، والإداريات، والمستخدمات</small></button>
+        </div>`);
+      icons(); g.querySelectorAll('[data-door]').forEach(b => b.onclick = () => gateLogin('', b.dataset.door));
+      return;
+    }
+    if (door === 's') return gateCats(note);
     g.innerHTML = gateShell(`
-      <h1>الدخول إلى المنصة</h1><p class="gate-sub">ادخلي بحساب Google. أول دخول يُنشئ طلب حساب تعتمده إدارة المدرسة، ثم يُنشأ ملفك في Google Drive الخاص بك.</p>
+      <button type="button" class="gate-back" id="g-back"><i data-lucide="arrow-right"></i>رجوع</button>
+      <h1>دخول مديرة المدرسة</h1><p class="gate-sub">${first ? 'أول استخدام للمنصة: فعّلي حساب الإدارة بحسابك في Google، وهو يُفعَّل مرة واحدة فقط.' : 'ادخلي بحساب Google المرتبط بحساب الإدارة.'}</p>
       ${note ? `<div class="msg info">${esc(note)}</div>` : ''}
       <div id="g-msg" aria-live="polite"></div>
-      <button class="btn-google" type="button" id="g-google">${G_ICON}<span>الدخول بحساب Google</span></button>
-      ${first ? `<div class="gate-first"><b><i data-lucide="shield-check"></i>أول استخدام للمنصة</b><p>لم يُفعَّل حساب الإدارة بعد. تفعّله مديرة المدرسة مرة واحدة بحسابها في Google، ثم تعتمد طلبات المنسوبات.</p><button class="btn btn-ghost btn-block" type="button" id="g-setup"><i data-lucide="user-cog"></i>تفعيل حساب الإدارة بحساب Google</button></div>` : ''}
+      <button class="btn-google" type="button" id="g-google">${G_ICON}<span>${first ? 'تفعيل حساب الإدارة بحساب Google' : 'الدخول بحساب Google'}</span></button>
       <details class="gate-alt"><summary>الدخول بالبريد وكلمة المرور</summary>
         <form id="g-login" class="gate-form" novalidate>
           <label class="field"><span>البريد الإلكتروني</span><input class="in ltr" id="g-email" type="email" autocomplete="username" inputmode="email"></label>
@@ -3538,9 +3716,9 @@ body{font-synthesis:weight style}
           <button class="btn btn-ghost btn-block" type="button" id="g-forgot">نسيت كلمة المرور</button>
         </form></details>`);
     wireEyes(g); icons();
+    document.getElementById('g-back').onclick = () => gateLogin();
     const m1 = document.getElementById('g-msg');
-    document.getElementById('g-google').onclick = e => googleSignIn(e.currentTarget, m1);
-    const st = document.getElementById('g-setup'); if (st) st.onclick = e => { claimOwner = true; googleSignIn(e.currentTarget, m1); };
+    document.getElementById('g-google').onclick = e => { claimOwner = !!first; doorWanted = 'p'; googleSignIn(e.currentTarget, m1); };
     const msg = m => { document.getElementById('g-msg2').innerHTML = m ? `<div class="msg err">${esc(m)}</div>` : ''; };
     document.getElementById('g-login').onsubmit = async ev => {
       ev.preventDefault();
@@ -3548,7 +3726,7 @@ body{font-synthesis:weight style}
       if (!emailOk(e)) return msg('اكتبي البريد الإلكتروني بشكل صحيح.');
       if (!p) return msg('اكتبي كلمة المرور.');
       const btn = g.querySelector('#g-login [type=submit]'); btn.disabled = true; msg('');
-      try { await fb.auth.signInWithEmailAndPassword(e, p); } catch(err){ msg(authMsg(err)); btn.disabled = false; }
+      try { doorWanted = 'p'; await fb.auth.signInWithEmailAndPassword(e, p); } catch(err){ msg(authMsg(err)); btn.disabled = false; }
     };
     document.getElementById('g-forgot').onclick = async () => {
       const e = document.getElementById('g-email').value.trim();
@@ -3556,6 +3734,28 @@ body{font-synthesis:weight style}
       try { await fb.auth.sendPasswordResetEmail(e); } catch(err){ if (err.code !== 'auth/user-not-found') return msg(authMsg(err)); }
       document.getElementById('g-msg2').innerHTML = '<div class="msg ok">إن كان البريد مسجّلًا فستصلك رسالة لتعيين كلمة مرور جديدة.</div>';
     };
+  }
+  let doorWanted = '';
+  /* دخول الكادر: اختيار الفئة ثم Google */
+  function gateCats(note){
+    const g = gateEl(), seeds = seedList();
+    const cats = CATS.filter(c => c.k !== 'lead');
+    g.innerHTML = gateShell(`
+      <button type="button" class="gate-back" id="g-back"><i data-lucide="arrow-right"></i>رجوع</button>
+      <h1>دخول الكادر</h1><p class="gate-sub">اختاري فئتك، ثم ادخلي بحساب Google. إن كان لك حساب مفعّل فستدخلين مباشرة، وإلا يُنشأ لك طلب حساب تعتمده مديرة المدرسة.</p>
+      ${note ? `<div class="msg info">${esc(note)}</div>` : ''}
+      <div class="cat-pick">${cats.map(c => `<button type="button" class="cp" data-cat="${c.k}"><span class="cp-i"><i data-lucide="${c.i}"></i></span><b>${c.t}</b><small>${ar(seeds.filter(x => catOf(x.job) === c.k).length)} منسوبة</small></button>`).join('')}</div>
+      <div id="g-msg" aria-live="polite"></div>
+      <button class="btn-google" type="button" id="g-google" disabled>${G_ICON}<span>اختاري فئتك أولًا</span></button>`);
+    icons();
+    document.getElementById('g-back').onclick = () => gateLogin();
+    const gb = document.getElementById('g-google');
+    g.querySelectorAll('[data-cat]').forEach(b => b.onclick = () => {
+      g.querySelectorAll('[data-cat]').forEach(x => x.classList.toggle('on', x === b));
+      try { sessionStorage.setItem('regcat', b.dataset.cat); } catch(e){}
+      gb.disabled = false; gb.querySelector('span').textContent = 'الدخول بحساب Google — ' + (CATS.find(c => c.k === b.dataset.cat) || {}).t;
+    });
+    gb.onclick = e => { doorWanted = 's'; googleSignIn(e.currentTarget, document.getElementById('g-msg')); };
   }
   function wireEyes(root){
     root.querySelectorAll('[data-eye]').forEach(b => b.onclick = () => { const i = document.getElementById(b.dataset.eye); const show = i.type === 'password'; i.type = show ? 'text' : 'password'; b.innerHTML = `<i data-lucide="${show ? 'eye-off' : 'eye'}"></i>`; icons(); });
@@ -3565,29 +3765,38 @@ body{font-synthesis:weight style}
   /* ---------- طلب الانضمام ---------- */
   function seedList(){ return (SP().staffSeed || []).filter(x => x && x.name); }
   function gateRegister(u, note){
-    const g = gateEl(), list = seedList();
+    const g = gateEl(), all = seedList();
+    let cat = ''; try { cat = sessionStorage.getItem('regcat') || ''; } catch(e){}
+    if (!CATS.some(c => c.k === cat && c.k !== 'lead')) cat = '';
+    const catT = (CATS.find(c => c.k === cat) || {}).t || '';
+    const list = cat ? all.filter(x => catOf(x.job) === cat) : all.filter(x => catOf(x.job) !== 'lead');
     g.innerHTML = gateShell(`
-      <h1>طلب حساب في المنصة</h1>${who(u)}
-      <p class="gate-sub">اختاري اسمك من قائمة منسوبات المدرسة، ثم أرسلي الطلب. تعتمده إدارة المدرسة، وبعدها يُنشأ ملفك في Google Drive.</p>
+      <h1>طلب حساب${catT ? ' — ' + esc(catT) : ''}</h1>${who(u)}
+      <p class="gate-sub">اختاري اسمك${cat === 'teacher' ? ' وتخصصك' : ''}، ثم أرسلي الطلب لتعتمده مديرة المدرسة.</p>
       ${note ? `<div class="msg info">${esc(note)}</div>` : ''}
       <form id="r-form" class="gate-form" novalidate>
+        ${cat ? '' : `<label class="field"><span>الفئة</span><select class="in" id="r-cat">${CATS.filter(c => c.k !== 'lead').map(c => `<option value="${c.k}">${c.t}</option>`).join('')}</select></label>`}
         <label class="field"><span>ابحثي عن اسمك</span><input class="in" id="r-q" type="search" placeholder="اكتبي جزءًا من الاسم…" autocomplete="off"></label>
-        <div class="r-list" id="r-list" role="listbox" aria-label="منسوبات المدرسة"></div>
+        <div class="r-list" id="r-list" role="listbox" aria-label="المنسوبات"></div>
+        ${cat === 'teacher' ? `<label class="field"><span>التخصص (نموذج التقييم)</span><select class="in" id="r-form-k">${FORMS_OF('teacher').map(f => `<option value="${f}">${esc(FORM_LBL[f].split('—').pop().trim())}</option>`).join('')}</select></label>` : ''}
         <div id="r-msg" aria-live="polite"></div>
         <button class="btn btn-primary btn-block" type="submit" disabled><i data-lucide="send"></i>إرسال الطلب</button>
+        <button class="btn btn-ghost btn-block" type="button" id="r-back"><i data-lucide="arrow-right"></i>تغيير الفئة</button>
         <button class="btn btn-ghost btn-block" type="button" id="r-out"><i data-lucide="log-out"></i>الدخول بحساب آخر</button>
       </form>`);
     icons();
     let pick = null;
-    const box = document.getElementById('r-list'), q = document.getElementById('r-q'), sub = g.querySelector('#r-form [type=submit]');
+    const box = document.getElementById('r-list'), q = document.getElementById('r-q'), sub = g.querySelector('#r-form [type=submit]'), cs = document.getElementById('r-cat');
+    const pool = () => cs ? all.filter(x => catOf(x.job) === cs.value) : list;
     const draw = () => {
       const t = q.value.trim();
-      const rows = list.filter(x => !t || x.name.includes(t)).slice(0, t ? 40 : 80);
-      box.innerHTML = rows.map(x => `<button type="button" role="option" class="r-opt${pick === x ? ' on' : ''}" aria-selected="${pick === x}" data-n="${esc(x.name)}"><b>${esc(x.name)}</b><small>${esc(g2(x.job))}${x.note ? ' · ' + esc(x.note) : ''}</small></button>`).join('') || '<p class="muted">لا يوجد اسم مطابق. تواصلي مع إدارة المدرسة لإضافة اسمك.</p>';
-      box.querySelectorAll('[data-n]').forEach(b => b.onclick = () => { pick = list.find(x => x.name === b.dataset.n); sub.disabled = false; draw(); });
+      const rows = pool().filter(x => !t || x.name.includes(t)).slice(0, 80);
+      box.innerHTML = rows.map(x => `<button type="button" role="option" class="r-opt${pick === x ? ' on' : ''}" aria-selected="${pick === x}" data-n="${esc(x.name)}"><b>${esc(x.name)}</b><small>${esc(g2(x.job))}${x.note ? ' · ' + esc(x.note) : ''}</small></button>`).join('') || '<p class="muted">لا يوجد اسم مطابق في هذه الفئة. تواصلي مع إدارة المدرسة لإضافة اسمك.</p>';
+      box.querySelectorAll('[data-n]').forEach(b => b.onclick = () => { pick = all.find(x => x.name === b.dataset.n); sub.disabled = false; const fk = document.getElementById('r-form-k'); if (fk) fk.value = defForm(pick.job) || 'teacher'; draw(); });
     };
-    q.oninput = draw; draw();
+    q.oninput = draw; if (cs) cs.onchange = () => { pick = null; sub.disabled = true; draw(); }; draw();
     document.getElementById('r-out').onclick = () => fb.auth.signOut();
+    document.getElementById('r-back').onclick = async () => { await fb.auth.signOut(); };
     document.getElementById('r-form').onsubmit = async ev => {
       ev.preventDefault(); if (!pick) return;
       const msg = m => { document.getElementById('r-msg').innerHTML = m ? `<div class="msg err">${esc(m)}</div>` : ''; };
@@ -3597,8 +3806,8 @@ body{font-synthesis:weight style}
         const l = await fb.fs.doc('links/' + k).get();
         if (l.exists && l.data().email !== e) { sub.disabled = false; return msg('هذا الاسم مرتبط بحساب آخر. إن كان اسمك فتواصلي مع إدارة المدرسة.'); }
         if (!l.exists) await fb.fs.doc('links/' + k).set({email: e, name: pick.name, at: new Date().toISOString()});
-        const c = catOf(pick.job);
-        await fb.fs.doc('members/' + e).set({email: e, name: pick.name, staffName: pick.name, job: pick.job, cat: c, form: defForm(pick.job), role: 'member', active: false, status: 'pending', photo: u.photoURL || '', at: new Date().toISOString()});
+        const c = catOf(pick.job), fk = document.getElementById('r-form-k');
+        await fb.fs.doc('members/' + e).set({email: e, name: pick.name, staffName: pick.name, job: pick.job, cat: c, form: fk ? fk.value : defForm(pick.job), role: 'member', ops: false, active: false, status: 'pending', photo: u.photoURL || '', at: new Date().toISOString()});
         gatePending(u, pick.name);
       } catch(err){ sub.disabled = false; msg(authMsg(err)); }
     };
@@ -3639,13 +3848,13 @@ body{font-synthesis:weight style}
       claimOwner = false;
       if (o.exists && o.data().email === e) {
         const lead = seedList().find(x => /مدير/.test(x.job)) || {};
-        acct = {email: e, name: lead.name || o.data().name || u.displayName || '', role: 'admin', owner: true, cat: 'lead', form: 'principal', staffName: lead.name || o.data().name || '', photo: u.photoURL || ''};
+        acct = {email: e, name: lead.name || o.data().name || u.displayName || '', role: 'admin', owner: true, ops: true, job: lead.job || '{مدير|مديرة} المدرسة', cat: 'lead', form: 'principal', staffName: lead.name || o.data().name || '', photo: u.photoURL || ''};
       } else {
         const m = await fb.fs.doc('members/' + e).get();
-        if (!m.exists) { acct = null; gateRegister(u); return; }
+        if (!m.exists) { acct = null; if (doorWanted === 'p') { await fb.auth.signOut(); gateLogin('هذا الحساب ليس حساب الإدارة. للتسجيل كمنسوبة اختاري «دخول الكادر».'); return; } gateRegister(u); return; }
         const d = m.data();
         if (!d.active) { acct = null; gatePending(u, d.staffName || d.name, d.status === 'stopped'); return; }
-        acct = {email: e, name: d.name || '', role: d.role === 'admin' ? 'admin' : 'member', owner: false, cat: d.cat || catOf(d.job), form: d.form || defForm(d.job), staffName: d.staffName || d.name || '', job: d.job || '', photo: d.photo || u.photoURL || ''};
+        acct = {email: e, name: d.name || '', role: d.role === 'admin' ? 'admin' : 'member', owner: false, ops: d.role === 'admin' || !!d.ops, cat: d.cat || catOf(d.job), form: d.form || defForm(d.job), staffName: d.staffName || d.name || '', job: d.job || '', photo: d.photo || u.photoURL || ''};
       }
       try { const s = await fb.fs.doc('site/state').get(); if (s.exists && s.data().json) { const v = JSON.parse(s.data().json); if (v && v.settings && Array.isArray(v.sections)) { v.settings.firebase = FB; PUBLISHED = v; } } } catch(x){}
     } catch(err){ gateLogin(authMsg(err)); return; }
@@ -3680,46 +3889,54 @@ body{font-synthesis:weight style}
     try { list = (await fb.fs.collection('members').get()).docs.map(d => d.data()).sort((a, b) => String(a.name).localeCompare(String(b.name), 'ar')); }
     catch(e){ tab.innerHTML = `<div class="msg err">${esc(authMsg(e))}</div>`; return; }
     let owner = null; try { const o = await fb.fs.doc('meta/owner').get(); owner = o.exists ? o.data() : null; } catch(e){}
-    const pend = list.filter(m => !m.active && m.status === 'pending'), rest = list.filter(m => !(!m.active && m.status === 'pending'));
-    const share = (location.origin + location.pathname).replace(/#.*$/, '');
+    const seeds = seedList(), share = (location.origin + location.pathname).replace(/#.*$/, '');
+    const catOfM = m => m.cat || catOf(m.job);
+    const pend = list.filter(m => !m.active && m.status === 'pending');
+    const row = (m, isPend) => `<div class="u-row${isPend ? ' pend' : ''}" data-e="${esc(m.email)}">${m.photo ? `<img class="u-ph" src="${esc(m.photo)}" alt="" referrerpolicy="no-referrer">` : `<span class="avatar">${esc(initials(m.name))}</span>`}
+      <div class="u-t"><b>${esc(m.name)}</b><small>${esc(g2(m.job || ''))} · <span class="ltr">${esc(m.email)}</span></small></div>
+      <span class="spill ${isPend ? 'wait' : m.active ? (m.role === 'admin' ? 'ok' : 'info') : 'none'}">${isPend ? 'طلب جديد' : ROLE_LBL(m)}${!isPend && m.active && m.ops && m.role !== 'admin' ? ' · متابعة يومية' : ''}</span>
+      <div class="u-acts">
+        <select class="in in-sm" data-cat aria-label="الفئة">${CATS.filter(c => c.k !== 'lead').map(c => `<option value="${c.k}" ${c.k === catOfM(m) ? 'selected' : ''}>${c.t}</option>`).join('')}</select>
+        ${formSel('pf-' + cssId(m.email), m.form, catOfM(m))}
+        ${isPend ? `<select class="in in-sm" data-role aria-label="الصلاحية"><option value="member">منسوبة</option><option value="ops" ${catOfM(m) === 'deputy' ? 'selected' : ''}>منسوبة + متابعة يومية</option><option value="admin">إدارة كاملة</option></select>
+          <button type="button" class="btn btn-primary btn-sm" data-u="approve"><i data-lucide="check"></i>قبول</button>
+          <button type="button" class="btn btn-ghost btn-sm danger" data-u="reject">رفض</button>`
+        : `<button type="button" class="btn btn-ghost btn-sm" data-u="save"><i data-lucide="save"></i>حفظ الفئة والنموذج</button>
+          ${m.role !== 'admin' ? `<button type="button" class="btn btn-ghost btn-sm" data-u="ops">${m.ops ? 'إلغاء المتابعة اليومية' : 'منح المتابعة اليومية'}</button>` : ''}
+          <button type="button" class="btn btn-ghost btn-sm" data-u="role">${m.role === 'admin' ? 'إلغاء الإدارة' : 'منح الإدارة'}</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-u="active">${m.active ? 'إيقاف' : 'تفعيل'}</button>
+          ${m.email !== acct.email ? `<button type="button" class="btn btn-ghost btn-sm danger" data-u="del">حذف الحساب</button>` : ''}`}
+      </div></div>`;
     tab.innerHTML = `<div class="stack">
+      <div class="acc-stats">${CATS.filter(c => c.k !== 'lead').map(c => { const n = seeds.filter(x => catOf(x.job) === c.k).length, a = list.filter(m => m.active && catOfM(m) === c.k).length, p = pend.filter(m => catOfM(m) === c.k).length;
+        return `<div class="acc-s"><span class="cp-i"><i data-lucide="${c.i}"></i></span><b>${c.t}</b><span>${ar(a)} من ${ar(n)} مفعّل${p ? ` · <em>${ar(p)} طلب</em>` : ''}</span><i class="acc-bar"><i style="width:${n ? Math.round(a / n * 100) : 0}%"></i></i></div>`; }).join('')}</div>
+      <div class="panel"><h2><i data-lucide="user-check"></i>طلبات بانتظار القبول (${ar(pend.length)})</h2>
+        ${pend.length ? CATS.filter(c => pend.some(m => catOfM(m) === c.k)).map(c => `<h3 class="u-grp"><i data-lucide="${c.i}"></i>${c.t}</h3><div class="u-list">${pend.filter(m => catOfM(m) === c.k).map(m => row(m, true)).join('')}</div>`).join('') : '<p class="muted">لا توجد طلبات جديدة.</p>'}</div>
+      <div class="panel"><h2><i data-lucide="users"></i>الحسابات المفعّلة والموقوفة</h2>
+        ${owner ? `<h3 class="u-grp"><i data-lucide="landmark"></i>القيادة المدرسية</h3><div class="u-list"><div class="u-row"><span class="avatar">${esc(initials(owner.name))}</span><div class="u-t"><b>${esc(owner.name)}</b><small class="ltr">${esc(owner.email)}</small></div><span class="spill ok">مالكة المنصة</span></div></div>` : ''}
+        ${CATS.filter(c => c.k !== 'lead').map(c => { const ms = list.filter(m => !(!m.active && m.status === 'pending') && catOfM(m) === c.k); return ms.length ? `<h3 class="u-grp"><i data-lucide="${c.i}"></i>${c.t} (${ar(ms.length)})</h3><div class="u-list">${ms.map(m => row(m, false)).join('')}</div>` : ''; }).join('') || '<p class="muted">لا توجد حسابات بعد.</p>'}</div>
       <div class="panel invite"><h2><i data-lucide="send"></i>دعوة المنسوبات</h2>
-        <p class="ev-note" style="margin:0 0 10px!important">أرسلي هذه الرسالة في مجموعة المنسوبات؛ كل منسوبة تدخل بحساب Google وتختار اسمها، ثم تعتمدين طلبها من هنا.</p>
-        <textarea class="in" id="inv-txt" readonly style="min-height:120px">${esc(`السلام عليكم ورحمة الله\nمنصة ${cur().settings.school || 'المدرسة'} للأداء الوظيفي:\n${share}\n١) اضغطي «الدخول بحساب Google».\n٢) اختاري اسمك من القائمة وأرسلي الطلب.\n٣) بعد اعتماد الطلب افتحي «ملفي» واضغطي «إنشاء ملفي في Google Drive»، ثم ارفعي شواهدك من المنصة.`)}</textarea>
+        <p class="ev-note" style="margin:0 0 10px!important">أرسلي هذه الرسالة في مجموعة المنسوبات.</p>
+        <textarea class="in" id="inv-txt" readonly style="min-height:130px">${esc(`السلام عليكم ورحمة الله\nمنصة ${cur().settings.school || 'المدرسة'} للأداء الوظيفي:\n${share}\n١) اضغطي «دخول الكادر» واختاري فئتك.\n٢) ادخلي بحساب Google، واختاري اسمك، وأرسلي الطلب.\n٣) بعد القبول افتحي «ملفي» واضغطي «إنشاء ملفي في Google Drive»، ثم ارفعي شواهدك.`)}</textarea>
         <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn btn-ghost btn-sm" id="inv-copy"><i data-lucide="copy"></i>نسخ الرسالة</button><a class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="#" id="inv-wa"><i data-lucide="message-circle"></i>إرسال عبر واتساب</a></div></div>
-      <div class="panel"><h2><i data-lucide="user-check"></i>طلبات بانتظار الاعتماد (${ar(pend.length)})</h2>
-        <div class="u-list">${pend.map(m => `<div class="u-row pend" data-e="${esc(m.email)}">${m.photo ? `<img class="u-ph" src="${esc(m.photo)}" alt="" referrerpolicy="no-referrer">` : `<span class="avatar">${esc(initials(m.name))}</span>`}<div class="u-t"><b>${esc(m.name)}</b><small>${esc(g2(m.job))} · <span class="ltr">${esc(m.email)}</span></small></div>
-          <span class="spill wait">جديد</span>
-          <div class="u-acts">${formSel('pf-' + cssId(m.email), m.form, m.cat)}
-            <select class="in in-sm" data-role aria-label="الصلاحية"><option value="member">منسوبة</option><option value="admin">إدارة</option></select>
-            <button type="button" class="btn btn-primary btn-sm" data-u="approve"><i data-lucide="check"></i>اعتماد</button>
-            <button type="button" class="btn btn-ghost btn-sm danger" data-u="reject">رفض</button></div></div>`).join('') || '<p class="muted">لا توجد طلبات جديدة.</p>'}</div></div>
-      <div class="panel"><h2><i data-lucide="users"></i>الحسابات (${ar(rest.length + (owner ? 1 : 0))})</h2>
-        <div class="u-list">
-          ${owner ? `<div class="u-row"><span class="avatar">${esc(initials(owner.name))}</span><div class="u-t"><b>${esc(owner.name)}</b><small class="ltr">${esc(owner.email)}</small></div><span class="spill ok">مالكة المنصة</span></div>` : ''}
-          ${rest.map(m => `<div class="u-row" data-e="${esc(m.email)}">${m.photo ? `<img class="u-ph" src="${esc(m.photo)}" alt="" referrerpolicy="no-referrer">` : `<span class="avatar">${esc(initials(m.name))}</span>`}<div class="u-t"><b>${esc(m.name)}</b><small>${esc(g2(m.job || ''))}${m.form ? ' · ' + esc(FORM_LBL[m.form] || '') : ''} · <span class="ltr">${esc(m.email)}</span></small></div>
-            <span class="spill ${m.active ? (m.role === 'admin' ? 'ok' : 'info') : 'none'}">${ROLE_LBL(m)}</span>
-            <div class="u-acts">${formSel('pf-' + cssId(m.email), m.form, m.cat || catOf(m.job))}
-              <button type="button" class="btn btn-ghost btn-sm" data-u="role">${m.role === 'admin' ? 'جعلها منسوبة' : 'منح الإدارة'}</button>
-              <button type="button" class="btn btn-ghost btn-sm" data-u="active">${m.active ? 'إيقاف' : 'تفعيل'}</button>
-              ${m.email !== acct.email ? `<button type="button" class="btn btn-ghost btn-sm danger" data-u="del">حذف</button>` : ''}
-            </div></div>`).join('') || (owner ? '' : '<p class="muted">لا توجد حسابات بعد.</p>')}
-        </div></div></div>`;
+    </div>`;
     icons();
     const txt = document.getElementById('inv-txt');
     document.getElementById('inv-wa').href = 'https://wa.me/?text=' + encodeURIComponent(txt.value);
     document.getElementById('inv-copy').onclick = () => navigator.clipboard.writeText(txt.value).then(() => toast('نُسخت الرسالة.', 'ok'), () => { txt.select(); });
-    tab.querySelectorAll('.u-row[data-e]').forEach(row => {
-      const e = row.dataset.e, m = list.find(x => x.email === e);
-      const fsel = row.querySelector('select[id^="pf-"]');
-      if (fsel && m.active) fsel.onchange = async () => { try { await fb.fs.doc('members/' + e).update({form: fsel.value}); toast('حُدّث نموذج التقييم.', 'ok'); } catch(err){ toast(authMsg(err), 'err'); } };
-      row.querySelectorAll('[data-u]').forEach(b => {
+    tab.querySelectorAll('.u-row[data-e]').forEach(rw => {
+      const e = rw.dataset.e, m = list.find(x => x.email === e); if (!m) return;
+      const fsel = () => rw.querySelector('select[id^="pf-"]'), csel = rw.querySelector('[data-cat]');
+      csel.onchange = () => { const old = fsel(); const html = formSel('pf-' + cssId(e), defForm(m.job), csel.value); if (old) old.outerHTML = html || ''; else if (html) csel.insertAdjacentHTML('afterend', html); };
+      rw.querySelectorAll('[data-u]').forEach(b => {
         const act = b.dataset.u;
         const run = async () => {
           try {
-            const ref = fb.fs.doc('members/' + e);
-            if (act === 'approve') { const role = row.querySelector('[data-role]').value; await ref.update({active: true, status: 'active', role, form: fsel ? fsel.value : (m.form || ''), by: acct.email}); toast('اعتُمد حساب ' + m.name, 'ok'); }
+            const ref = fb.fs.doc('members/' + e), cat = csel.value, form = fsel() ? fsel().value : '';
+            if (act === 'approve') { const r = rw.querySelector('[data-role]').value; await ref.update({active: true, status: 'active', role: r === 'admin' ? 'admin' : 'member', ops: r !== 'member', cat, form, by: acct.email}); toast('قُبل حساب ' + m.name, 'ok'); }
             if (act === 'reject') { await ref.delete(); try { await fb.fs.doc('links/' + nameKey(m.staffName || m.name)).delete(); } catch(x){} toast('رُفض الطلب.', 'ok'); }
+            if (act === 'save') { await ref.update({cat, form}); toast('حُفظت الفئة والنموذج.', 'ok'); }
+            if (act === 'ops') await ref.update({ops: !m.ops});
             if (act === 'role') await ref.update({role: m.role === 'admin' ? 'member' : 'admin'});
             if (act === 'active') await ref.update({active: !m.active, status: m.active ? 'stopped' : 'active'});
             if (act === 'del') { await ref.delete(); try { await fb.fs.doc('links/' + nameKey(m.staffName || m.name)).delete(); } catch(x){} }
@@ -4009,7 +4226,419 @@ body{font-synthesis:weight style}
     const head = app.querySelector('.mf'); if (head) head.insertAdjacentHTML('afterbegin', `<nav class="crumbs"><a href="#cadre"><i data-lucide="arrow-right"></i>الكادر</a><span>/</span><a href="#cat-${c}">${esc((CATS.find(z => z.k === c) || {}).t || '')}</a><span>/</span><span>${esc(s.name)}</span></nav>
       ${!x.m ? '<div class="msg info">لم تنشئ هذه المنسوبة حسابًا في المنصة بعد. أرسلي لها رسالة الدعوة من «لوحة التحكم ← الحسابات».</div>' : ''}`);
     icons();
+    if (head) adminPersonTools(head, x);
   }
+
+  /* ================= صفحات المنسوبة الخاصة + التقييم والملاحظات والمهام + مكتب التوجيه ================= */
+  /* الأدوار: admin (إدارة) · ops (متابعة يومية) · staff (منسوبة: صفحاتها فقط) */
+  const roleNow = () => !useFb ? 'local' : !acct ? 'none' : acct.role === 'admin' ? 'admin' : acct.ops ? 'ops' : 'staff';
+  const staffOnly = () => roleNow() === 'staff';
+  const isCounselorAcct = () => !!acct && (acct.role === 'admin' || acct.cat === 'counselor');
+  const MY_PAGES = ['myeval', 'myatt', 'mytasks', 'mynotes'];
+  const OPS_PAGES = ['staff', 'att', 'assembly', 'late', 'sup', 'duty', 'dutyend', 'io'];
+  function navAllowed(r){
+    const R = roleNow();
+    if (R === 'local' || R === 'none') return !['mine', 'cadre', 'evals', 'gc', ...MY_PAGES].includes(r);
+    if (R === 'admin') return !MY_PAGES.includes(r);
+    if (r === 'gc') return isCounselorAcct();
+    if (r === 'cadre' || r === 'evals') return false;
+    if (R === 'staff' && OPS_PAGES.includes(r)) return false;
+    return true;
+  }
+  const SCORE = [[5, 'متميز'], [4, 'متقدم'], [3, 'متمكن'], [2, 'مبتدئ'], [1, 'غير مُرضٍ']];
+  const scoreLbl = v => (SCORE.find(x => x[0] === +v) || [0, '—'])[1];
+  const gradeOf = t => t >= 90 ? 'ممتاز' : t >= 80 ? 'جيد جدًا' : t >= 70 ? 'جيد' : t >= 60 ? 'مرضٍ' : 'غير مرضٍ';
+  function evalTotal(items, scores){
+    let t = 0, w = 0;
+    items.forEach(it => { const v = +((scores || {})[it.id] || {}).v; if (v) { t += (it.weight || 0) * v / 5; w += it.weight || 0; } });
+    return {total: Math.round(t * 10) / 10, covered: w};
+  }
+  const NOTE_T = {thanks: ['شكر وتقدير', 'heart', 'ok'], guide: ['توجيه', 'compass', 'info'], warn: ['تنبيه', 'triangle-alert', 'wait'], formal: ['لفت نظر', 'octagon-alert', 'bad'], visit: ['زيارة صفية', 'presentation', 'info']};
+  const pageWrap = (inner) => `<div class="wrap page">${inner}</div>`;
+  const loading = t => pageWrap(`<div class="panel muted-panel"><span class="spinner"></span>${esc(t || 'جارٍ التحميل…')}</div>`);
+
+  /* ---------- النسخة الشخصية من الحضور (pa/{staffId}) ---------- */
+  const MIR = {};
+  async function mirrorPersonal(path, data){
+    if (!fb || !acct || !acct.ops) return;
+    try {
+      const [col, date] = path.split('/'), prev = MIR[path]; MIR[path] = clone(data || {});
+      const FV = firebase.firestore.FieldValue, batch = fb.fs.batch(); let n = 0;
+      const put = (id, patch) => { batch.set(fb.fs.doc('pa/' + id), Object.assign({name: sname(id), at: new Date().toISOString()}, patch), {merge: true}); n++; };
+      if (col === 'att') {
+        const a = (data && data.rec) || {}, b = (prev && prev.rec) || {};
+        new Set([...Object.keys(a), ...Object.keys(b)]).forEach(id => { if (JSON.stringify(a[id] || null) !== JSON.stringify(b[id] || null) || !prev) put(id, {days: {[date]: a[id] ? {s: a[id].s || '', t: a[id].t || '', n: a[id].n || ''} : FV.delete()}}); });
+      } else if (col === 'late') {
+        const by = d => { const m = {}; ((d && d.entries) || []).forEach(e => { (m[e.staffId] = m[e.staffId] || []).push({p: e.period || '', m: +e.min || 0, a: e.action || ''}); }); return m; };
+        const a = by(data), b = by(prev);
+        new Set([...Object.keys(a), ...Object.keys(b)]).forEach(id => { if (JSON.stringify(a[id] || null) !== JSON.stringify(b[id] || null) || !prev) put(id, {late: {[date]: a[id] ? a[id] : FV.delete()}}); });
+      } else if (col === 'assembly') {
+        const a = new Set((data && data.absentStaff) || []), b = new Set((prev && prev.absentStaff) || []);
+        new Set([...a, ...b]).forEach(id => { if (a.has(id) !== b.has(id) || !prev) put(id, {asm: {[date]: a.has(id) ? true : FV.delete()}}); });
+      }
+      if (n) await batch.commit();
+    } catch(e){ console.warn('mirror', e); }
+  }
+  /* مزامنة شهرية كاملة (مرة يوميًا لكل جهاز إدارة/متابعة) — تنشئ ملف حضور لكل منسوبة حتى إن لم يُسجَّل لها شيء */
+  async function syncPersonal(force){
+    if (!fb || !acct || !acct.ops || !S.staff.length) return;
+    const key = 'pa-sync-' + today(); if (!force && store.get(key)) return;
+    try {
+      const [from, to] = monthRange(monthNow());
+      const q = c => db.collection(c).where('date', '>=', from).where('date', '<=', to).get().then(x => x.docs.map(d => d.data()));
+      const [att, late, asm] = await Promise.all([q('att'), q('late'), q('assembly')]);
+      const P = {}; S.staff.forEach(s => { P[s.id] = {name: s.name, job: s.job || '', days: {}, late: {}, asm: {}}; });
+      att.forEach(d => Object.entries(d.rec || {}).forEach(([id, r]) => { if (P[id]) P[id].days[d.date] = {s: r.s || '', t: r.t || '', n: r.n || ''}; }));
+      late.forEach(d => (d.entries || []).forEach(e => { if (P[e.staffId]) (P[e.staffId].late[d.date] = P[e.staffId].late[d.date] || []).push({p: e.period || '', m: +e.min || 0, a: e.action || ''}); }));
+      asm.forEach(d => (d.absentStaff || []).forEach(id => { if (P[id]) P[id].asm[d.date] = true; }));
+      const ids = Object.keys(P);
+      for (let i = 0; i < ids.length; i += 400) { const b = fb.fs.batch(); ids.slice(i, i + 400).forEach(id => b.set(fb.fs.doc('pa/' + id), Object.assign({at: new Date().toISOString()}, P[id]), {merge: true})); await b.commit(); }
+      store.set(key, 1);
+    } catch(e){ console.warn('sync', e); }
+  }
+
+  /* ---------- بيانات المنسوبة الحالية ---------- */
+  const ME = {pa: null, paId: '', at: 0};
+  async function loadMyPa(force){
+    if (!force && ME.at && Date.now() - ME.at < 60000) return ME;
+    try {
+      const x = await fb.fs.collection('pa').where('name', '==', acct.staffName).limit(1).get();
+      if (!x.empty) { ME.pa = x.docs[0].data(); ME.paId = x.docs[0].id; } else { ME.pa = null; ME.paId = ''; }
+    } catch(e){ ME.pa = null; }
+    ME.at = Date.now(); return ME;
+  }
+  const myQ = c => fb.fs.collection(c).where('email', '==', acct.email);
+  function myDuties(id){
+    if (!id) return {sup: [], duty: [], dutyend: []};
+    const c = cfg(), sup = [];
+    DAYS.forEach((d, di) => c.slots.forEach(sl => { if (((c.supGrid[di] || {})[sl.id] || []).includes(id)) sup.push({day: di, t: sl.name}); }));
+    const dd = k => DAYS.map((d, di) => (c[DUTY[k].grid][di] || []).includes(id) ? di : -1).filter(x => x >= 0);
+    return {sup, duty: dd('duty'), dutyend: dd('dutyend')};
+  }
+  function monthCounts(pa, ym){
+    const c = {p: 0, l: 0, a: 0, v: 0, m: 0, late: 0, lateMin: 0, asm: 0};
+    Object.entries((pa && pa.days) || {}).forEach(([d, r]) => { if (d.startsWith(ym) && c[r.s] != null) c[r.s]++; });
+    Object.entries((pa && pa.late) || {}).forEach(([d, L]) => { if (d.startsWith(ym)) (L || []).forEach(e => { c.late++; c.lateMin += +e.m || 0; }); });
+    Object.keys((pa && pa.asm) || {}).forEach(d => { if (d.startsWith(ym)) c.asm++; });
+    return c;
+  }
+  function myHead(title, icon, sub){ return pageHead(title, icon, sub); }
+
+  /* ---------- 🏠 الرئيسية للمنسوبة ---------- */
+  async function myHome(){
+    if (!acct) return;
+    app.innerHTML = loading();
+    let file = null, ups = [], ev = null, notes = [], tasks = [];
+    await Promise.all([
+      loadMyPa(),
+      loadFile(acct.email).then(x => file = x).catch(() => {}),
+      loadUploads(acct.email).then(x => ups = x).catch(() => {}),
+      fb.fs.doc('evals/' + acct.email).get().then(x => ev = x.exists ? x.data() : null).catch(() => {}),
+      myQ('notes').get().then(x => notes = x.docs.map(d => ({id: d.id, ...d.data()}))).catch(() => {}),
+      myQ('tasks').get().then(x => tasks = x.docs.map(d => ({id: d.id, ...d.data()}))).catch(() => {})
+    ]);
+    const sec = secOfForm(acct.form), items = sec ? sec.items : [];
+    const done = items.filter(it => ups.some(u => u.item === it.id)).length, pct = items.length ? Math.round(done / items.length * 100) : 0;
+    const mc = monthCounts(ME.pa, monthNow()), unread = notes.filter(n => !n.seen).length, open = tasks.filter(t => t.status !== 'done');
+    const du = myDuties(ME.paId), di = dayIdx(today()), first = (acct.staffName || acct.name || '').split(/\s+/)[0];
+    const todayDuty = [...du.sup.filter(x => x.day === di).map(x => 'إشراف: ' + x.t), ...(du.duty.includes(di) ? ['مناوبة بداية الدوام'] : []), ...(du.dutyend.includes(di) ? ['مناوبة نهاية الدوام'] : [])];
+    const missing = items.filter(it => !ups.some(u => u.item === it.id)).slice(0, 3);
+    const s = cur().settings;
+    app.innerHTML = pageWrap(`
+      <section class="hb my-hb">
+        <div class="hb-top">${acct.photo ? `<img src="${esc(acct.photo)}" alt="" class="my-ph" referrerpolicy="no-referrer">` : `<span class="mf-av">${esc(initials(acct.staffName || acct.name))}</span>`}
+          <div class="hb-id"><small>${esc(s.school || '')}${s.year ? ' · ' + esc(s.year) : ''}</small><h1>مرحبًا، أ. ${esc(first)}</h1><span>${esc(g(acct.job || ''))}${acct.form ? ' · ' + esc(FORM_LBL[acct.form] || '') : ''}</span></div></div>
+        <div class="hb-greet"><span><i data-lucide="calendar"></i>${dayName(today())} · ${hijri(today())}</span></div>
+        <div class="hb-stats">
+          <a href="#mine"><i data-lucide="award"></i><b>${items.length ? ar(pct) + '٪' : ar(ups.length)}</b><span>${items.length ? 'اكتمال شواهدي' : 'ملفاتي المرفوعة'}</span></a>
+          <a href="#myeval"><i data-lucide="star"></i><b>${ev && ev.status === 'published' ? ar(ev.total) : '—'}</b><span>درجتي</span></a>
+          <a href="#myatt"><i data-lucide="calendar-check"></i><b>${ar(mc.a)}/${ar(mc.l)}</b><span>غياب/تأخر هذا الشهر</span></a>
+          <a href="#mynotes"><i data-lucide="message-square-text"></i><b>${ar(unread)}</b><span>ملاحظات جديدة</span></a>
+        </div>
+        <div class="hb-acts"><a class="hb-btn pri" href="#mine"><i data-lucide="upload"></i>رفع شاهد</a><a class="hb-btn" href="#myeval"><i data-lucide="star"></i>تقييمي</a><a class="hb-btn" href="#mytasks"><i data-lucide="list-checks"></i>تكليفاتي</a></div>
+      </section>
+      <div class="my-grid">
+        <section class="panel"><h2><i data-lucide="bell"></i>تذكيراتي</h2><div class="rem-list">
+          ${!file || !file.root ? `<a class="rem hl" href="#mine"><div><b>أنشئي ملفك في Google Drive</b><span>خطوة واحدة لتتمكني من رفع شواهدك.</span></div><i data-lucide="chevron-left" class="rem-go"></i></a>` : ''}
+          ${todayDuty.map(t => `<a class="rem" href="#mytasks"><div><b>${esc(t)}</b><span>اليوم</span></div><i data-lucide="chevron-left" class="rem-go"></i></a>`).join('')}
+          ${open.slice(0, 3).map(t => `<a class="rem" href="#mytasks"><div><b>${esc(t.title)}</b><span>${t.due ? 'موعدها ' + esc(t.due) : 'مهمة مسندة'}</span></div><i data-lucide="chevron-left" class="rem-go"></i></a>`).join('')}
+          ${missing.map(it => `<a class="rem" href="#mine"><div><b>${esc(g(it.name))}</b><span>لا توجد شواهد بعد</span></div><i data-lucide="chevron-left" class="rem-go"></i></a>`).join('')}
+          ${unread ? `<a class="rem" href="#mynotes"><div><b>لديك ${ar(unread)} ${unread === 1 ? 'ملاحظة جديدة' : 'ملاحظات جديدة'} من الإدارة</b><span>اطّلعي عليها</span></div><i data-lucide="chevron-left" class="rem-go"></i></a>` : ''}
+          ${file && file.root && !todayDuty.length && !open.length && !missing.length && !unread ? '<p class="muted">لا توجد تذكيرات. أحسنتِ!</p>' : ''}
+        </div></section>
+        <section class="panel"><h2><i data-lucide="layout-grid"></i>صفحاتي</h2><div class="svc-grid my-svc">
+          ${[['mine', 'folder-open', 'ملفي', 'c1'], ['myeval', 'star', 'تقييمي وتقدمي', 'c2'], ['myatt', 'calendar-check', 'حضوري', 'c3'], ['mytasks', 'list-checks', 'تكليفاتي', 'c4'], ['mynotes', 'message-square-text', 'ملاحظات الإدارة', 'c1'],
+            ...(isCounselorAcct() ? [['gc', 'compass', 'مكتب التوجيه', 'c2']] : []), ['ev', 'book-open', 'نماذج التقييم', 'c3'], ['profile', 'school', 'ملف المدرسة', 'c4']].map(([r, i, l, c]) => `<a class="svc-t ${c}" href="#${r}"><span class="svc-i"><i data-lucide="${i}"></i></span><span class="svc-l">${l}</span></a>`).join('')}
+        </div></section>
+      </div>`);
+    icons();
+  }
+
+  /* ---------- ⭐ تقييمي وتقدمي ---------- */
+  async function myEvalPage(){
+    app.innerHTML = loading();
+    let ev = null, ups = [];
+    try { const x = await fb.fs.doc('evals/' + acct.email).get(); ev = x.exists ? x.data() : null; } catch(e){ ev = null; }
+    try { ups = await loadUploads(acct.email); } catch(e){}
+    const sec = secOfForm(acct.form), items = sec ? sec.items : [];
+    const done = items.filter(it => ups.some(u => u.item === it.id)).length;
+    if (!items.length) { app.innerHTML = pageWrap(myHead('تقييمي وتقدمي', 'star', '') + '<div class="panel"><p class="muted">لا يوجد نموذج تقييم مرتبط بفئتك في دليل الوظائف التعليمية.</p></div>'); icons(); return; }
+    const pub = ev && ev.status === 'published';
+    const hist = (ev && ev.history) || [];
+    app.innerHTML = pageWrap(`${myHead('تقييمي وتقدمي', 'star', esc(FORM_LBL[acct.form] || ''))}
+      <div class="cat-kpis">
+        <div><b>${pub ? ar(ev.total) : '—'}</b><span>الدرجة الموزونة من ١٠٠</span></div>
+        <div><b>${pub ? gradeOf(ev.total) : '—'}</b><span>التقدير العام</span></div>
+        <div><b>${ar(done)}/${ar(items.length)}</b><span>عناصر بشواهد</span></div>
+        <div class="k-term"><b>${pub ? esc(ev.term || '') : '—'}</b><span>فترة التقييم</span></div>
+      </div>
+      ${pub ? '' : '<div class="msg info">لم تعتمد الإدارة تقييمك بعد. يظهر هنا فور اعتماده ونشره، وحتى ذلك الحين تابعي اكتمال شواهدك.</div>'}
+      ${hist.length ? `<section class="panel"><h2><i data-lucide="trending-up"></i>تقدمي</h2><div class="hist">${hist.concat(pub ? [{term: ev.term, total: ev.total}] : []).map(h => `<div><span class="bar"><i style="height:${Math.max(6, h.total)}%"></i></span><b>${ar(h.total)}</b><small>${esc(h.term || '')}</small></div>`).join('')}</div></section>` : ''}
+      <section class="panel"><h2><i data-lucide="list-checks"></i>عناصر التقييم</h2>
+        <div class="ev-tbl">${items.map((it, i) => { const sc = pub ? (ev.scores || {})[it.id] || {} : {}; const n = ups.filter(u => u.item === it.id).length;
+          return `<div class="ev-r"><span class="mf-n">${ar(i + 1)}</span><div class="ev-t"><b>${esc(g(it.name))}</b><small>الوزن ${ar(it.weight || 0)}٪ · ${n ? ar(n) + ' ملف' : 'لا شواهد'}${sc.n ? ' · ' + esc(sc.n) : ''}</small></div>
+            <span class="ev-s ${sc.v ? 's' + sc.v : ''}">${sc.v ? ar(sc.v) + ' — ' + scoreLbl(sc.v) : (pub ? 'لم يُقدَّر' : '—')}</span></div>`; }).join('')}</div></section>
+      ${pub ? (() => { const low = items.filter(it => +(((ev.scores || {})[it.id] || {}).v) && +ev.scores[it.id].v <= 3); return low.length ? `<section class="panel impact"><h2><i data-lucide="target"></i>فرص التحسين</h2><ul class="ind">${low.map(it => `<li><b>${esc(g(it.name))}</b> — ${(it.evidence || []).slice(0, 3).map(x => esc(g(x))).join('، ')}</li>`).join('')}</ul></section>` : ''; })() : ''}`);
+    icons();
+  }
+
+  /* ---------- 🗓️ حضوري ---------- */
+  async function myAttPage(){
+    app.innerHTML = loading();
+    await loadMyPa(true);
+    const ym = M.myYm || monthNow(), pa = ME.pa;
+    const [y, mo] = ym.split('-').map(Number), last = new Date(y, mo, 0).getDate();
+    const c = monthCounts(pa, ym);
+    const cells = []; const first = new Date(y, mo - 1, 1).getDay();
+    for (let i = 0; i < first; i++) cells.push('<span class="cal-e"></span>');
+    for (let d = 1; d <= last; d++) {
+      const k = ym + '-' + String(d).padStart(2, '0'), r = pa && pa.days && pa.days[k], A = r && ATT.find(z => z.k === r.s), wk = dayIdx(k) > 4;
+      const L = pa && pa.late && pa.late[k];
+      cells.push(`<span class="cal-d ${A ? A.c : ''} ${wk ? 'wk' : ''} ${k === today() ? 'now' : ''}" title="${A ? esc(g(A.t)) : ''}${r && r.t ? ' ' + esc(r.t) : ''}"><b>${ar(d)}</b>${A ? `<small>${esc(g(A.t))}</small>` : ''}${L ? '<i class="cal-late"></i>' : ''}</span>`);
+    }
+    const prevYm = (() => { const d = new Date(y, mo - 2, 1); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); })();
+    const nextYm = (() => { const d = new Date(y, mo, 1); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); })();
+    const monthName = new Intl.DateTimeFormat('ar', {month: 'long', year: 'numeric'}).format(new Date(y, mo - 1, 1));
+    const lateRows = Object.entries((pa && pa.late) || {}).filter(([d]) => d.startsWith(ym)).flatMap(([d, L]) => (L || []).map(e => ({d, ...e})));
+    app.innerHTML = pageWrap(`${myHead('حضوري', 'calendar-check', 'سجلك الشخصي كما سجّلته إدارة المدرسة (للاطلاع).')}
+      ${!pa ? '<div class="msg info">لم يُسجَّل لك حضور بعد، أو لم يُربط اسمك بسجل الحضور. يظهر هنا تلقائيًا عند التسجيل.</div>' : ''}
+      <div class="cat-kpis tight">${[['حضور', c.p, 'ok'], ['تأخر صباحي', c.l, 'wait'], ['غياب', c.a, 'bad'], ['إجازة', c.v, 'info'], ['مهمة رسمية', c.m, 'info'], ['تأخر عن الحصص', c.late, 'wait'], ['عدم حضور الاصطفاف', c.asm, 'bad']].map(([k, v, cl]) => `<div class="k-${cl}"><b>${ar(v)}</b><span>${k}</span></div>`).join('')}</div>
+      <section class="panel"><div class="cal-head"><button type="button" class="icon-btn" data-ym="${prevYm}" aria-label="الشهر السابق"><i data-lucide="chevron-right"></i></button><h2>${esc(monthName)}</h2><button type="button" class="icon-btn" data-ym="${nextYm}" aria-label="الشهر التالي" ${ym >= monthNow() ? 'disabled' : ''}><i data-lucide="chevron-left"></i></button></div>
+        <div class="cal">${DAYS.concat(['الجمعة', 'السبت']).map(d => `<span class="cal-h">${d.replace('ال', '').slice(0, 5)}</span>`).join('')}${cells.join('')}</div>
+        <div class="chart-legend cal-leg"><span><i class="lg ok"></i>حاضرة</span><span><i class="lg wait"></i>متأخرة</span><span><i class="lg bad"></i>غائبة</span><span><i class="lg info"></i>إجازة/مهمة</span><span><i class="lg late-dot"></i>تأخر عن حصة</span></div></section>
+      ${lateRows.length ? `<section class="panel"><h2><i data-lucide="alarm-clock"></i>التأخر عن الحصص</h2><div class="tbl-wrap flat"><table class="tbl dtbl"><thead><tr><th>التاريخ</th><th>الحصة</th><th>المدة</th><th>الإجراء</th></tr></thead><tbody>${lateRows.map(e => `<tr><td>${dayName(e.d)} ${ar(e.d.slice(8))}</td><td>${ar(e.p)}</td><td>${ar(e.m)} د</td><td>${esc(e.a || '—')}</td></tr>`).join('')}</tbody></table></div></section>` : ''}`);
+    icons();
+    app.querySelectorAll('[data-ym]').forEach(b => b.onclick = () => { M.myYm = b.dataset.ym; myAttPage(); });
+  }
+
+  /* ---------- 📋 تكليفاتي ---------- */
+  async function myTasksPage(){
+    app.innerHTML = loading();
+    await loadMyPa();
+    let tasks = []; try { tasks = (await myQ('tasks').get()).docs.map(d => ({id: d.id, ...d.data()})).sort((a, b) => (a.status === 'done') - (b.status === 'done') || String(a.due || '9').localeCompare(String(b.due || '9'))); } catch(e){}
+    const du = myDuties(ME.paId);
+    app.innerHTML = pageWrap(`${myHead('تكليفاتي', 'list-checks', 'الإشراف والمناوبة الأسبوعية والمهام التي أسندتها الإدارة.')}
+      <section class="panel"><h2><i data-lucide="calendar-days"></i>جدولي الأسبوعي</h2>
+        <div class="wk-grid">${DAYS.map((d, di) => { const list = [...du.sup.filter(x => x.day === di).map(x => ['sup', 'إشراف: ' + x.t]), ...(du.duty.includes(di) ? [['duty', 'مناوبة بداية الدوام']] : []), ...(du.dutyend.includes(di) ? [['dutyend', 'مناوبة نهاية الدوام']] : [])];
+          return `<div class="wk-d${di === dayIdx(today()) ? ' now' : ''}"><b>${d}</b>${list.length ? list.map(([k, t]) => `<span class="sched ${k}">${esc(t)}</span>`).join('') : '<small class="muted">لا تكليف</small>'}</div>`; }).join('')}</div>
+        ${!ME.paId ? '<p class="muted small-note">يظهر جدولك بعد ربط اسمك بسجل المنسوبات من الإدارة.</p>' : ''}</section>
+      <section class="panel"><h2><i data-lucide="clipboard-list"></i>المهام المسندة (${ar(tasks.filter(t => t.status !== 'done').length)})</h2>
+        <div class="task-list">${tasks.map(t => `<div class="task ${t.status === 'done' ? 'done' : ''}" data-t="${esc(t.id)}"><span class="task-c"><i data-lucide="${t.status === 'done' ? 'circle-check' : 'circle'}"></i></span>
+          <div><b>${esc(t.title)}</b>${t.details ? `<p>${esc(t.details)}</p>` : ''}<small>${t.due ? 'الموعد: ' + esc(t.due) + ' · ' : ''}أُسندت ${dateTxt(t.at)}${t.doneAt ? ' · أُنجزت ' + dateTxt(t.doneAt) : ''}</small></div>
+          ${t.status === 'done' ? '<span class="spill ok">منجزة</span>' : '<button type="button" class="btn btn-primary btn-sm" data-done><i data-lucide="check"></i>تم الإنجاز</button>'}</div>`).join('') || '<p class="muted">لا توجد مهام مسندة إليك.</p>'}</div></section>`);
+    icons();
+    app.querySelectorAll('[data-done]').forEach(b => b.onclick = async () => { const id = b.closest('[data-t]').dataset.t; b.disabled = true; try { await fb.fs.doc('tasks/' + id).update({status: 'done', doneAt: new Date().toISOString()}); toast('أحسنتِ! سُجّلت المهمة منجزة.', 'ok'); myTasksPage(); } catch(e){ b.disabled = false; toast(authMsg(e), 'err'); } });
+  }
+
+  /* ---------- 💬 ملاحظات الإدارة ---------- */
+  async function myNotesPage(){
+    app.innerHTML = loading();
+    let notes = []; try { notes = (await myQ('notes').get()).docs.map(d => ({id: d.id, ...d.data()})).sort((a, b) => a.at < b.at ? 1 : -1); } catch(e){}
+    app.innerHTML = pageWrap(`${myHead('ملاحظات الإدارة', 'message-square-text', 'رسائل مديرة المدرسة لك: شكر، وتوجيه، ونتائج الزيارات.')}
+      <div class="note-list">${notes.map(n => { const T2 = NOTE_T[n.type] || NOTE_T.guide; return `<article class="note ${n.seen ? '' : 'new'}" data-n="${esc(n.id)}"><span class="note-i ${T2[2]}"><i data-lucide="${T2[1]}"></i></span>
+        <div><div class="note-h"><b>${T2[0]}</b><small>${dateTxt(n.at)}</small>${n.seen ? '' : '<span class="spill wait">جديدة</span>'}</div><p>${esc(n.text).replace(/\n/g, '<br>')}</p>
+        ${n.seen ? '<small class="muted">اطّلعتِ عليها</small>' : '<button type="button" class="btn btn-ghost btn-sm" data-seen><i data-lucide="check"></i>اطّلعت</button>'}</div></article>`; }).join('') || '<div class="panel"><p class="muted">لا توجد ملاحظات.</p></div>'}</div>`);
+    icons();
+    app.querySelectorAll('[data-seen]').forEach(b => b.onclick = async () => { const id = b.closest('[data-n]').dataset.n; try { await fb.fs.doc('notes/' + id).update({seen: true}); myNotesPage(); } catch(e){ toast(authMsg(e), 'err'); } });
+  }
+
+  /* ---------- لوحة المديرة في ملف المنسوبة: تقييم، ملاحظة، مهمة ---------- */
+  async function adminPersonTools(host, x){
+    if (!acct || acct.role !== 'admin' || !x.m) return;
+    const e = x.m.email, items = x.items;
+    let ev = null, notes = [], tasks = [];
+    try { const d = await fb.fs.doc('evals/' + e).get(); ev = d.exists ? d.data() : null; } catch(er){}
+    try { notes = (await fb.fs.collection('notes').where('email', '==', e).get()).docs.map(d => ({id: d.id, ...d.data()})).sort((a, b) => a.at < b.at ? 1 : -1); } catch(er){}
+    try { tasks = (await fb.fs.collection('tasks').where('email', '==', e).get()).docs.map(d => ({id: d.id, ...d.data()})).sort((a, b) => a.at < b.at ? 1 : -1); } catch(er){}
+    const sc = clone((ev && ev.scores) || {});
+    const term = (ev && ev.term) || 'الفصل الدراسي الأول ' + (cur().settings.year || '');
+    const box = document.createElement('div'); box.className = 'stack adm-tools';
+    box.innerHTML = `
+      ${items.length ? `<section class="panel eval-p"><h2><i data-lucide="star"></i>تقييم الأداء <span class="spill ${ev && ev.status === 'published' ? 'ok' : ev ? 'wait' : 'none'}">${ev && ev.status === 'published' ? 'معتمد ومنشور' : ev ? 'مسودة' : 'لم يبدأ'}</span></h2>
+        <div class="field"><label for="ev-term">فترة التقييم</label><input class="in" id="ev-term" value="${esc(term)}"></div>
+        <div class="ev-tbl">${items.map((it, i) => { const s = sc[it.id] || {}; const n = x.ups.filter(u => u.item === it.id).length;
+          return `<div class="ev-r ed" data-i="${esc(it.id)}"><span class="mf-n">${ar(i + 1)}</span><div class="ev-t"><b>${esc(g(it.name))}</b><small>الوزن ${ar(it.weight || 0)}٪ · ${n ? ar(n) + ' ملف شواهد' : 'لا شواهد مرفوعة'}</small></div>
+            <div class="ev-in"><div class="seg ev-seg" role="radiogroup" aria-label="التقدير">${[1, 2, 3, 4, 5].map(v => `<button type="button" role="radio" aria-checked="${+s.v === v}" data-v="${v}" title="${scoreLbl(v)}">${ar(v)}</button>`).join('')}</div>
+            <input class="in in-sm" data-n placeholder="ملاحظة (اختياري)" value="${esc(s.n || '')}"></div></div>`; }).join('')}</div>
+        <div class="ev-foot"><div><b id="ev-total">—</b><small id="ev-grade"></small></div>
+          <button type="button" class="btn btn-ghost" id="ev-draft"><i data-lucide="save"></i>حفظ مسودة</button>
+          <button type="button" class="btn btn-primary" id="ev-pub"><i data-lucide="send"></i>اعتماد ونشر للمنسوبة</button>
+          <button type="button" class="btn btn-ghost" id="ev-print"><i data-lucide="printer"></i>طباعة</button></div></section>` : ''}
+      <section class="panel"><h2><i data-lucide="message-square-plus"></i>ملاحظة للمنسوبة</h2>
+        <div class="row2"><select class="in" id="nt-type">${Object.entries(NOTE_T).map(([k, v]) => `<option value="${k}">${v[0]}</option>`).join('')}</select></div>
+        <textarea class="in" id="nt-text" placeholder="نص الملاحظة…" style="min-height:90px;margin-top:8px"></textarea>
+        <button type="button" class="btn btn-primary btn-sm" id="nt-send" style="margin-top:8px"><i data-lucide="send"></i>إرسال</button>
+        <div class="note-list sm">${notes.map(n => `<div class="note-mini"><b>${(NOTE_T[n.type] || NOTE_T.guide)[0]}</b> · <small>${dateTxt(n.at)} · ${n.seen ? 'اطّلعت' : 'لم تطّلع'}</small><p>${esc(n.text)}</p><button type="button" class="icon-btn sm danger" data-ndel="${esc(n.id)}" aria-label="حذف"><i data-lucide="trash-2"></i></button></div>`).join('')}</div></section>
+      <section class="panel"><h2><i data-lucide="clipboard-plus"></i>إسناد مهمة</h2>
+        <input class="in" id="tk-title" placeholder="عنوان المهمة">
+        <div class="row2" style="margin-top:8px"><input class="in" id="tk-due" type="date" aria-label="الموعد"><input class="in" id="tk-det" placeholder="تفاصيل (اختياري)"></div>
+        <button type="button" class="btn btn-primary btn-sm" id="tk-add" style="margin-top:8px"><i data-lucide="plus"></i>إسناد</button>
+        <div class="task-list sm">${tasks.map(t => `<div class="task ${t.status === 'done' ? 'done' : ''}"><span class="task-c"><i data-lucide="${t.status === 'done' ? 'circle-check' : 'circle'}"></i></span><div><b>${esc(t.title)}</b><small>${t.due ? 'الموعد ' + esc(t.due) + ' · ' : ''}${t.status === 'done' ? 'أُنجزت ' + dateTxt(t.doneAt) : 'لم تُنجز'}</small></div><button type="button" class="icon-btn sm danger" data-tdel="${esc(t.id)}" aria-label="حذف"><i data-lucide="trash-2"></i></button></div>`).join('')}</div></section>`;
+    host.appendChild(box); icons();
+    const recalc = () => { const r = evalTotal(items, sc); const t = document.getElementById('ev-total'); if (!t) return; t.textContent = r.covered ? ar(r.total) + ' / ١٠٠' : '—'; document.getElementById('ev-grade').textContent = r.covered ? gradeOf(r.total) + (r.covered < 100 ? ` · قُدّر ${ar(r.covered)}٪ من الأوزان` : '') : 'اختاري التقدير لكل عنصر'; };
+    box.querySelectorAll('.ev-r.ed').forEach(r => {
+      const id = r.dataset.i;
+      r.querySelectorAll('[data-v]').forEach(b => b.onclick = () => { sc[id] = Object.assign(sc[id] || {}, {v: +b.dataset.v}); r.querySelectorAll('[data-v]').forEach(z => z.setAttribute('aria-checked', z === b)); recalc(); });
+      r.querySelector('[data-n]').oninput = ev2 => { sc[id] = Object.assign(sc[id] || {}, {n: ev2.target.value}); };
+    });
+    recalc();
+    const saveEval = async status => {
+      const r = evalTotal(items, sc), t = document.getElementById('ev-term').value.trim();
+      if (status === 'published' && r.covered < 100) { toast('قدّري جميع العناصر قبل الاعتماد والنشر.', 'err'); return; }
+      const hist = ((ev && ev.history) || []).slice();
+      if (status === 'published' && ev && ev.status === 'published' && ev.term && ev.term !== t) hist.push({term: ev.term, total: ev.total});
+      try { await fb.fs.doc('evals/' + e).set({email: e, name: x.s.name, form: x.form, scores: sc, total: r.total, term: t, status, history: hist, at: new Date().toISOString(), by: acct.email}); toast(status === 'published' ? 'اعتُمد التقييم ونُشر للمنسوبة.' : 'حُفظت المسودة.', 'ok'); personPage(x.s.id); }
+      catch(er){ toast(authMsg(er), 'err'); }
+    };
+    const d1 = document.getElementById('ev-draft'); if (d1) d1.onclick = () => saveEval('draft');
+    const d2 = document.getElementById('ev-pub'); if (d2) d2.onclick = () => saveEval('published');
+    const d3 = document.getElementById('ev-print'); if (d3) d3.onclick = () => printEval(x, sc, document.getElementById('ev-term').value);
+    document.getElementById('nt-send').onclick = async () => { const tx = document.getElementById('nt-text').value.trim(); if (!tx) return toast('اكتبي نص الملاحظة.', 'err');
+      try { await fb.fs.collection('notes').add({email: e, name: x.s.name, type: document.getElementById('nt-type').value, text: tx, seen: false, at: new Date().toISOString(), by: acct.email}); toast('أُرسلت الملاحظة.', 'ok'); personPage(x.s.id); } catch(er){ toast(authMsg(er), 'err'); } };
+    document.getElementById('tk-add').onclick = async () => { const tt = document.getElementById('tk-title').value.trim(); if (!tt) return toast('اكتبي عنوان المهمة.', 'err');
+      try { await fb.fs.collection('tasks').add({email: e, name: x.s.name, title: tt, details: document.getElementById('tk-det').value.trim(), due: document.getElementById('tk-due').value, status: 'open', at: new Date().toISOString(), by: acct.email}); toast('أُسندت المهمة.', 'ok'); personPage(x.s.id); } catch(er){ toast(authMsg(er), 'err'); } };
+    box.querySelectorAll('[data-ndel]').forEach(b => armDelete(b, async () => { await fb.fs.doc('notes/' + b.dataset.ndel).delete(); personPage(x.s.id); }));
+    box.querySelectorAll('[data-tdel]').forEach(b => armDelete(b, async () => { await fb.fs.doc('tasks/' + b.dataset.tdel).delete(); personPage(x.s.id); }));
+  }
+  function printEval(x, sc, term){
+    const s = cur().settings, items = x.items, r = evalTotal(items, sc);
+    const w = window.open('', '_blank'); if (!w) return toast('اسمحي بالنوافذ المنبثقة للطباعة.', 'err');
+    w.document.write(`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>نموذج تقييم الأداء — ${esc(x.s.name)}</title><style>body{font-family:"Sakkal Majalla","Segoe UI",Tahoma,sans-serif;margin:24px;color:#10262D}h1{font-size:22px;margin:0 0 4px;color:#0B3D4A}table{width:100%;border-collapse:collapse;margin-top:12px;font-size:15px}th,td{border:1px solid #9FB8BC;padding:6px 8px;text-align:center}th{background:#0E5A66;color:#fff}td:nth-child(2){text-align:right}.m{color:#5F7479;font-size:14px}.tot td{font-weight:700;background:#E2F5F3}.sig{display:flex;justify-content:space-between;margin-top:40px}</style></head><body>
+      <h1>${esc(FORM_LBL[x.form] || 'نموذج تقييم الأداء')}</h1><div class="m">${esc(s.school || '')} · ${esc(term || '')}</div>
+      <p><b>الاسم:</b> ${esc(x.s.name)} &nbsp; · &nbsp; <b>العمل:</b> ${esc(plain(jobOf(x.s)))}</p>
+      <table><thead><tr><th>م</th><th>عنصر التقييم</th><th>الوزن النسبي</th><th>التقدير (١-٥)</th><th>الدرجة الموزونة</th><th>ملاحظات</th></tr></thead><tbody>
+      ${items.map((it, i) => { const v = +((sc[it.id] || {}).v) || 0; return `<tr><td>${i + 1}</td><td>${esc(plain(it.name))}</td><td>${it.weight}%</td><td>${v || ''}</td><td>${v ? (it.weight * v / 5).toFixed(1) : ''}</td><td>${esc((sc[it.id] || {}).n || '')}</td></tr>`; }).join('')}
+      <tr class="tot"><td colspan="4">التقدير العام للأداء</td><td>${r.total}</td><td>${gradeOf(r.total)}</td></tr></tbody></table>
+      <div class="sig"><div>توقيع الموظفة: ..................</div><div>مديرة المدرسة: ${esc(s.person || '')} ..................</div></div>
+      <script>window.onload=()=>window.print()<\/script></body></html>`);
+    w.document.close();
+  }
+
+  /* ---------- مركز التقييم (للمديرة) ---------- */
+  async function evalsPage(){
+    const gk = cadreGate(); if (gk) { app.innerHTML = pageWrap(pageHead('التقييم الوظيفي', 'star', '') + gk); return; }
+    app.innerHTML = loading('جارٍ تحميل التقييمات…');
+    let evs = [];
+    try { await cadreLoad(); evs = (await fb.fs.collection('evals').get()).docs.map(d => d.data()); } catch(e){ app.innerHTML = pageWrap(`<div class="msg err">${esc(authMsg(e))}</div>`); return; }
+    const rows = S.staff.map(personInfo).filter(x => x.items.length).map(x => Object.assign(x, {ev: x.m ? evs.find(v => v.email === x.m.email) : null}));
+    const f = M.evF || 'all';
+    const shown = rows.filter(x => f === 'all' || (f === 'none' && !x.ev) || (f === 'draft' && x.ev && x.ev.status === 'draft') || (f === 'pub' && x.ev && x.ev.status === 'published') || (f === 'noacc' && !x.m));
+    const pubN = rows.filter(x => x.ev && x.ev.status === 'published'), avg = pubN.length ? Math.round(pubN.reduce((a, x) => a + x.ev.total, 0) / pubN.length * 10) / 10 : null;
+    app.innerHTML = pageWrap(`${pageHead('التقييم الوظيفي', 'star', 'متابعة تقييم أداء جميع المنسوبات وفق نماذج تقييم شاغلي الوظائف التعليمية.', '<button type="button" class="btn btn-ghost" id="ev-csv"><i data-lucide="file-spreadsheet"></i>تصدير Excel</button>')}
+      <div class="cat-kpis"><div><b>${ar(rows.length)}</b><span>منسوبة لها نموذج</span></div><div><b>${ar(pubN.length)}</b><span>تقييم معتمد</span></div><div><b>${ar(rows.filter(x => x.ev && x.ev.status === 'draft').length)}</b><span>مسودة</span></div><div><b>${avg != null ? ar(avg) : '—'}</b><span>متوسط الدرجات</span></div></div>
+      <div class="tabs" role="tablist">${[['all', 'الكل'], ['none', 'لم يبدأ'], ['draft', 'مسودة'], ['pub', 'معتمد'], ['noacc', 'بلا حساب']].map(([k, l]) => `<button type="button" role="tab" data-f="${k}" aria-selected="${f === k}">${l}</button>`).join('')}</div>
+      <div class="ppl">${shown.map(x => `<a class="ppl-row" href="#pf-${esc(x.s.id)}"><span class="avatar">${esc(initials(x.s.name))}</span><div class="ppl-t"><b>${esc(x.s.name)}</b><small>${esc((FORM_LBL[x.form] || '').split('—').pop().trim())}</small></div>
+        <div class="ppl-chips">${x.ev ? `<span class="spill ${x.ev.status === 'published' ? 'ok' : 'wait'}">${x.ev.status === 'published' ? 'معتمد' : 'مسودة'}</span>` : `<span class="spill none">${x.m ? 'لم يبدأ' : 'بلا حساب'}</span>`}</div>
+        <div class="ppl-bar"><b class="ev-score">${x.ev ? ar(x.ev.total) : '—'}</b><small>شواهد ${ar(x.done)}/${ar(x.items.length)}</small></div><i data-lucide="chevron-left" class="ppl-go"></i></a>`).join('') || '<p class="muted">لا توجد نتائج.</p>'}</div>`);
+    icons();
+    app.querySelectorAll('[data-f]').forEach(b => b.onclick = () => { M.evF = b.dataset.f; evalsPage(); });
+    document.getElementById('ev-csv').onclick = () => exportCsv('التقييم الوظيفي', [['الاسم', 'العمل', 'النموذج', 'الحالة', 'الدرجة', 'التقدير', 'عناصر بشواهد', 'فترة التقييم'],
+      ...rows.map(x => [x.s.name, plain(jobOf(x.s)), FORM_LBL[x.form] || '', x.ev ? (x.ev.status === 'published' ? 'معتمد' : 'مسودة') : 'لم يبدأ', x.ev ? x.ev.total : '', x.ev ? gradeOf(x.ev.total) : '', x.done + '/' + x.items.length, x.ev ? x.ev.term || '' : ''])]);
+  }
+
+  /* ---------- 🧭 مكتب التوجيه ---------- */
+  const PK = {pre: 'وقائي', dev: 'إنمائي', rem: 'علاجي'}, PS = {plan: ['مخطط', 'none'], done: ['منفذ', 'ok'], late: ['مؤجل', 'wait']};
+  const CK = {beh: 'سلوكية', acad: 'تحصيلية', psy: 'نفسية', soc: 'اجتماعية', health: 'صحية', abs: 'غياب وتأخر'}, CS = {open: ['مفتوحة', 'wait'], follow: ['تحت المتابعة', 'info'], closed: ['مغلقة', 'ok']};
+  async function gcPage(){
+    if (needFb()) { app.innerHTML = pageWrap(pageHead('مكتب التوجيه', 'compass', '') + needFb()); return; }
+    if (!isCounselorAcct()) { app.innerHTML = pageWrap(`<div class="panel lock-panel"><i data-lucide="lock-keyhole"></i><div><h2>مكتب التوجيه</h2><p>خاص بالموجهة الطلابية وإدارة المدرسة.</p></div></div>`); icons(); return; }
+    app.innerHTML = loading();
+    let progs = [], cases = [];
+    try { [progs, cases] = await Promise.all([fb.fs.collection('cprog').get(), fb.fs.collection('cases').get()].map(p => p.then(x => x.docs.map(d => ({id: d.id, ...d.data()}))))); } catch(e){ app.innerHTML = pageWrap(`<div class="msg err">${esc(authMsg(e))}</div>`); return; }
+    progs.sort((a, b) => String(a.date || '').localeCompare(String(b.date || ''))); cases.sort((a, b) => (a.status === 'closed') - (b.status === 'closed') || (a.opened < b.opened ? 1 : -1));
+    const tab = M.gcTab || 'prog', done = progs.filter(p => p.status === 'done').length;
+    app.innerHTML = pageWrap(`${pageHead('مكتب التوجيه الطلابي', 'compass', 'خطة البرامج وتنفيذها، والحالات الفردية ومتابعتها. الحالات سرية: لا يراها إلا الموجهة والإدارة.')}
+      <div class="cat-kpis"><div><b>${ar(progs.length)}</b><span>برنامج في الخطة</span></div><div><b>${progs.length ? ar(Math.round(done / progs.length * 100)) + '٪' : '—'}</b><span>نسبة التنفيذ</span></div><div><b>${ar(cases.filter(c => c.status !== 'closed').length)}</b><span>حالة مفتوحة</span></div><div><b>${ar(cases.filter(c => c.status === 'closed').length)}</b><span>حالة مغلقة</span></div></div>
+      <div class="tabs" role="tablist"><button type="button" role="tab" data-gt="prog" aria-selected="${tab === 'prog'}"><i data-lucide="calendar-range"></i>الخطة والبرامج</button><button type="button" role="tab" data-gt="case" aria-selected="${tab === 'case'}"><i data-lucide="lock-keyhole"></i>الحالات</button></div>
+      <div id="gc-body"></div>`);
+    icons();
+    app.querySelectorAll('[data-gt]').forEach(b => b.onclick = () => { M.gcTab = b.dataset.gt; gcPage(); });
+    const body = document.getElementById('gc-body');
+    if (tab === 'prog') {
+      body.innerHTML = `<section class="panel"><h2><i data-lucide="plus"></i>برنامج جديد</h2><div class="gc-form">
+          <input class="in" id="p-title" placeholder="عنوان البرنامج"><select class="in" id="p-kind">${Object.entries(PK).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}</select>
+          <input class="in" id="p-date" type="date" aria-label="الموعد"><input class="in" id="p-target" placeholder="الفئة المستهدفة"></div>
+          <button type="button" class="btn btn-primary btn-sm" id="p-add" style="margin-top:8px"><i data-lucide="plus"></i>إضافة إلى الخطة</button></section>
+        <div class="ppl">${progs.map(p => `<div class="gc-row" data-p="${esc(p.id)}"><span class="cat-i sm"><i data-lucide="${p.kind === 'rem' ? 'life-buoy' : p.kind === 'pre' ? 'shield-check' : 'sprout'}"></i></span>
+          <div class="ppl-t"><b>${esc(p.title)}</b><small>${PK[p.kind] || ''}${p.date ? ' · ' + esc(p.date) : ''}${p.target ? ' · ' + esc(p.target) : ''}${p.count ? ' · ' + ar(p.count) + ' مستفيدة' : ''}</small>${p.impact ? `<small>الأثر: ${esc(p.impact)}</small>` : ''}</div>
+          <select class="in in-sm" data-ps aria-label="الحالة">${Object.entries(PS).map(([k, v]) => `<option value="${k}" ${p.status === k ? 'selected' : ''}>${v[0]}</option>`).join('')}</select>
+          <input class="in in-sm" data-pc type="number" min="0" placeholder="المستفيدات" value="${esc(p.count || '')}" aria-label="عدد المستفيدات">
+          <input class="in in-sm" data-pi placeholder="قياس الأثر" value="${esc(p.impact || '')}" aria-label="قياس الأثر">
+          <button type="button" class="icon-btn sm danger" data-pdel aria-label="حذف"><i data-lucide="trash-2"></i></button></div>`).join('') || '<p class="muted">لم تُضف برامج بعد.</p>'}</div>`;
+      icons();
+      document.getElementById('p-add').onclick = async () => { const t = document.getElementById('p-title').value.trim(); if (!t) return toast('اكتبي عنوان البرنامج.', 'err');
+        try { await fb.fs.collection('cprog').add({title: t, kind: document.getElementById('p-kind').value, date: document.getElementById('p-date').value, target: document.getElementById('p-target').value.trim(), status: 'plan', at: new Date().toISOString(), by: acct.email}); gcPage(); } catch(e){ toast(authMsg(e), 'err'); } };
+      body.querySelectorAll('[data-p]').forEach(r => {
+        const ref = fb.fs.doc('cprog/' + r.dataset.p), up = o => ref.update(o).then(() => toast('حُفظ.', 'ok')).catch(e => toast(authMsg(e), 'err'));
+        r.querySelector('[data-ps]').onchange = e => up({status: e.target.value});
+        r.querySelector('[data-pc]').onchange = e => up({count: +e.target.value || 0});
+        r.querySelector('[data-pi]').onchange = e => up({impact: e.target.value.trim()});
+        armDelete(r.querySelector('[data-pdel]'), async () => { await ref.delete(); gcPage(); });
+      });
+    } else {
+      body.innerHTML = `<section class="panel"><h2><i data-lucide="folder-plus"></i>فتح حالة</h2><div class="gc-form">
+          <input class="in" id="c-name" placeholder="اسم الطالبة"><input class="in" id="c-grade" placeholder="الصف والفصل">
+          <select class="in" id="c-kind">${Object.entries(CK).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}</select><input class="in" id="c-desc" placeholder="وصف مختصر"></div>
+          <button type="button" class="btn btn-primary btn-sm" id="c-add" style="margin-top:8px"><i data-lucide="plus"></i>فتح الحالة</button></section>
+        <div class="ppl">${cases.map(c => `<button type="button" class="gc-row case" data-c="${esc(c.id)}"><span class="cat-i sm"><i data-lucide="user-round"></i></span>
+          <div class="ppl-t"><b>${esc(c.name)}</b><small>${esc(c.grade || '')} · ${CK[c.kind] || ''} · فُتحت ${dateTxt(c.opened)} · ${ar((c.sessions || []).length)} جلسة</small></div>
+          <span class="spill ${(CS[c.status] || CS.open)[1]}">${(CS[c.status] || CS.open)[0]}</span><i data-lucide="chevron-left" class="ppl-go"></i></button>`).join('') || '<p class="muted">لا توجد حالات.</p>'}</div>`;
+      icons();
+      document.getElementById('c-add').onclick = async () => { const n = document.getElementById('c-name').value.trim(); if (!n) return toast('اكتبي اسم الطالبة.', 'err');
+        try { await fb.fs.collection('cases').add({name: n, grade: document.getElementById('c-grade').value.trim(), kind: document.getElementById('c-kind').value, desc: document.getElementById('c-desc').value.trim(), status: 'open', opened: new Date().toISOString(), sessions: [], by: acct.email}); gcPage(); } catch(e){ toast(authMsg(e), 'err'); } };
+      body.querySelectorAll('[data-c]').forEach(b => b.onclick = () => caseDrawer(cases.find(c => c.id === b.dataset.c)));
+    }
+  }
+  function caseDrawer(c){
+    if (!c) return;
+    const layer = document.getElementById('layer');
+    layer.innerHTML = `<div class="drawer-bg" id="dbg"><div class="drawer" role="dialog" aria-modal="true" aria-labelledby="cs-t">
+      <div class="drawer-head"><h2 id="cs-t"><i data-lucide="lock-keyhole"></i> ${esc(c.name)}</h2><button type="button" class="icon-btn" id="dr-x" aria-label="إغلاق"><i data-lucide="x"></i></button></div>
+      <div class="drawer-body">
+        <dl class="prof-dl"><div><dt>الصف</dt><dd>${esc(c.grade || '—')}</dd></div><div><dt>نوع الحالة</dt><dd>${CK[c.kind] || ''}</dd></div><div><dt>تاريخ الفتح</dt><dd>${dateTxt(c.opened)}</dd></div><div class="wide"><dt>الوصف</dt><dd>${esc(c.desc || '—')}</dd></div></dl>
+        <div class="field"><label for="cs-st">حالة المتابعة</label><select class="in" id="cs-st">${Object.entries(CS).map(([k, v]) => `<option value="${k}" ${c.status === k ? 'selected' : ''}>${v[0]}</option>`).join('')}</select></div>
+        <div class="field"><label for="cs-parent">التواصل مع ولية الأمر</label><input class="in" id="cs-parent" value="${esc(c.parent || '')}" placeholder="مثال: اتصال هاتفي بتاريخ…"></div>
+        <div class="field"><label for="cs-ref">التحويل لجهة مختصة (إن وُجد)</label><input class="in" id="cs-ref" value="${esc(c.referral || '')}"></div>
+        <h3 class="sub-h"><i data-lucide="notebook-pen"></i>الجلسات والإجراءات</h3>
+        <div class="task-list sm">${(c.sessions || []).map(s => `<div class="task"><span class="task-c"><i data-lucide="dot"></i></span><div><b>${esc(s.action)}</b><small>${esc(s.date || '')}</small>${s.note ? `<p>${esc(s.note)}</p>` : ''}</div></div>`).join('') || '<p class="muted">لا توجد جلسات.</p>'}</div>
+        <div class="row2"><input class="in" id="ss-date" type="date" value="${today()}" aria-label="التاريخ"><input class="in" id="ss-act" placeholder="الإجراء (جلسة فردية، تواصل، خطة…)"></div>
+        <textarea class="in" id="ss-note" placeholder="ملاحظة" style="margin-top:8px;min-height:70px"></textarea>
+        <button type="button" class="btn btn-ghost btn-sm" id="ss-add" style="margin-top:8px"><i data-lucide="plus"></i>إضافة جلسة</button>
+      </div>
+      <div class="drawer-foot"><button type="button" class="btn btn-primary" id="cs-save"><i data-lucide="check"></i>حفظ</button><button type="button" class="btn btn-ghost danger" id="cs-del">حذف الحالة</button><button type="button" class="btn btn-ghost" id="dr-cancel">إغلاق</button></div>
+    </div></div>`;
+    icons();
+    const close = () => { layer.innerHTML = ''; gcPage(); };
+    const ref = fb.fs.doc('cases/' + c.id);
+    layer.querySelector('#dr-x').onclick = close; layer.querySelector('#dr-cancel').onclick = close;
+    layer.querySelector('#dbg').addEventListener('click', e => { if (e.target.id === 'dbg') close(); });
+    layer.querySelector('#cs-save').onclick = async () => { try { await ref.update({status: layer.querySelector('#cs-st').value, parent: layer.querySelector('#cs-parent').value.trim(), referral: layer.querySelector('#cs-ref').value.trim()}); toast('حُفظت الحالة.', 'ok'); close(); } catch(e){ toast(authMsg(e), 'err'); } };
+    layer.querySelector('#ss-add').onclick = async () => { const a = layer.querySelector('#ss-act').value.trim(); if (!a) return toast('اكتبي الإجراء.', 'err');
+      const ses = (c.sessions || []).concat({date: layer.querySelector('#ss-date').value, action: a, note: layer.querySelector('#ss-note').value.trim()});
+      try { await ref.update({sessions: ses, status: c.status === 'open' ? 'follow' : c.status}); c.sessions = ses; c.status = c.status === 'open' ? 'follow' : c.status; caseDrawer(c); } catch(e){ toast(authMsg(e), 'err'); } };
+    armDelete(layer.querySelector('#cs-del'), async () => { await ref.delete(); close(); });
+  }
+  function lockPage(){ app.innerHTML = pageWrap(`<div class="panel lock-panel"><i data-lucide="lock-keyhole"></i><div><h2>هذه الصفحة غير متاحة لحسابك</h2><p>صفحات المتابعة اليومية تديرها إدارة المدرسة. صفحاتك: <a href="#home">الرئيسية</a>، <a href="#mine">ملفي</a>، <a href="#myatt">حضوري</a>.</p></div></div>`); icons(); }
 
   /* ---------- التوجيه ---------- */
   function route(){
@@ -4021,7 +4650,7 @@ body{font-synthesis:weight style}
     const old = /^e(\d{1,2})$/.exec(h); if (old) h = 'i' + old[1];
     if (!h) h = 'home';
     const school = SCHOOL_ROUTES.includes(h);
-    const pg = h === 'profile' || h === 'ach' || h === 'mine' || h === 'cadre' || /^cat-[a-z]+$/.test(h) || /^pf-[\w-]+$/.test(h);
+    const pg = h === 'profile' || h === 'ach' || h === 'mine' || h === 'cadre' || ['evals', 'myeval', 'myatt', 'mytasks', 'mynotes', 'gc'].includes(h) || /^cat-[a-z]+$/.test(h) || /^pf-[\w-]+$/.test(h);
     const item = !school && !pg && h !== 'admin' && h !== 'ev' && /^[a-z][a-z0-9]{1,24}$/.test(h);
     activeRoute = (school || item || pg || h === 'admin' || h === 'ev') ? h : 'home';
     chrome();
@@ -4032,8 +4661,15 @@ body{font-synthesis:weight style}
     else if (h === 'ach') achPage();
     else if (h === 'mine') minePage();
     else if (h === 'cadre') cadrePage();
+    else if (h === 'evals') evalsPage();
+    else if (h === 'myeval') myEvalPage();
+    else if (h === 'myatt') myAttPage();
+    else if (h === 'mytasks') myTasksPage();
+    else if (h === 'mynotes') myNotesPage();
+    else if (h === 'gc') gcPage();
     else if (h.startsWith('cat-')) catPage(h.slice(4));
     else if (h.startsWith('pf-')) personPage(h.slice(3));
+    else if (school && staffOnly()) { clearRouteSubs(); curRoute = ''; h === 'home' ? myHome() : lockPage(); }
     else if (school) renderSchool(h);
     else if (item) element(h);
     else renderSchool('home');
