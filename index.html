@@ -1760,6 +1760,20 @@ body.plat #tour-btn{display:none!important}
 #g-tour{display:inline-flex;align-items:center;gap:6px}#g-tour svg{width:16px;height:16px}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #tour h3{color:#9fe3dc}}
 [data-theme="dark"] #tour h3{color:#9fe3dc}
+/* ===== الكشوفات والهوية ===== */
+.id-card{border:1px solid var(--line,#dfe7e8);border-radius:16px;padding:14px 16px;background:linear-gradient(180deg,rgba(31,181,172,.05),transparent)}
+.id-card .lh{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px}
+.id-card .lh-r{font-weight:700;line-height:1.6;color:var(--petrol,#0B3D4A)}.id-card .lh-l{text-align:left;line-height:1.7;font-size:14px}
+.id-card .lh-c img{height:64px}.id-card .lh-line{height:4px;border-radius:4px;background:linear-gradient(90deg,#1FB5AC,#138D90 40%,#0B3D4A);margin:10px 0 8px}
+[data-theme="dark"] .id-card .lh-c img{filter:brightness(0) invert(1)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .id-card .lh-c img{filter:brightness(0) invert(1)}}
+.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.rep-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px;margin-top:14px}
+.rep{display:flex;flex-direction:column;gap:10px;background:var(--card,#fff);border:1px solid var(--line,#dfe7e8);border-radius:16px;padding:14px}
+.rep-i{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--soft,#e9f3f3);color:var(--teal,#138D90)}.rep-i svg{width:22px;height:22px}
+.rep-t{display:flex;flex-direction:column;gap:2px}.rep-t small{color:var(--muted,#5b6b6e)}
+.rep-a{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+@media (max-width:720px){.row3{grid-template-columns:1fr}.id-card .lh{grid-template-columns:1fr auto;}.id-card .lh-l{grid-column:1/-1;text-align:right}}
 
 /* ===== الخط: سكالا مجالا (من جهاز المستخدم) مع بديل Noto Naskh Arabic ===== */
 /* سكالا مجالا يظهر أصغر من غيره بالحجم نفسه، فيُكبَّر بـ size-adjust دون تغيير بقية الأحجام */
@@ -1883,6 +1897,7 @@ body{font-synthesis:weight style}
     {r: 'sup', t: 'الإشراف اليومي', i: 'calendar-days'},
     {r: 'duty', t: 'مناوبة بداية الدوام', i: 'door-open'},
     {r: 'dutyend', t: 'مناوبة نهاية الدوام', i: 'sunset'},
+    {r: 'reports', t: 'الكشوفات والتقارير', i: 'printer'},
     {r: 'io', t: 'الاستيراد والتصدير', i: 'arrow-down-up'},
     {r: 'ev', t: 'شواهد الأداء الوظيفي', i: 'award'}
   ];
@@ -2670,7 +2685,9 @@ body{font-synthesis:weight style}
       toast('تم تنزيل الملف.', 'ok'); return true;
     } catch(e){ toast('تعذّر تنزيل الملف.', 'err'); return false; }
   }
-  async function exportCsv(name, rows){
+  /* التصدير: Excel (xlsx) بترويسة المدرسة في النسخة المستضافة، وCSV احتياطًا */
+  async function exportCsv(name, rows, plainCsv){
+    if (!plainCsv && !dl && rows.length > 1) { const hi = rows.findIndex(r => r.length > 1); if (hi >= 0) return exportXlsx(name, rows[hi], rows.slice(hi + 1), name); }
     const csv = '﻿' + rows.map(r => r.map(c => '"' + String(c == null ? '' : c).replace(/"/g, '""') + '"').join(',')).join('\r\n');
     if (!dl) { saveBlob(name + '.csv', csv, 'text/csv;charset=utf-8'); return; }
     try { const r = await dl.save({filename: name + '.csv', data: csv}); if (r && r.status === 'saved') toast('تم حفظ الملف.', 'ok'); }
@@ -2796,7 +2813,7 @@ body{font-synthesis:weight style}
         <div class="hb-top">
           <img src="${ASSETS.logoW}" alt="شعار وزارة التعليم" class="hb-logo">
           <div class="hb-id"><small>${esc(PLATFORM)}${TAGLINE ? ' — ' + esc(TAGLINE) : ''}${s.year ? ' · ' + esc(s.year) : ''}</small><h1>${esc(P.name || s.school || 'المدرسة')}</h1>
-            <span>${[info('المدينة'), info('المرحلة')].filter(Boolean).map(esc).join(' · ')}</span></div>
+            <span>${[identity().office, info('المرحلة'), info('المدينة')].filter(Boolean).map(esc).join(' · ')}</span></div>
           <button type="button" class="hb-ref" id="d-refresh" title="تحديث" aria-label="تحديث"><i data-lucide="refresh-cw"></i></button>
         </div>
         <div class="hb-greet"><b>${first ? `مرحبًا، أ. ${esc(first)}` : 'مرحبًا بك'}</b><span><i data-lucide="calendar"></i>${dayName(t)} · ${hijri(t)} · ${gregTxt(t)}</span></div>
@@ -3399,7 +3416,7 @@ body{font-synthesis:weight style}
         <section class="panel"><h2><i data-lucide="file-up"></i>استيراد الطاقم</h2>
           <p class="muted">انسخ الجدول من Excel والصقه هنا، أو اختر ملف CSV. ترتيب الأعمدة: الاسم، الرقم الوظيفي، العمل، التخصص، الجوال (الأعمدة بعد الاسم اختيارية).</p>
           ${canWrite ? `<textarea class="in" id="io-paste" style="min-height:150px" placeholder="الاسم&#9;الرقم الوظيفي&#9;العمل&#9;التخصص&#9;الجوال" aria-label="الصق الجدول"></textarea>
-          <div class="io-row"><label class="btn btn-ghost btn-sm file-btn"><i data-lucide="paperclip"></i>اختيار ملف CSV<input type="file" accept=".csv,.txt,text/csv,text/plain" id="io-file"></label><button type="button" class="btn btn-ghost btn-sm" id="io-prev"><i data-lucide="eye"></i>معاينة</button></div>
+          <div class="io-row"><label class="btn btn-ghost btn-sm file-btn"><i data-lucide="paperclip"></i>اختيار ملف Excel أو CSV<input type="file" accept=".xlsx,.xls,.ods,.csv,.txt,text/csv,text/plain" id="io-file"></label><button type="button" class="btn btn-ghost btn-sm" id="io-prev"><i data-lucide="eye"></i>معاينة</button></div>
           <div id="io-preview"></div>` : '<p class="msg info">الاستيراد متاح لمن يملك صلاحية التعديل.</p>'}
         </section>
         <section class="panel"><h2><i data-lucide="file-down"></i>تصدير السجلات (Excel)</h2>
@@ -3428,7 +3445,7 @@ body{font-synthesis:weight style}
     const rs = document.getElementById('io-restore'); if (rs) rs.onchange = () => ioRestorePick(rs.files[0]);
     if (!canWrite) return;
     const paste = document.getElementById('io-paste');
-    document.getElementById('io-file').onchange = e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => { paste.value = String(r.result || ''); ioPreview(); }; r.readAsText(f, 'utf-8'); };
+        document.getElementById('io-file').onchange = async e => { const f = e.target.files[0]; if (!f) return; try { paste.value = String(await readSheetText(f) || ''); ioPreview(); } catch(er){ toast('تعذّر قراءة الملف. جرّبي حفظه بصيغة CSV.', 'err'); } };
     document.getElementById('io-prev').onclick = ioPreview;
   }
   function matchJob(t){
@@ -4582,6 +4599,7 @@ body{font-synthesis:weight style}
     if (R === 'admin') return !MY_PAGES.includes(r);
     if (r === 'gc') return isCounselorAcct();
     if (r === 'cadre' || r === 'evals' || r === 'io') return false;
+    if (r === 'reports') return R === 'ops' && REPS.some(repAllowed);
     if (OPS_PAGES.includes(r)) return R === 'ops' && myMods().includes(PAGE_MOD[r]);
     if ((r === 'myeval' || r === 'ev') && !hasForm()) return false;
     return true;
@@ -4923,18 +4941,14 @@ body{font-synthesis:weight style}
     box.querySelectorAll('[data-tdel]').forEach(b => armDelete(b, async () => { await SD.doc('tasks/' + b.dataset.tdel).delete(); personPage(x.s.id); }));
   }
   function printEval(x, sc, term){
-    const s = cur().settings, items = x.items, r = evalTotal(items, sc);
-    const w = window.open('', '_blank'); if (!w) return toast('اسمحي بالنوافذ المنبثقة للطباعة.', 'err');
-    w.document.write(`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>نموذج تقييم الأداء — ${esc(x.s.name)}</title><style>body{font-family:"Sakkal Majalla","Segoe UI",Tahoma,sans-serif;margin:24px;color:#10262D}h1{font-size:22px;margin:0 0 4px;color:#0B3D4A}table{width:100%;border-collapse:collapse;margin-top:12px;font-size:15px}th,td{border:1px solid #9FB8BC;padding:6px 8px;text-align:center}th{background:#0E5A66;color:#fff}td:nth-child(2){text-align:right}.m{color:#5F7479;font-size:14px}.tot td{font-weight:700;background:#E2F5F3}.sig{display:flex;justify-content:space-between;margin-top:40px}</style></head><body>
-      <h1>${esc(FORM_LBL[x.form] || 'نموذج تقييم الأداء')}</h1><div class="m">${esc(s.school || '')} · ${esc(term || '')}</div>
-      <p><b>الاسم:</b> ${esc(x.s.name)} &nbsp; · &nbsp; <b>العمل:</b> ${esc(plain(jobOf(x.s)))}</p>
-      <table><thead><tr><th>م</th><th>عنصر التقييم</th><th>الوزن النسبي</th><th>التقدير (١-٥)</th><th>الدرجة الموزونة</th><th>ملاحظات</th></tr></thead><tbody>
-      ${items.map((it, i) => { const v = +((sc[it.id] || {}).v) || 0; return `<tr><td>${i + 1}</td><td>${esc(plain(it.name))}</td><td>${it.weight}%</td><td>${v || ''}</td><td>${v ? (it.weight * v / 5).toFixed(1) : ''}</td><td>${esc((sc[it.id] || {}).n || '')}</td></tr>`; }).join('')}
-      <tr class="tot"><td colspan="4">التقدير العام للأداء</td><td>${r.total}</td><td>${gradeOf(r.total)}</td></tr></tbody></table>
-      <div class="sig"><div>توقيع الموظفة: ..................</div><div>مديرة المدرسة: ${esc(s.person || '')} ..................</div></div>
-      <script>window.onload=()=>window.print()<\/script></body></html>`);
-    w.document.close();
+    const items = x.items, r = evalTotal(items, sc);
+    const rows = items.map((it, i) => { const v = +((sc[it.id] || {}).v) || 0; return [i + 1, plain(it.name), it.weight + '٪', v || '', v ? (it.weight * v / 5).toFixed(1) : '', (sc[it.id] || {}).n || '']; });
+    const body = `<p style="margin:0 0 10px"><b>الاسم:</b> ${esc(x.s.name)} &nbsp;·&nbsp; <b>العمل:</b> ${esc(plain(jobOf(x.s)))}${x.s.empNo ? ` &nbsp;·&nbsp; <b>الرقم الوظيفي:</b> ${esc(x.s.empNo)}` : ''}</p>`
+      + tbl(['م', 'عنصر التقييم', 'الوزن النسبي', 'التقدير (١-٥)', 'الدرجة الموزونة', 'ملاحظات'], rows)
+      + `<table style="margin-top:6px"><tr><th style="width:60%">التقدير العام للأداء</th><td><b>${r.total}</b> من ١٠٠</td><td><b>${gradeOf(r.total)}</b></td></tr></table>`;
+    printDoc(FORM_LBL[x.form] || 'نموذج تقييم الأداء', term || '', body, {prep: 'توقيع الموظفة'});
   }
+
 
   /* ---------- مركز التقييم (للمديرة) ---------- */
   async function evalsPage(){
@@ -5585,7 +5599,9 @@ body{font-synthesis:weight style}
     {r: 'late', el: '#late-body', t: 'التأخر عن الحصص', d: 'سجّلي التأخر عن الحصص: المنسوبة، والحصة، والدقائق، والسبب، مع تقرير شهري.'},
     {r: 'sup', el: '#sup-body', t: 'الإشراف اليومي', d: 'جدول الإشراف الأسبوعي لكل موقع، ومتابعة التنفيذ يوميًا. أضيفي المواقع من أسفل الجدول.'},
     {r: 'duty', el: '#duty-body', t: 'مناوبة بداية الدوام', d: 'المتابعة اليومية للمناوبات وجدول توزيعها. ومثلها «مناوبة نهاية الدوام».'},
-    {r: 'io', el: '.form-cols', t: 'الاستيراد والتصدير', d: 'استيراد المنسوبات من Excel، وتصدير التقارير الشهرية، والنسخ الاحتياطي واستعادته.'},
+    {r: 'reports', el: '.id-prev', t: 'الهوية الرسمية', d: 'ترويسة كل الكشوفات: شعار وزارة التعليم، وإدارة التعليم، واسم المدرسة، والتاريخ الهجري، واسم المديرة للتوقيع والختم.'},
+    {r: 'reports', el: '.rep-grid', t: 'الكشوفات والتقارير', d: 'كشوفات جاهزة: أسماء المنسوبات، وكشف التوقيع، والحضور الشهري، والتأخر، والإشراف، والمناوبة، والتقييم، والحسابات. اطبعيها أو احفظيها PDF أو صدّريها Excel.'},
+    {r: 'io', el: '.form-cols', t: 'الاستيراد والتصدير', d: 'استيراد المنسوبات من ملف Excel أو CSV أو باللصق، وتصدير التقارير الشهرية، والنسخ الاحتياطي واستعادته.'},
     {r: 'ev', el: '.form-pick', t: 'شواهد الأداء الوظيفي', d: 'نماذج التقييم الثمانية لشاغلي الوظائف التعليمية. اختاري النموذج لعرض عناصره.'},
     {r: 'ev', el: '#sections', t: 'العناصر والمؤشرات', d: 'لكل عنصر: الوزن، ومؤشرات التحقق، وقياس الأثر، ورابط مجلد الشواهد.'},
     {r: 'admin', el: '.tabs', t: 'لوحة التحكم', d: 'خمسة تبويبات: الأقسام والعناصر، وبيانات المنصة، وملف المدرسة، والنسخ الاحتياطي، والحسابات.'},
@@ -5619,7 +5635,8 @@ body{font-synthesis:weight style}
     {r: 'sup', el: '#sup-body', t: 'الإشراف اليومي', d: 'جدول الإشراف ومتابعة تنفيذه.'},
     {r: 'assembly', el: '#as-body', t: 'الاصطفاف الصباحي', d: 'تسجيل الاصطفاف وأعداده وفقراته.'},
     {r: 'duty', el: '#duty-body', t: 'مناوبة بداية الدوام', d: 'متابعة المناوبة وجدولها.'},
-    {r: 'dutyend', el: '#duty-body', t: 'مناوبة نهاية الدوام', d: 'متابعة مناوبة الانصراف وجدولها.'}
+    {r: 'dutyend', el: '#duty-body', t: 'مناوبة نهاية الدوام', d: 'متابعة مناوبة الانصراف وجدولها.'},
+    {r: 'reports', el: '.rep-grid', t: 'الكشوفات والتقارير', d: 'كشوفات وحداتكِ بترويسة المدرسة: اطبعيها أو صدّريها Excel.'}
   ];
   const T_END = {t: 'انتهت الجولة 🎉', d: 'تعرّفتِ على المنصة كلها. يمكنكِ إعادة الجولة أو شرح أي صفحة من زر الخريطة أعلى الشاشة.'};
   function tourFor(){
@@ -5764,6 +5781,145 @@ body{font-synthesis:weight style}
     p.querySelector('button').onclick = () => tourStart(T_LOGIN, 0);
   }
 
+  /* ================= الهوية الرسمية + مركز الكشوفات والتقارير — #reports ================= */
+  /* الترويسة تُبنى من بيانات المدرسة نفسها: شعار وزارة التعليم، المملكة/الوزارة/إدارة التعليم/المدرسة، التاريخ، واسم المديرة للتوقيع.
+     كل كشف: طباعة أو حفظ PDF بالترويسة، وتصدير Excel (xlsx) بالأعمدة نفسها. */
+  function identity(){
+    const st = cur().settings, sc = (typeof SCHOOL !== 'undefined' && SCHOOL) || {};
+    const fem = (sc.gender || (st.editions === 'm' ? 'm' : 'f')) !== 'm';
+    return {
+      school: sc.name || st.school || '', office: sc.office || sc.region || st.region || '',
+      person: st.person || sc.principal || '', role: fem ? 'مديرة المدرسة' : 'مدير المدرسة', fem,
+      year: st.year || '', city: sc.city || '', stage: sc.stage || '', brand: typeof PLATFORM !== 'undefined' ? PLATFORM : ''
+    };
+  }
+  const ID_CSS = `@page{size:A4 var(--or,portrait);margin:12mm 11mm 14mm}*{box-sizing:border-box}
+    body{font-family:"Sakkal Majalla","Traditional Arabic","Segoe UI",Tahoma,sans-serif;color:#10262D;margin:0;font-size:16px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .lh{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;padding-bottom:8px}
+    .lh-r{font-weight:700;line-height:1.45;font-size:15px}.lh-l{text-align:left;line-height:1.6;font-size:14px}.lh-l b{font-weight:700}
+    .lh-c img{height:74px;display:block}
+    .lh-line{height:4px;border-radius:4px;background:linear-gradient(90deg,#1FB5AC,#138D90 40%,#0B3D4A);margin:2px 0 14px}
+    h1{font-size:24px;text-align:center;margin:4px 0 2px;color:#0B3D4A}.sub{text-align:center;color:#3c5a60;margin:0 0 12px;font-size:15px}
+    table{width:100%;border-collapse:collapse;font-size:15px}th{background:#0E5A66;color:#fff;font-weight:700;padding:6px 5px;border:1px solid #0E5A66}
+    td{border:1px solid #b9cfd2;padding:5px;text-align:center;vertical-align:middle}td.n{text-align:right}tr:nth-child(even) td{background:#f1f8f8}
+    .grid td,.grid th{font-size:12.5px;padding:3px 2px}.sign td{height:30px}
+    .note{margin-top:8px;font-size:13px;color:#3c5a60}
+    .lh-f{display:flex;justify-content:space-between;align-items:flex-end;margin-top:26px;page-break-inside:avoid}
+    .lh-f div{line-height:2}.stamp{width:120px;height:80px;border:1.5px dashed #9bb;border-radius:12px;display:grid;place-items:center;color:#8aa;font-size:13px}
+    .pf{position:fixed;bottom:0;left:0;right:0;text-align:center;font-size:11px;color:#7a9196}
+    @media screen{body{padding:22px;max-width:1100px;margin:auto}.bar{position:sticky;top:0;background:#fff;padding:8px 0;margin-bottom:10px;display:flex;gap:8px;border-bottom:1px solid #dde}
+      .bar button{font:inherit;padding:6px 16px;border-radius:9px;border:1px solid #0E5A66;background:#0E5A66;color:#fff;cursor:pointer}.bar button+button{background:#fff;color:#0E5A66}}
+    @media print{.bar{display:none}}`;
+  /* ترويسة رسمية (تُستخدم في الطباعة، وتُعرض داخل المنصة في مركز الكشوفات) */
+  function letterhead(I){
+    I = I || identity(); const t = today();
+    return `<header class="lh"><div class="lh-r">المملكة العربية السعودية<br>وزارة التعليم<br>${esc(I.office || 'إدارة التعليم')}<br>${esc(I.school)}</div>
+      <div class="lh-c"><img src="${ASSETS.logo}" alt="شعار وزارة التعليم"></div>
+      <div class="lh-l">التاريخ: <b>${esc(hijri(t))}</b><br>الموافق: ${esc(gregTxt(t))}${I.year ? `<br>العام الدراسي: ${esc(I.year)}` : ''}</div></header><div class="lh-line"></div>`;
+  }
+  /* فتح مستند للطباعة بالهوية */
+  function printDoc(title, sub, body, opt){
+    opt = opt || {}; const I = identity();
+    const w = window.open('', '_blank'); if (!w) return toast('اسمحي بالنوافذ المنبثقة للطباعة.', 'err');
+    w.document.write(`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>${esc(title)} — ${esc(I.school)}</title>
+      <style>${ID_CSS.replace('var(--or,portrait)', opt.land ? 'landscape' : 'portrait')}</style></head><body>
+      <div class="bar"><button onclick="print()">طباعة / حفظ PDF</button><button onclick="close()">إغلاق</button></div>
+      ${letterhead(I)}<h1>${esc(title)}</h1>${sub ? `<p class="sub">${esc(sub)}</p>` : ''}${body}
+      ${opt.noSign ? '' : `<div class="lh-f"><div>${opt.prep ? `${esc(opt.prep)}: ........................<br>` : ''}</div><div class="stamp">الختم</div><div>${esc(I.role)}<br><b>${esc(I.person || '........................')}</b><br>التوقيع: ........................</div></div>`}
+      <div class="pf">${esc(I.school)}${I.brand ? ' — ' + esc(I.brand) : ''}</div>
+      ${opt.auto === false ? '' : '<script>window.onload=()=>setTimeout(()=>print(),350)<\/script>'}</body></html>`);
+    w.document.close();
+  }
+  const tbl = (head, rows, cls) => `<table class="${cls || ''}"><thead><tr>${head.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map((c, i) => `<td${i === 1 && !cls ? ' class="n"' : ''}>${esc(c == null ? '' : c)}</td>`).join('')}</tr>`).join('') || `<tr><td colspan="${head.length}">لا توجد بيانات.</td></tr>`}</tbody></table>`;
+
+  /* ---------- Excel (xlsx) عبر SheetJS عند الحاجة فقط ---------- */
+  let XLSX_P = null;
+  const xlsxLib = () => XLSX_P || (XLSX_P = window.XLSX ? Promise.resolve(window.XLSX) : new Promise((ok, no) => { const s = document.createElement('script'); s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'; s.onload = () => ok(window.XLSX); s.onerror = () => { XLSX_P = null; no(new Error('xlsx')); }; document.head.appendChild(s); }));
+  async function exportXlsx(name, head, rows, title){
+    try {
+      const X = await xlsxLib(), I = identity();
+      const aoa = [[I.school + (I.office ? ' — ' + I.office : '')], [title || name], [], head, ...rows];
+      const ws = X.utils.aoa_to_sheet(aoa);
+      ws['!cols'] = head.map((h, i) => ({wch: Math.min(40, Math.max(6, String(h).length + 2, ...rows.map(r => String(r[i] == null ? '' : r[i]).length + 2)))}));
+      ws['!merges'] = [{s: {r: 0, c: 0}, e: {r: 0, c: Math.max(0, head.length - 1)}}, {s: {r: 1, c: 0}, e: {r: 1, c: Math.max(0, head.length - 1)}}];
+      const wb = X.utils.book_new(); wb.Workbook = {Views: [{RTL: true}]}; X.utils.book_append_sheet(wb, ws, 'الكشف');
+      X.writeFile(wb, name.replace(/[\\/:*?"<>|]/g, '-') + '.xlsx');
+    } catch(e){ await exportCsv(name, [head, ...rows], true); }
+  }
+  /* قراءة ملف Excel أو CSV إلى نص مفصول بعلامات Tab (للاستيراد) */
+  async function readSheetText(file){
+    if (/\.(xlsx|xls|ods)$/i.test(file.name)) {
+      const X = await xlsxLib(), wb = X.read(await file.arrayBuffer(), {type: 'array'});
+      return X.utils.sheet_to_csv(wb.Sheets[wb.SheetNames[0]], {FS: '\t', blankrows: false});
+    }
+    return await file.text();
+  }
+
+  /* ---------- الكشوفات ---------- */
+  const monthLbl = m => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-gregory', {month: 'long', year: 'numeric'}).format(new Date(m + '-15')); } catch(e){ return m; } };
+  const byCat = k => S.staff.filter(s => !k || catOf(s.job) === k);
+  const REPS = [
+    {k: 'names', t: 'كشف بأسماء المنسوبات', i: 'users', mod: 'staff', opt: ['cat'], build: o => ({sub: o.catT, head: ['م', 'الاسم', 'الرقم الوظيفي', 'العمل', 'التخصص', 'الجوال'], rows: byCat(o.cat).map((s, i) => [i + 1, s.name, s.empNo || '', g(jobOf(s)), s.subject || '', s.phone || ''])})},
+    {k: 'sign', t: 'كشف توقيع', i: 'pen-line', mod: 'staff', opt: ['cat', 'topic'], cls: 'sign', build: o => ({title: o.topic ? 'كشف توقيع: ' + o.topic : 'كشف توقيع بالعلم والاطلاع', sub: o.catT, head: ['م', 'الاسم', 'العمل', 'التوقيع', 'التاريخ'], rows: byCat(o.cat).map((s, i) => [i + 1, s.name, g(jobOf(s)), '', ''])})},
+    {k: 'attGrid', t: 'كشف الحضور الشهري التفصيلي', i: 'table-2', mod: 'att', opt: ['month'], land: true, cls: 'grid', build: async o => {
+      const docs = await monthDocs('att'), [from, to] = monthRange(o.month), days = []; for (let d = from; d <= to; d = addDays(d, 1)) if (dayIdx(d) <= 4) days.push(d);
+      const code = {p: 'ح', l: 'م', a: 'غ', v: 'إ', m: 'مه'};
+      return {sub: 'شهر ' + monthLbl(o.month), note: 'الرموز: ح حاضرة · م متأخرة · غ غائبة · إ إجازة · مه مهمة رسمية', head: ['م', 'الاسم', ...days.map(d => d.slice(8))],
+        rows: S.staff.map((s, i) => [i + 1, s.name, ...days.map(d => { const x = docs.find(z => z.date === d), r = x && x.rec && x.rec[s.id]; return r && code[r.s] ? code[r.s] : ''; })])}; }},
+    {k: 'attSum', t: 'ملخص الحضور والغياب', i: 'clipboard-check', mod: 'att', opt: ['month'], build: async o => {
+      const docs = await monthDocs('att');
+      return {sub: 'شهر ' + monthLbl(o.month), head: ['م', 'الاسم', ...ATT.map(a => g(a.t))], rows: S.staff.map((s, i) => { const c = {p: 0, l: 0, a: 0, v: 0, m: 0}; docs.forEach(d => { const r = d.rec && d.rec[s.id]; if (r && c[r.s] != null) c[r.s]++; }); return [i + 1, s.name, ...ATT.map(a => c[a.k])]; })}; }},
+    {k: 'late', t: 'كشف التأخر عن الحصص', i: 'alarm-clock', mod: 'late', opt: ['month'], build: async o => {
+      const docs = await monthDocs('late');
+      return {sub: 'شهر ' + monthLbl(o.month), head: ['م', 'الاسم', 'التاريخ', 'اليوم', 'الحصة', 'المدة (دقيقة)', 'السبب', 'الإجراء'],
+        rows: docs.flatMap(d => (d.entries || []).map(e => [d.date, dayName(d.date), sname(e.staffId), e.p || e.period || '', e.m || e.min || '', e.r || e.reason || '', e.a || e.action || ''])).map((r, i) => [i + 1, r[2], r[0], r[1], r[3], r[4], r[5], r[6]])}; }},
+    {k: 'sup', t: 'جدول الإشراف اليومي', i: 'calendar-days', mod: 'sup', land: true, build: () => {
+      const c = cfg(); return {sub: 'الجدول الأسبوعي لمواقع الإشراف', head: ['الموقع', ...DAYS], rows: c.slots.map(sl => [sl.name, ...DAYS.map((d, di) => (((c.supGrid[di] || {})[sl.id]) || []).map(sname).join('، '))])}; }},
+    {k: 'duty', t: 'جدول المناوبة', i: 'door-open', mod: 'duty', land: true, build: () => {
+      const c = cfg(), cell = (gk, di) => { const v = (c[gk] || {})[di]; return (Array.isArray(v) ? v : v ? Object.values(v).flat() : []).map(sname).join('، '); };
+      return {sub: 'مناوبة بداية الدوام ونهايته', head: ['اليوم', 'مناوبة بداية الدوام', 'مناوبة نهاية الدوام'], rows: DAYS.map((d, di) => [d, cell('dutyGrid', di), cell('dutyEndGrid', di)])}; }},
+    {k: 'evals', t: 'كشف التقييم الوظيفي', i: 'star', admin: true, build: async () => {
+      const ev = {}; try { (await SD.collection('evals').get()).docs.forEach(d => { ev[d.id] = d.data(); }); } catch(e){}
+      const mem = {}; try { (await SD.collection('members').get()).docs.forEach(d => { const m = d.data(); if (m.staffId) mem[m.staffId] = m.email; }); } catch(e){}
+      const st = {published: 'معتمد', draft: 'مسودة'};
+      return {sub: cfg().evalTerm || '', head: ['م', 'الاسم', 'العمل', 'النموذج', 'الدرجة', 'التقدير', 'الحالة'],
+        rows: S.staff.map((s, i) => { const e = ev[mem[s.id]] || null; return [i + 1, s.name, g(jobOf(s)), e ? (FORM_LBL[e.form] || '').replace(/ — .*/, '') : '', e && e.total != null ? e.total : '', e && e.total != null ? gradeOf(e.total) : '', e ? (st[e.status] || '') : 'لم يبدأ']; })}; }},
+    {k: 'accounts', t: 'كشف حسابات المنصة', i: 'user-check', admin: true, build: async () => {
+      let L = []; try { L = (await SD.collection('members').get()).docs.map(d => d.data()); } catch(e){}
+      const stt = m => m.active ? (m.role === 'admin' ? 'إدارة' : 'مفعّل') : m.status === 'pending' ? 'بانتظار القبول' : 'موقوف';
+      const has = new Set(L.map(m => m.staffId).filter(Boolean));
+      return {sub: 'حسابات المنسوبات في المنصة', note: 'بلا حساب: ' + ar(S.staff.filter(s => !has.has(s.id)).length) + ' منسوبة.', head: ['م', 'الاسم', 'العمل', 'البريد', 'الحالة'],
+        rows: L.sort((a, b) => String(a.name).localeCompare(String(b.name), 'ar')).map((m, i) => [i + 1, m.staffName || m.name, plain(m.job || ''), m.email, stt(m)])}; }}
+  ];
+  const repAllowed = r => acct && (acct.role === 'admin' || (!r.admin && myMods().includes(r.mod)));
+  async function repRun(r, how){
+    const o = {cat: (document.getElementById('rp-cat') || {}).value || '', topic: ((document.getElementById('rp-topic') || {}).value || '').trim(), month: (document.getElementById('rp-month') || {}).value || monthNow()};
+    o.catT = o.cat ? (CATS.find(c => c.k === o.cat) || {}).t : 'جميع المنسوبات';
+    M.ioMonth = o.month;
+    if (!S.staff.length) return toast('أضيفي أسماء المنسوبات أولًا.', 'err');
+    let d; try { d = await r.build(o); } catch(e){ return toast('تعذّر تجهيز الكشف.', 'err'); }
+    const title = d.title || r.t;
+    if (how === 'xlsx') return exportXlsx(title + (d.sub ? ' - ' + d.sub : ''), d.head, d.rows, title);
+    printDoc(title, d.sub, tbl(d.head, d.rows, r.cls) + (d.note ? `<p class="note">${esc(d.note)}</p>` : ''), {land: r.land});
+  }
+  function reportsPage(){
+    if (!S.staffReady) { app.innerHTML = loading('جارٍ تحميل بيانات المدرسة…'); setTimeout(() => curHash0() === 'reports' && reportsPage(), 700); return; }
+    const L = REPS.filter(repAllowed), I = identity();
+    app.innerHTML = `<div class="wrap page">${pageHead('الكشوفات والتقارير', 'printer', 'كشوفات رسمية بترويسة المدرسة وشعار وزارة التعليم: اطبعيها أو احفظيها PDF، أو صدّريها إلى Excel.')}
+      <section class="panel id-prev"><div class="id-card">${letterhead(I).replace('<div class="lh-line"></div>', '')}<div class="lh-line"></div>
+        <p class="muted">الترويسة تُؤخذ من بيانات المدرسة. ${acct.role === 'admin' ? '<a href="#setup">تعديل بيانات المدرسة والمديرة</a>' : ''}</p></div></section>
+      <section class="panel"><h2><i data-lucide="sliders-horizontal"></i>خيارات الكشف</h2>
+        <div class="row3"><div class="field"><label for="rp-month">الشهر</label><input class="in" type="month" id="rp-month" value="${esc(M.ioMonth || monthNow())}"></div>
+          <div class="field"><label for="rp-cat">الفئة</label><select class="in" id="rp-cat"><option value="">جميع المنسوبات</option>${CATS.map(c => `<option value="${c.k}">${c.t}</option>`).join('')}</select></div>
+          <div class="field"><label for="rp-topic">موضوع كشف التوقيع</label><input class="in" id="rp-topic" placeholder="مثال: الاطلاع على تعميم الاختبارات"></div></div></section>
+      <div class="rep-grid">${L.map(r => `<article class="rep" data-rep="${r.k}"><span class="rep-i"><i data-lucide="${r.i}"></i></span><div class="rep-t"><b>${r.t}</b><small>${r.land ? 'أفقي' : 'عمودي'}${(r.opt || []).includes('month') ? ' · حسب الشهر' : ''}${(r.opt || []).includes('cat') ? ' · حسب الفئة' : ''}</small></div>
+        <div class="rep-a"><button type="button" class="btn btn-primary btn-sm" data-how="print"><i data-lucide="printer"></i>طباعة / PDF</button><button type="button" class="btn btn-ghost btn-sm" data-how="xlsx"><i data-lucide="file-spreadsheet"></i>Excel</button></div></article>`).join('')}</div>
+      ${L.length ? '' : '<div class="msg info">لا توجد كشوفات ضمن صلاحياتك.</div>'}</div>`;
+    icons();
+    app.querySelectorAll('[data-rep]').forEach(el => { const r = REPS.find(x => x.k === el.dataset.rep); el.querySelectorAll('[data-how]').forEach(b => b.onclick = async () => { b.disabled = true; try { await repRun(r, b.dataset.how); } finally { b.disabled = false; } }); });
+  }
+  const curHash0 = () => (location.hash || '').replace(/^#(g-)?/, '');
+
   /* ---------- التوجيه ---------- */
   function route(){
     let h = (location.hash || '').replace('#', '');
@@ -5775,7 +5931,7 @@ body{font-synthesis:weight style}
     if (!h) h = 'home';
     if (isPlat()) { clearRouteSubs(); curRoute = ''; activeRoute = h; devPage(h); return; }
     const school = SCHOOL_ROUTES.includes(h);
-    const pg = h === 'profile' || h === 'ach' || h === 'mine' || h === 'cadre' || ['evals', 'myeval', 'myatt', 'mytasks', 'mynotes', 'gc', 'dev', 'setup'].includes(h) || /^cat-[a-z]+$/.test(h) || /^pf-[\w-]+$/.test(h);
+    const pg = h === 'profile' || h === 'ach' || h === 'mine' || h === 'cadre' || ['evals', 'myeval', 'myatt', 'mytasks', 'mynotes', 'gc', 'dev', 'setup', 'reports'].includes(h) || /^cat-[a-z]+$/.test(h) || /^pf-[\w-]+$/.test(h);
     const item = !school && !pg && h !== 'admin' && h !== 'ev' && /^[a-z][a-z0-9]{1,24}$/.test(h);
     activeRoute = (school || item || pg || h === 'admin' || h === 'ev') ? h : 'home';
     chrome();
@@ -5794,6 +5950,7 @@ body{font-synthesis:weight style}
     else if (h === 'gc') gcPage();
     else if (h === 'dev') devPage();
     else if (h === 'setup') setupPage();
+    else if (h === 'reports') reportsPage();
     else if (h.startsWith('cat-')) catPage(h.slice(4));
     else if (h.startsWith('pf-')) personPage(h.slice(3));
     else if (school && staffOnly()) { clearRouteSubs(); curRoute = ''; h === 'home' ? myHome() : lockPage(); }
