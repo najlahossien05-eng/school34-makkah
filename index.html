@@ -1688,6 +1688,12 @@ body.gated{overflow:hidden}
 .mod-c input{accent-color:var(--teal)}
 @media (max-width:760px){.dep-grid{grid-template-columns:1fr}}
 @media (max-width:760px){.u-row{grid-template-columns:auto minmax(0,1fr)}.u-row>.spill{grid-column:1/-1;justify-self:start}}
+/* لوحة المطوّر */
+.dev-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.danger-zone{border:1px dashed var(--bad)}
+.danger-zone h2 svg{color:var(--bad)}
+.mod-c.big{font-size:14.5px;padding:6px 14px}
+@media (max-width:900px){.dev-grid{grid-template-columns:1fr}}
 
 /* ===== الخط: سكالا مجالا (من جهاز المستخدم) مع بديل Noto Naskh Arabic ===== */
 /* سكالا مجالا يظهر أصغر من غيره بالحجم نفسه، فيُكبَّر بـ size-adjust دون تغيير بقية الأحجام */
@@ -1800,6 +1806,7 @@ body{font-synthesis:weight style}
     {r: 'mytasks', t: 'تكليفاتي', i: 'list-checks'},
     {r: 'mynotes', t: 'ملاحظات الإدارة', i: 'message-square-text'},
     {r: 'gc', t: 'مكتب التوجيه', i: 'compass'},
+    {r: 'dev', t: 'لوحة المطوّر', i: 'shield-half'},
     {r: 'profile', t: 'ملف المدرسة', i: 'school'},
     {r: 'ach', t: 'إنجازات المدرسة', i: 'trophy'},
     {r: 'staff', t: 'منسوبات المدرسة', i: 'users'},
@@ -3890,13 +3897,19 @@ body{font-synthesis:weight style}
     const e = String(u.email || '').toLowerCase();
     if (!hasPw(u) && !pwSkip.has(e) && !fbEmuNoPw) { gateSetPw(u); return; }
     try {
+      let sup = false; try { sup = (await fb.fs.doc('supers/' + e).get()).exists; } catch(x){}
+      try { const L = await fb.fs.doc('meta/license').get(); LIC = L.exists ? L.data() : null; } catch(x){ LIC = null; }
+      if (!sup && licOff(LIC)) { acct = null; gateBlocked(u, LIC); return; }
       const o = await fb.fs.doc('meta/owner').get();
-      if (!o.exists && claimOwner) {
+      if (sup && !claimOwner) {
+        acct = {email: e, name: u.displayName || 'مطوّر المنصة', role: 'admin', owner: false, super: true, ops: true, cat: '', form: '', staffName: '', job: '', photo: u.photoURL || ''};
+      } else if (!o.exists && claimOwner) {
         await fb.fs.doc('meta/owner').set({email: e, name: u.displayName || cur().settings.person || '', photo: u.photoURL || '', at: new Date().toISOString()});
         claimOwner = false; return onUser(u);
       }
-      claimOwner = false;
-      if (o.exists && o.data().email === e) {
+      else { claimOwner = false; }
+      if (acct && acct.super) {}
+      else if (o.exists && o.data().email === e) {
         const lead = seedList().find(x => /مدير/.test(x.job)) || {};
         acct = {email: e, name: lead.name || o.data().name || u.displayName || '', role: 'admin', owner: true, ops: true, job: lead.job || '{مدير|مديرة} المدرسة', cat: 'lead', form: 'principal', staffName: lead.name || o.data().name || '', photo: u.photoURL || ''};
       } else {
@@ -4307,6 +4320,7 @@ body{font-synthesis:weight style}
   const visSecs = () => (useFb && acct && acct.role !== 'admin') ? cur().sections.filter(s => s.id === FORM_SEC[acct.form]) : cur().sections;
   const OPS_PAGES = ['staff', 'att', 'assembly', 'late', 'sup', 'duty', 'dutyend', 'io'];
   function navAllowed(r){
+    if (r === 'dev') return !!(acct && acct.super);
     const R = roleNow();
     if (R === 'local' || R === 'none') return !['mine', 'cadre', 'evals', 'gc', ...MY_PAGES].includes(r);
     if (R === 'admin') return !MY_PAGES.includes(r);
@@ -4772,6 +4786,113 @@ body{font-synthesis:weight style}
   }
   function lockPage(){ app.innerHTML = pageWrap(`<div class="panel lock-panel"><i data-lucide="lock-keyhole"></i><div><h2>هذه الصفحة غير متاحة لحسابك</h2><p>صفحات المتابعة اليومية تديرها إدارة المدرسة. صفحاتك: <a href="#home">الرئيسية</a>، <a href="#mine">ملفي</a>، <a href="#myatt">حضوري</a>.</p></div></div>`); icons(); }
 
+  /* ================= لوحة المطوّر (مخفية): لصاحبة المنصة فقط — #dev ================= */
+  /* الصلاحية من وثيقة supers/{email} التي لا تُنشأ من داخل المنصة. قواعد قاعدة البيانات تمنع غير المطوّر من كل ما هنا. */
+  let LIC = null;
+  const WIPE = [['members', 'الحسابات وطلباتها'], ['links', 'ربط الأسماء بالحسابات'], ['files', 'ملفات Drive (المعرّفات فقط)'], ['uploads', 'سجلات الشواهد المرفوعة'],
+    ['evals', 'التقييمات'], ['notes', 'ملاحظات الإدارة'], ['tasks', 'المهام'], ['cases', 'حالات التوجيه'], ['cprog', 'برامج التوجيه'], ['pa', 'الحضور الشخصي'],
+    ['att', 'الحضور والغياب'], ['late', 'التأخر عن الحصص'], ['assembly', 'الاصطفاف'], ['suplog', 'سجل الإشراف'], ['duty', 'مناوبة البداية'], ['dutyend', 'مناوبة النهاية']];
+  function gateBlocked(u, lic){
+    const g = gateEl();
+    g.innerHTML = gateShell(`<div class="gate-state"><span class="gs-ico bad"><i data-lucide="power-off"></i></span><h1>المنصة متوقفة</h1>
+      <p class="gate-sub">${esc((lic && lic.msg) || 'المنصة متوقفة مؤقتًا. تواصلي مع مزوّد الخدمة.')}</p></div>
+      <button class="btn btn-ghost btn-block" type="button" id="bl-out"><i data-lucide="log-out"></i>تسجيل الخروج</button>`);
+    icons(); document.getElementById('bl-out').onclick = () => fb.auth.signOut();
+  }
+  const licOff = lic => !!lic && (lic.active === false || (lic.until && lic.until < today()));
+  async function devCount(col){ try { return (await fb.fs.collection(col).get()).size; } catch(e){ return '—'; } }
+  async function devPage(){
+    if (!acct || !acct.super) { location.hash = '#home'; return; }
+    app.innerHTML = loading('جارٍ تحميل لوحة المطوّر…');
+    let owner = null, members = [];
+    try { const o = await fb.fs.doc('meta/owner').get(); owner = o.exists ? o.data() : null; } catch(e){}
+    try { members = (await fb.fs.collection('members').get()).docs.map(d => d.data()); } catch(e){}
+    try { const L = await fb.fs.doc('meta/license').get(); LIC = L.exists ? L.data() : null; } catch(e){}
+    const [up, ev, st] = await Promise.all([devCount('uploads'), devCount('evals'), devCount('staff')]);
+    const act = members.filter(m => m.active).length, pend = members.filter(m => !m.active && m.status === 'pending').length;
+    const L = LIC || {active: true, until: '', msg: '', client: ''};
+    const s = cur().settings, url = (location.origin + location.pathname).replace(/#.*$/, '');
+    const q = (M.devQ || '').trim();
+    const rows = members.filter(m => !q || (m.name + ' ' + m.email).includes(q)).sort((a, b) => String(a.name).localeCompare(String(b.name), 'ar'));
+    app.innerHTML = pageWrap(`
+      ${pageHead('لوحة المطوّر', 'shield-half', 'إدارة المنصة كمزوّد خدمة: المالك، والحسابات، والترخيص، والتسليم. هذه الصفحة لا تظهر لأي مستخدم آخر.')}
+      <div class="cat-kpis"><div><b>${ar(act)}</b><span>حساب مفعّل</span></div><div><b>${ar(pend)}</b><span>طلب معلّق</span></div><div><b>${ar(st)}</b><span>منسوبة في السجل</span></div><div><b>${ar(up)}</b><span>شاهد مرفوع</span></div><div><b>${ar(ev)}</b><span>تقييم</span></div>
+        <div class="k-${licOff(L) ? 'bad' : 'ok'}"><b>${licOff(L) ? 'متوقفة' : 'تعمل'}</b><span>حالة المنصة</span></div></div>
+      <div class="dev-grid">
+        <section class="panel"><h2><i data-lucide="school"></i>بيانات النسخة</h2>
+          <dl class="prof-dl"><div><dt>المدرسة</dt><dd>${esc(s.school || '—')}</dd></div><div><dt>الرابط</dt><dd class="ltr"><a href="${esc(url)}" target="_blank" rel="noopener">${esc(url.replace(/^https?:\/\//, ''))}</a></dd></div>
+            <div><dt>مشروع Firebase</dt><dd class="ltr">${esc((FB && FB.projectId) || '—')}</dd></div><div><dt>حسابك</dt><dd class="ltr">${esc(acct.email)}</dd></div></dl></section>
+        <section class="panel"><h2><i data-lucide="crown"></i>مالكة المنصة (حساب الإدارة)</h2>
+          ${owner ? `<div class="u-row"><span class="avatar">${esc(initials(owner.name))}</span><div class="u-t"><b>${esc(owner.name || '')}</b><small class="ltr">${esc(owner.email)}</small></div><span class="spill ok">المالكة</span></div>` : '<div class="msg info">لا يوجد حساب إدارة. أول من يختار «إنشاء حساب جديد ← مديرة المدرسة» يصبح المالكة.</div>'}
+          <div class="field" style="margin-top:10px"><label for="dv-own">نقل الملكية إلى بريد آخر</label><div class="row2"><input class="in ltr" id="dv-own" type="email" placeholder="principal@gmail.com"><button type="button" class="btn btn-ghost" id="dv-own-go"><i data-lucide="arrow-left-right"></i>نقل الملكية</button></div>
+            <span class="hint">تدخل صاحبة البريد الجديد بحسابها في Google أو بكلمة مرور بالبريد نفسه، فتصبح المالكة فورًا.</span></div>
+          ${owner ? '<button type="button" class="btn btn-ghost btn-sm danger" id="dv-own-reset"><i data-lucide="user-x"></i>إلغاء حساب الإدارة (يُفعّل من جديد عند أول تسجيل)</button>' : ''}</section>
+        <section class="panel"><h2><i data-lucide="key-round"></i>الترخيص والاشتراك</h2>
+          <div class="field"><label class="mod-c big"><input type="checkbox" id="dv-act" ${L.active !== false ? 'checked' : ''}><span>المنصة تعمل</span></label></div>
+          <div class="row2"><div class="field"><label for="dv-until">ينتهي الاشتراك في</label><input class="in" id="dv-until" type="date" value="${esc(L.until || '')}"></div>
+            <div class="field"><label for="dv-client">اسم العميل</label><input class="in" id="dv-client" value="${esc(L.client || '')}" placeholder="مثال: الابتدائية ٣٤ — مكة"></div></div>
+          <div class="field"><label for="dv-msg">رسالة الإيقاف للمستخدمين</label><input class="in" id="dv-msg" value="${esc(L.msg || '')}" placeholder="المنصة متوقفة مؤقتًا. تواصلي مع مزوّد الخدمة."></div>
+          <button type="button" class="btn btn-primary btn-sm" id="dv-lic"><i data-lucide="save"></i>حفظ الترخيص</button>
+          <p class="hint">عند الإيقاف أو انتهاء التاريخ تظهر الرسالة لكل المستخدمين بعد الدخول، وتبقى أنتِ قادرة على الدخول.</p></section>
+        <section class="panel danger-zone"><h2><i data-lucide="package-check"></i>التسليم للعميل</h2>
+          <p class="muted">يمسح بيانات التجربة كلها، ويُبقي أسماء المنسوبات والمحتوى والإعدادات. لا يمس الملفات داخل Google Drive للمستخدمين.</p>
+          <div class="mods">${WIPE.map(([k, l]) => `<label class="mod-c"><input type="checkbox" value="${k}" checked><span>${l}</span></label>`).join('')}<label class="mod-c"><input type="checkbox" value="__owner" checked><span>حساب الإدارة</span></label></div>
+          <div class="field" style="margin-top:10px"><label for="dv-confirm">للتأكيد اكتبي: تسليم</label><input class="in" id="dv-confirm" autocomplete="off"></div>
+          <button type="button" class="btn btn-ghost danger" id="dv-wipe"><i data-lucide="eraser"></i>مسح بيانات التجربة</button>
+          <div id="dv-wipe-msg" aria-live="polite"></div>
+          <button type="button" class="btn btn-ghost btn-sm" id="dv-backup" style="margin-top:10px"><i data-lucide="download"></i>نسخة احتياطية كاملة (JSON)</button></section>
+      </div>
+      <section class="panel"><h2><i data-lucide="users"></i>كل الحسابات (${ar(members.length)})</h2>
+        <div class="toolbar"><label class="search"><i data-lucide="search"></i><input id="dv-q" type="search" value="${esc(q)}" placeholder="ابحثي بالاسم أو البريد…"></label></div>
+        <div class="u-list">${rows.map(m => `<div class="u-row" data-e="${esc(m.email)}">${m.photo ? `<img class="u-ph" src="${esc(m.photo)}" alt="" referrerpolicy="no-referrer">` : `<span class="avatar">${esc(initials(m.name))}</span>`}
+          <div class="u-t"><b>${esc(m.name)}</b><small>${esc(plain(m.job || ''))} · <span class="ltr">${esc(m.email)}</span></small></div>
+          <span class="spill ${m.active ? (m.role === 'admin' ? 'ok' : 'info') : 'wait'}">${m.active ? (m.role === 'admin' ? 'إدارة' : m.ops ? 'متابعة يومية' : 'منسوبة') : (m.status === 'pending' ? 'معلّق' : 'موقوف')}</span>
+          <div class="u-acts"><button type="button" class="btn btn-ghost btn-sm" data-d="active">${m.active ? 'إيقاف' : 'تفعيل'}</button><button type="button" class="btn btn-ghost btn-sm" data-d="role">${m.role === 'admin' ? 'إلغاء الإدارة' : 'منح الإدارة'}</button><button type="button" class="btn btn-ghost btn-sm danger" data-d="del">حذف</button></div></div>`).join('') || '<p class="muted">لا توجد حسابات.</p>'}</div></section>`);
+    icons();
+    const qi = document.getElementById('dv-q'); qi.onchange = () => { M.devQ = qi.value; devPage(); };
+    document.getElementById('dv-lic').onclick = async () => {
+      const v = {active: document.getElementById('dv-act').checked, until: document.getElementById('dv-until').value, client: document.getElementById('dv-client').value.trim(), msg: document.getElementById('dv-msg').value.trim(), at: new Date().toISOString(), by: acct.email};
+      try { await fb.fs.doc('meta/license').set(v); toast('حُفظ الترخيص.', 'ok'); devPage(); } catch(e){ toast(authMsg(e), 'err'); }
+    };
+    document.getElementById('dv-own-go').onclick = async () => {
+      const ne = document.getElementById('dv-own').value.trim().toLowerCase(); if (!emailOk(ne)) return toast('اكتبي بريدًا صحيحًا.', 'err');
+      try { const o = await fb.fs.doc('meta/owner').get(); if (o.exists) await fb.fs.doc('meta/owner').update({email: ne, name: o.data().name || ''}); else await fb.fs.doc('meta/owner').set({email: ne, name: '', at: new Date().toISOString()}); toast('نُقلت الملكية إلى ' + ne, 'ok'); devPage(); } catch(e){ toast(authMsg(e), 'err'); }
+    };
+    const rs = document.getElementById('dv-own-reset'); if (rs) armDelete(rs, async () => { try { await fb.fs.doc('meta/owner').delete(); toast('أُلغي حساب الإدارة.', 'ok'); devPage(); } catch(e){ toast(authMsg(e), 'err'); } });
+    document.getElementById('dv-wipe').onclick = async () => {
+      if (document.getElementById('dv-confirm').value.trim() !== 'تسليم') return toast('اكتبي كلمة «تسليم» للتأكيد.', 'err');
+      const box = document.getElementById('dv-wipe-msg'), picks = [...app.querySelectorAll('.danger-zone .mods input:checked')].map(i => i.value);
+      const btn = document.getElementById('dv-wipe'); btn.disabled = true; let total = 0;
+      for (const c of picks.filter(x => x !== '__owner')) {
+        box.innerHTML = `<div class="msg info"><span class="spinner"></span>مسح ${esc((WIPE.find(w => w[0] === c) || [c, c])[1])}…</div>`;
+        try { for (;;) { const snap = await fb.fs.collection(c).limit(400).get(); if (snap.empty) break; const b = fb.fs.batch(); snap.docs.forEach(d => b.delete(d.ref)); await b.commit(); total += snap.size; if (snap.size < 400) break; } }
+        catch(e){ box.innerHTML = `<div class="msg err">تعذّر مسح ${esc(c)}: ${esc(authMsg(e))}</div>`; btn.disabled = false; return; }
+      }
+      if (picks.includes('__owner')) { try { await fb.fs.doc('meta/owner').delete(); } catch(e){} }
+      try { ['staff-seeded', 'staff-seeded-' + ((FB && FB.projectId) || 'fb')].forEach(k => store.del(k)); } catch(e){}
+      box.innerHTML = `<div class="msg ok">تم: حُذفت ${ar(total)} وثيقة. المنصة جاهزة للتسليم.</div>`; btn.disabled = false; CD.at = 0;
+    };
+    document.getElementById('dv-backup').onclick = async () => {
+      const out = {at: new Date().toISOString(), project: FB && FB.projectId, data: {}};
+      for (const c of [...WIPE.map(w => w[0]), 'staff', 'config', 'site', 'meta']) { try { out.data[c] = {}; (await fb.fs.collection(c).get()).docs.forEach(d => { out.data[c][d.id] = d.data(); }); } catch(e){} }
+      saveBlob('نسخة-المنصة-' + today() + '.json', JSON.stringify(out, null, 1), 'application/json');
+    };
+    app.querySelectorAll('.u-row[data-e]').forEach(r => {
+      const e = r.dataset.e, m = members.find(x => x.email === e), ref = fb.fs.doc('members/' + e);
+      r.querySelectorAll('[data-d]').forEach(b => {
+        const run = async () => {
+          try {
+            if (b.dataset.d === 'active') await ref.update({active: !m.active, status: m.active ? 'stopped' : 'active'});
+            if (b.dataset.d === 'role') await ref.update({role: m.role === 'admin' ? 'member' : 'admin'});
+            if (b.dataset.d === 'del') { await ref.delete(); try { await fb.fs.doc('links/' + nameKey(m.staffName || m.name)).delete(); } catch(x){} }
+            devPage();
+          } catch(err){ toast(authMsg(err), 'err'); }
+        };
+        if (b.dataset.d === 'del') armDelete(b, run); else b.onclick = run;
+      });
+    });
+  }
+
   /* ---------- التوجيه ---------- */
   function route(){
     let h = (location.hash || '').replace('#', '');
@@ -4782,7 +4903,7 @@ body{font-synthesis:weight style}
     const old = /^e(\d{1,2})$/.exec(h); if (old) h = 'i' + old[1];
     if (!h) h = 'home';
     const school = SCHOOL_ROUTES.includes(h);
-    const pg = h === 'profile' || h === 'ach' || h === 'mine' || h === 'cadre' || ['evals', 'myeval', 'myatt', 'mytasks', 'mynotes', 'gc'].includes(h) || /^cat-[a-z]+$/.test(h) || /^pf-[\w-]+$/.test(h);
+    const pg = h === 'profile' || h === 'ach' || h === 'mine' || h === 'cadre' || ['evals', 'myeval', 'myatt', 'mytasks', 'mynotes', 'gc', 'dev'].includes(h) || /^cat-[a-z]+$/.test(h) || /^pf-[\w-]+$/.test(h);
     const item = !school && !pg && h !== 'admin' && h !== 'ev' && /^[a-z][a-z0-9]{1,24}$/.test(h);
     activeRoute = (school || item || pg || h === 'admin' || h === 'ev') ? h : 'home';
     chrome();
@@ -4799,6 +4920,7 @@ body{font-synthesis:weight style}
     else if (h === 'mytasks') myTasksPage();
     else if (h === 'mynotes') myNotesPage();
     else if (h === 'gc') gcPage();
+    else if (h === 'dev') devPage();
     else if (h.startsWith('cat-')) catPage(h.slice(4));
     else if (h.startsWith('pf-')) personPage(h.slice(3));
     else if (school && staffOnly()) { clearRouteSubs(); curRoute = ''; h === 'home' ? myHome() : lockPage(); }
