@@ -4009,7 +4009,7 @@ body{font-synthesis:weight style}
     {k: 'counselor', t: 'التوجيه الطلابي', d: 'الموجهة الطلابية', i: 'compass'},
     {k: 'teacher', t: 'المعلمات', d: 'الهيئة التعليمية', i: 'graduation-cap'},
     {k: 'admin', t: 'الإداريات', d: 'المساعدات الإداريات', i: 'folder-kanban'},
-    {k: 'service', t: 'المستخدمات', d: 'الخدمات المساندة', i: 'hand-helping'}];
+    {k: 'service', t: 'المستخدمات', d: 'الخدمات المساندة', i: 'spray-can'}];
   const FORM_LBL = {principal: 'نموذج ٨ — مديرة المدرسة', deputy: 'نموذج ٧ — وكيلة المدرسة', counselor: 'نموذج ٦ — الموجهة الطلابية', teacher: 'نموذج ١ — المعلمة',
     activity: 'نموذج ٢ — معلمة مسند لها نشاط طلابي', health: 'نموذج ٣ — معلمة مسند لها توجيه صحي', kg: 'نموذج ٤ — معلمة رياض الأطفال', lab: 'نموذج ٥ — محضرة المختبر'};
   const FORM_SEC = {principal: 's1', deputy: 's-deputy', counselor: 's-counselor', teacher: 's-teacher', activity: 's-activity', health: 's-health', kg: 's-kg', lab: 's-lab'};
@@ -4296,7 +4296,7 @@ body{font-synthesis:weight style}
     {k: 'counselor', t: 'الموجهة الطلابية', i: 'compass', cat: 'counselor', m: j => catOf(j) === 'counselor'},
     {k: 'teacher', t: 'معلمة', i: 'graduation-cap', cat: 'teacher', m: j => catOf(j) === 'teacher'},
     {k: 'admin', t: 'مساعدة إدارية', i: 'folder-kanban', cat: 'admin', m: j => catOf(j) === 'admin'},
-    {k: 'service', t: 'عاملة خدمات', i: 'hand-helping', cat: 'service', m: j => catOf(j) === 'service'}];
+    {k: 'service', t: 'عاملة خدمات', i: 'spray-can', cat: 'service', m: j => catOf(j) === 'service'}];
   /* وحدات المتابعة اليومية (تُمنح للوكيلات حسب المهام) */
   const MODS_ALL = [['att', 'الحضور والغياب', 'clipboard-check'], ['late', 'التأخر عن الحصص', 'alarm-clock'], ['sup', 'الإشراف اليومي', 'calendar-days'], ['assembly', 'الاصطفاف الصباحي', 'sunrise'], ['duty', 'مناوبة بداية الدوام', 'door-open'], ['dutyend', 'مناوبة نهاية الدوام', 'sunset'], ['staff', 'بيانات المنسوبات', 'users']];
   function defMods(job){ const j = plain(job); if (/التعليمية/.test(j)) return ['att', 'late', 'sup', 'staff']; if (/وكيل/.test(j)) return ['assembly', 'duty', 'dutyend', 'sup']; return ['att']; }
