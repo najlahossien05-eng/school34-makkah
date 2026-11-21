@@ -1667,6 +1667,27 @@ body.gated{overflow:hidden}
 .gate-or{display:flex;align-items:center;gap:10px;margin:14px 0 6px;color:var(--muted);font-size:13px}
 .gate-or::before,.gate-or::after{content:"";flex:1;height:1px;background:var(--line)}
 .gate-new{text-align:center;margin:14px 0 0;font-size:14px;color:var(--muted)}
+/* المسميات الوظيفية في إنشاء الحساب */
+.title-pick{display:flex;flex-direction:column;gap:6px;margin:4px 0 12px;max-height:360px;overflow:auto}
+.tp{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:9px 12px;cursor:pointer;color:var(--ink);text-align:start}
+.tp b{font-family:var(--f-display);font-size:14.5px}
+.tp small{font-size:11.5px;color:var(--muted);background:var(--soft);border-radius:999px;padding:1px 8px}
+.tp.on{border-color:var(--teal);background:var(--limebg);box-shadow:inset 0 0 0 1px var(--teal)}
+.tp.on .cp-i{background:var(--teal);color:#fff}
+.tp .cp-i{width:34px;height:34px;border-radius:10px}
+/* لوحة الوكيلة */
+.dep-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.dep-c{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;background:var(--soft);border-radius:16px;padding:12px;text-decoration:none;color:var(--ink);border-inline-start:4px solid var(--line)}
+.dep-c.ok{border-inline-start-color:var(--ok)}.dep-c.wait{border-inline-start-color:var(--wait)}.dep-c.info{border-inline-start-color:var(--info)}
+.dep-c b{font-family:var(--f-display);font-size:15px;display:block}
+.dep-c small{font-size:12px;color:var(--muted)}
+.dep-c:hover{background:var(--surface);box-shadow:var(--shadow)}
+/* وحدات الوكيلة في الحسابات */
+.mods{display:flex;flex-wrap:wrap;gap:6px;width:100%}
+.mod-c{display:inline-flex;align-items:center;gap:5px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:12.5px;cursor:pointer}
+.mod-c input{accent-color:var(--teal)}
+@media (max-width:760px){.dep-grid{grid-template-columns:1fr}}
+@media (max-width:760px){.u-row{grid-template-columns:auto minmax(0,1fr)}.u-row>.spill{grid-column:1/-1;justify-self:start}}
 
 /* ===== الخط: سكالا مجالا (من جهاز المستخدم) مع بديل Noto Naskh Arabic ===== */
 /* سكالا مجالا يظهر أصغر من غيره بالحجم نفسه، فيُكبَّر بـ size-adjust دون تغيير بقية الأحجام */
@@ -1952,7 +1973,7 @@ body{font-synthesis:weight style}
       : `<span class="btn btn-block" aria-disabled="true"><i data-lucide="folder-clock"></i>يُضاف الرابط قريبًا</span>`;
   }
   function evHome(){
-    const st = cur(), s = st.settings, items = allItems(st);
+    const st = cur(), s = st.settings, items = visSecs().flatMap(x => x.items);
     const linked = items.filter(i => linksOf(i).length).length;
     const totalEv = items.reduce((a, i) => a + (i.evidence || []).length, 0);
     const doneEv = items.reduce((a, i) => a + doneOf(i), 0);
@@ -1983,7 +2004,7 @@ body{font-synthesis:weight style}
     </div></section>
     <div class="wrap">
       ${staleBanner()}
-      <div class="form-pick" role="tablist" aria-label="نماذج التقييم">${st.sections.map((sec, k) => `<button type="button" role="tab" data-fs="${k}" aria-selected="${k === evSec()}"><b>${esc(g(sec.name).split('—').pop().trim())}</b><span>${ar(sec.items.length)} ${sec.items.length > 10 ? 'عنصرًا' : 'عناصر'}</span></button>`).join('')}</div>
+      <div class="form-pick" role="tablist" aria-label="نماذج التقييم"${visSecs().length < 2 ? ' hidden' : ''}>${visSecs().map((sec, k) => `<button type="button" role="tab" data-fs="${k}" aria-selected="${k === evSec()}"><b>${esc(g(sec.name).split('—').pop().trim())}</b><span>${ar(sec.items.length)} ${sec.items.length > 10 ? 'عنصرًا' : 'عناصر'}</span></button>`).join('')}</div>
       <div class="tools"><label class="search"><i data-lucide="search"></i><input id="q" type="search" placeholder="ابحث في جميع النماذج عن عنصر أو شاهد…" autocomplete="off" aria-label="ابحث في العناصر"></label></div>
       <div id="sections"></div>
     </div>`;
@@ -1995,13 +2016,13 @@ body{font-synthesis:weight style}
     if (!pageUrl('ev')) document.querySelector('[data-qr-cap]').hidden = true;
     wireStale();
   }
-  function evSec(){ const n = +store.get('ev-sec'); const L = cur().sections.length; return n >= 0 && n < L ? n : 0; }
+  function evSec(){ const n = +store.get('ev-sec'); const L = visSecs().length; return n >= 0 && n < L ? n : 0; }
   function renderSections(term){
     const st = cur(), t = term.replace(/[ًٌٍَُِّْ]/g, '');
     const box = document.getElementById('sections');
     let any = false;
     const pick = evSec();
-    box.innerHTML = st.sections.map((sec, si) => {
+    box.innerHTML = visSecs().map((sec, si) => {
       if (!t && si !== pick) return '';
       const list = sec.items.map((it, i) => ({it, n: i + 1})).filter(({it}) =>
         !t || g([it.name, it.sub, ...(it.evidence || []), ...(it.indicators || []), ...(it.impact || [])].join(' ')).includes(t));
@@ -2033,7 +2054,7 @@ body{font-synthesis:weight style}
   /* ---------- صفحة العنصر ---------- */
   function element(id){
     const st = cur();
-    const sec = st.sections.find(s => s.items.some(i => i.id === id));
+    const sec = visSecs().find(s => s.items.some(i => i.id === id));
     if (!sec) return evHome();
     const idx = sec.items.findIndex(i => i.id === id), it = sec.items[idx];
     const prev = sec.items[idx - 1], next = sec.items[idx + 1];
@@ -2849,8 +2870,8 @@ body{font-synthesis:weight style}
       ['duty', 'dutyend'].forEach(k => { const ids = cfg()[DUTY[k].grid][di] || []; const rec2 = (T[k] && T[k].rec) || {}; const miss = ids.filter(id => !(rec2[id] && rec2[id].s)).length; if (miss) out.push([DUTY[k].icon, `${DUTY[k].title}: لم تُتابَع حالة ${ar(miss)}.`, k]); });
     }
     const items = allItems(cur()), nl = items.filter(i => !linksOf(i).length).length;
-    if (nl) out.push(['award', `عناصر شواهد بلا روابط: ${ar(nl)}`, 'ev']);
-    return out;
+    if (nl && (!useFb || (acct && acct.role === 'admin'))) out.push(['award', `عناصر شواهد بلا روابط: ${ar(nl)}`, 'ev']);
+    return useFb ? out.filter(x => navAllowed(x[2])) : out;
   }
   function renderBell(){
     const n = document.getElementById('bell-n'), pop = document.getElementById('bell-pop'); if (!n) return;
@@ -3735,24 +3756,24 @@ body{font-synthesis:weight style}
     const g = gateEl(), seeds = seedList();
     let owner = null; try { owner = await fb.fs.doc('meta/owner').get(); } catch(e){}
     const noOwner = owner && !owner.exists;
-    const cats = (noOwner ? [{k: 'lead', t: 'مديرة المدرسة', i: 'landmark'}] : []).concat(CATS.filter(c => c.k !== 'lead'));
+    const list = TITLES.filter(t => t.k !== 'lead' || noOwner);
     g.innerHTML = gateShell(`
       <button type="button" class="gate-back" id="g-back"><i data-lucide="arrow-right"></i>تسجيل الدخول</button>
-      <h1>إنشاء حساب جديد</h1><p class="gate-sub">اختاري فئتك، ثم أنشئي الحساب بحساب Google. بعدها تختارين اسمك وتضعين كلمة مرور تدخلين بها لاحقًا، ويُرسل طلبك لمديرة المدرسة لاعتماده.</p>
-      <div class="cat-pick">${cats.map(c => `<button type="button" class="cp" data-cat="${c.k}"><span class="cp-i"><i data-lucide="${c.i}"></i></span><b>${c.t}</b><small>${c.k === 'lead' ? 'تفعيل حساب الإدارة' : ar(seeds.filter(x => catOf(x.job) === c.k).length) + ' منسوبة'}</small></button>`).join('')}</div>
+      <h1>إنشاء حساب جديد</h1><p class="gate-sub">اختاري مسماك الوظيفي، ثم أنشئي الحساب بحساب Google. بعدها تختارين اسمك وتضعين كلمة مرور، ويُرسل طلبك لمديرة المدرسة لاعتماده.</p>
+      <div class="title-pick">${list.map(t => `<button type="button" class="tp" data-tk="${t.k}"><span class="cp-i"><i data-lucide="${t.i}"></i></span><b>${t.t}</b><small>${t.k === 'lead' ? 'تفعيل حساب الإدارة' : ar(seeds.filter(x => t.m(x.job)).length)}</small></button>`).join('')}</div>
       <div id="g-msg" aria-live="polite"></div>
-      <button class="btn-google" type="button" id="g-google" disabled>${G_ICON}<span>اختاري فئتك أولًا</span></button>`);
+      <button class="btn-google" type="button" id="g-google" disabled>${G_ICON}<span>اختاري مسماك الوظيفي أولًا</span></button>`);
     icons();
     document.getElementById('g-back').onclick = () => gateLogin();
     const gb = document.getElementById('g-google');
-    let pickCat = '';
-    g.querySelectorAll('[data-cat]').forEach(b => b.onclick = () => {
-      pickCat = b.dataset.cat;
-      g.querySelectorAll('[data-cat]').forEach(x => x.classList.toggle('on', x === b));
-      try { sessionStorage.setItem('regcat', pickCat === 'lead' ? '' : pickCat); } catch(e){}
+    let pick = '';
+    g.querySelectorAll('[data-tk]').forEach(b => b.onclick = () => {
+      pick = b.dataset.tk;
+      g.querySelectorAll('[data-tk]').forEach(x => x.classList.toggle('on', x === b));
+      try { sessionStorage.setItem('regcat', pick === 'lead' ? '' : pick); } catch(e){}
       gb.disabled = false; gb.querySelector('span').textContent = 'إنشاء الحساب بحساب Google';
     });
-    gb.onclick = e => { claimOwner = pickCat === 'lead'; doorWanted = 'new'; googleSignIn(e.currentTarget, document.getElementById('g-msg')); };
+    gb.onclick = e => { claimOwner = pick === 'lead'; doorWanted = 'new'; googleSignIn(e.currentTarget, document.getElementById('g-msg')); };
   }
   /* تعيين كلمة مرور لحساب أُنشئ بـ Google (للدخول لاحقًا بالبريد وكلمة المرور) */
   const hasPw = u => !!(u && (u.providerData || []).some(p => p && p.providerId === 'password'));
@@ -3797,36 +3818,33 @@ body{font-synthesis:weight style}
   function seedList(){ return (SP().staffSeed || []).filter(x => x && x.name); }
   function gateRegister(u, note){
     const g = gateEl(), all = seedList();
-    let cat = ''; try { cat = sessionStorage.getItem('regcat') || ''; } catch(e){}
-    if (!CATS.some(c => c.k === cat && c.k !== 'lead')) cat = '';
-    const catT = (CATS.find(c => c.k === cat) || {}).t || '';
-    const list = cat ? all.filter(x => catOf(x.job) === cat) : all.filter(x => catOf(x.job) !== 'lead');
+    let tk = ''; try { tk = sessionStorage.getItem('regcat') || ''; } catch(e){}
+    let T0 = TITLES.find(t => t.k === tk && t.k !== 'lead') || null;
     g.innerHTML = gateShell(`
-      <h1>طلب حساب${catT ? ' — ' + esc(catT) : ''}</h1>${who(u)}
-      <p class="gate-sub">اختاري اسمك${cat === 'teacher' ? ' وتخصصك' : ''}، ثم أرسلي الطلب لتعتمده مديرة المدرسة.</p>
+      <h1>طلب حساب${T0 ? ' — ' + esc(T0.t) : ''}</h1>${who(u)}
+      <p class="gate-sub">اختاري اسمك${T0 && T0.k === 'teacher' ? ' وتخصصك' : ''}، ثم أرسلي الطلب لتعتمده مديرة المدرسة.</p>
       ${note ? `<div class="msg info">${esc(note)}</div>` : ''}
       <form id="r-form" class="gate-form" novalidate>
-        ${cat ? '' : `<label class="field"><span>الفئة</span><select class="in" id="r-cat">${CATS.filter(c => c.k !== 'lead').map(c => `<option value="${c.k}">${c.t}</option>`).join('')}</select></label>`}
+        ${T0 ? '' : `<label class="field"><span>المسمى الوظيفي</span><select class="in" id="r-cat">${TITLES.filter(t => t.k !== 'lead').map(t => `<option value="${t.k}">${t.t}</option>`).join('')}</select></label>`}
         <label class="field"><span>ابحثي عن اسمك</span><input class="in" id="r-q" type="search" placeholder="اكتبي جزءًا من الاسم…" autocomplete="off"></label>
         <div class="r-list" id="r-list" role="listbox" aria-label="المنسوبات"></div>
-        ${cat === 'teacher' ? `<label class="field"><span>التخصص (نموذج التقييم)</span><select class="in" id="r-form-k">${FORMS_OF('teacher').map(f => `<option value="${f}">${esc(FORM_LBL[f].split('—').pop().trim())}</option>`).join('')}</select></label>` : ''}
+        <label class="field" id="r-fk-wrap" ${T0 && T0.k === 'teacher' ? '' : 'hidden'}><span>التخصص (نموذج التقييم)</span><select class="in" id="r-form-k">${FORMS_OF('teacher').map(f => `<option value="${f}">${esc(FORM_LBL[f].split('—').pop().trim())}</option>`).join('')}</select></label>
         <div id="r-msg" aria-live="polite"></div>
         <button class="btn btn-primary btn-block" type="submit" disabled><i data-lucide="send"></i>إرسال الطلب</button>
         <button class="btn btn-ghost btn-block" type="button" id="r-back"><i data-lucide="arrow-right"></i>رجوع</button>
-        <button class="btn btn-ghost btn-block" type="button" id="r-out"><i data-lucide="log-out"></i>الدخول بحساب آخر</button>
       </form>`);
     icons();
     let pick = null;
     const box = document.getElementById('r-list'), q = document.getElementById('r-q'), sub = g.querySelector('#r-form [type=submit]'), cs = document.getElementById('r-cat');
-    const pool = () => cs ? all.filter(x => catOf(x.job) === cs.value) : list;
+    const curT = () => T0 || TITLES.find(t => t.k === (cs && cs.value)) || TITLES[1];
     const draw = () => {
-      const t = q.value.trim();
-      const rows = pool().filter(x => !t || x.name.includes(t)).slice(0, 80);
-      box.innerHTML = rows.map(x => `<button type="button" role="option" class="r-opt${pick === x ? ' on' : ''}" aria-selected="${pick === x}" data-n="${esc(x.name)}"><b>${esc(x.name)}</b><small>${esc(g2(x.job))}${x.note ? ' · ' + esc(x.note) : ''}</small></button>`).join('') || '<p class="muted">لا يوجد اسم مطابق في هذه الفئة. تواصلي مع إدارة المدرسة لإضافة اسمك.</p>';
+      const t = q.value.trim(), TT = curT();
+      document.getElementById('r-fk-wrap').hidden = TT.k !== 'teacher';
+      const rows = all.filter(x => TT.m(x.job)).filter(x => !t || x.name.includes(t)).slice(0, 80);
+      box.innerHTML = rows.map(x => `<button type="button" role="option" class="r-opt${pick === x ? ' on' : ''}" aria-selected="${pick === x}" data-n="${esc(x.name)}"><b>${esc(x.name)}</b><small>${esc(g2(x.job))}${x.note ? ' · ' + esc(x.note) : ''}</small></button>`).join('') || '<p class="muted">لا يوجد اسم مطابق بهذا المسمى. تواصلي مع إدارة المدرسة لإضافة اسمك.</p>';
       box.querySelectorAll('[data-n]').forEach(b => b.onclick = () => { pick = all.find(x => x.name === b.dataset.n); sub.disabled = false; const fk = document.getElementById('r-form-k'); if (fk) fk.value = defForm(pick.job) || 'teacher'; draw(); });
     };
     q.oninput = draw; if (cs) cs.onchange = () => { pick = null; sub.disabled = true; draw(); }; draw();
-    document.getElementById('r-out').onclick = () => fb.auth.signOut();
     document.getElementById('r-back').onclick = async () => { try { sessionStorage.removeItem('regcat'); } catch(e){} await fb.auth.signOut(); };
     document.getElementById('r-form').onsubmit = async ev => {
       ev.preventDefault(); if (!pick) return;
@@ -3838,7 +3856,7 @@ body{font-synthesis:weight style}
         if (l.exists && l.data().email !== e) { sub.disabled = false; return msg('هذا الاسم مرتبط بحساب آخر. إن كان اسمك فتواصلي مع إدارة المدرسة.'); }
         if (!l.exists) await fb.fs.doc('links/' + k).set({email: e, name: pick.name, at: new Date().toISOString()});
         const c = catOf(pick.job), fk = document.getElementById('r-form-k');
-        await fb.fs.doc('members/' + e).set({email: e, name: pick.name, staffName: pick.name, job: pick.job, cat: c, form: fk ? fk.value : defForm(pick.job), role: 'member', ops: false, active: false, status: 'pending', photo: u.photoURL || '', at: new Date().toISOString()});
+        await fb.fs.doc('members/' + e).set({email: e, name: pick.name, staffName: pick.name, job: pick.job, cat: c, form: c === 'teacher' && fk ? fk.value : defForm(pick.job), role: 'member', ops: false, active: false, status: 'pending', photo: u.photoURL || '', at: new Date().toISOString()});
         gatePending(u, pick.name);
       } catch(err){ sub.disabled = false; msg(authMsg(err)); }
     };
@@ -3886,7 +3904,7 @@ body{font-synthesis:weight style}
         if (!m.exists) { acct = null; gateRegister(u, doorWanted === 'new' ? '' : 'هذا الحساب غير مسجّل في المنصة بعد. اختاري اسمك لإرسال طلب حساب.'); return; }
         const d = m.data();
         if (!d.active) { acct = null; gatePending(u, d.staffName || d.name, d.status === 'stopped'); return; }
-        acct = {email: e, name: d.name || '', role: d.role === 'admin' ? 'admin' : 'member', owner: false, ops: d.role === 'admin' || !!d.ops, cat: d.cat || catOf(d.job), form: d.form || defForm(d.job), staffName: d.staffName || d.name || '', job: d.job || '', photo: d.photo || u.photoURL || ''};
+        acct = {email: e, name: d.name || '', role: d.role === 'admin' ? 'admin' : 'member', owner: false, ops: d.role === 'admin' || !!d.ops, mods: Array.isArray(d.mods) ? d.mods : [], cat: d.cat || catOf(d.job), form: d.form || defForm(d.job), staffName: d.staffName || d.name || '', job: d.job || '', photo: d.photo || u.photoURL || ''};
       }
       try { const s = await fb.fs.doc('site/state').get(); if (s.exists && s.data().json) { const v = JSON.parse(s.data().json); if (v && v.settings && Array.isArray(v.sections)) { v.settings.firebase = FB; PUBLISHED = v; } } } catch(x){}
     } catch(err){ gateLogin(authMsg(err)); return; }
@@ -3932,10 +3950,11 @@ body{font-synthesis:weight style}
       <div class="u-acts">
         <select class="in in-sm" data-cat aria-label="الفئة">${CATS.filter(c => c.k !== 'lead').map(c => `<option value="${c.k}" ${c.k === catOfM(m) ? 'selected' : ''}>${c.t}</option>`).join('')}</select>
         ${formSel('pf-' + cssId(m.email), m.form, catOfM(m))}
-        ${isPend ? `<select class="in in-sm" data-role aria-label="الصلاحية"><option value="member">منسوبة</option><option value="ops" ${catOfM(m) === 'deputy' ? 'selected' : ''}>منسوبة + متابعة يومية</option><option value="admin">إدارة كاملة</option></select>
+        ${!isPend && m.active && m.ops && m.role !== 'admin' ? `<div class="mods" role="group" aria-label="وحدات المتابعة اليومية">${MODS_ALL.map(([k, l]) => `<label class="mod-c"><input type="checkbox" value="${k}" ${(m.mods || []).includes(k) ? 'checked' : ''}><span>${l}</span></label>`).join('')}</div>` : ''}
+        ${isPend ? `<select class="in in-sm" data-role aria-label="الصلاحية"><option value="member">منسوبة</option><option value="ops" ${catOfM(m) === 'deputy' ? 'selected' : ''}>منسوبة + متابعة يومية (حسب المسمى)</option><option value="admin">إدارة كاملة</option></select>
           <button type="button" class="btn btn-primary btn-sm" data-u="approve"><i data-lucide="check"></i>قبول</button>
           <button type="button" class="btn btn-ghost btn-sm danger" data-u="reject">رفض</button>`
-        : `<button type="button" class="btn btn-ghost btn-sm" data-u="save"><i data-lucide="save"></i>حفظ الفئة والنموذج</button>
+        : `<button type="button" class="btn btn-ghost btn-sm" data-u="save"><i data-lucide="save"></i>حفظ التعديلات</button>
           ${m.role !== 'admin' ? `<button type="button" class="btn btn-ghost btn-sm" data-u="ops">${m.ops ? 'إلغاء المتابعة اليومية' : 'منح المتابعة اليومية'}</button>` : ''}
           <button type="button" class="btn btn-ghost btn-sm" data-u="role">${m.role === 'admin' ? 'إلغاء الإدارة' : 'منح الإدارة'}</button>
           <button type="button" class="btn btn-ghost btn-sm" data-u="active">${m.active ? 'إيقاف' : 'تفعيل'}</button>
@@ -3967,10 +3986,10 @@ body{font-synthesis:weight style}
         const run = async () => {
           try {
             const ref = fb.fs.doc('members/' + e), cat = csel.value, form = fsel() ? fsel().value : '';
-            if (act === 'approve') { const r = rw.querySelector('[data-role]').value; await ref.update({active: true, status: 'active', role: r === 'admin' ? 'admin' : 'member', ops: r !== 'member', cat, form, by: acct.email}); toast('قُبل حساب ' + m.name, 'ok'); }
+            if (act === 'approve') { const r = rw.querySelector('[data-role]').value; await ref.update({active: true, status: 'active', role: r === 'admin' ? 'admin' : 'member', ops: r !== 'member', mods: r === 'ops' ? defMods(m.job) : [], cat, form, by: acct.email}); toast('قُبل حساب ' + m.name, 'ok'); }
             if (act === 'reject') { await ref.delete(); try { await fb.fs.doc('links/' + nameKey(m.staffName || m.name)).delete(); } catch(x){} toast('رُفض الطلب.', 'ok'); }
-            if (act === 'save') { await ref.update({cat, form}); toast('حُفظت الفئة والنموذج.', 'ok'); }
-            if (act === 'ops') await ref.update({ops: !m.ops});
+            if (act === 'save') { const mb = rw.querySelector('.mods'); const upd = {cat, form}; if (mb) upd.mods = [...mb.querySelectorAll('input:checked')].map(i => i.value); await ref.update(upd); toast('حُفظت التعديلات.', 'ok'); }
+            if (act === 'ops') await ref.update(m.ops ? {ops: false, mods: []} : {ops: true, mods: (m.mods && m.mods.length) ? m.mods : defMods(m.job)});
             if (act === 'role') await ref.update({role: m.role === 'admin' ? 'member' : 'admin'});
             if (act === 'active') await ref.update({active: !m.active, status: m.active ? 'stopped' : 'active'});
             if (act === 'del') { await ref.delete(); try { await fb.fs.doc('links/' + nameKey(m.staffName || m.name)).delete(); } catch(x){} }
@@ -4269,14 +4288,32 @@ body{font-synthesis:weight style}
   const staffOnly = () => roleNow() === 'staff';
   const isCounselorAcct = () => !!acct && (acct.role === 'admin' || acct.cat === 'counselor');
   const MY_PAGES = ['myeval', 'myatt', 'mytasks', 'mynotes'];
+  /* المسميات الوظيفية كما في المدرسة (واجهة إنشاء الحساب) */
+  const TITLES = [
+    {k: 'lead', t: 'مديرة المدرسة', i: 'landmark', cat: 'lead', m: j => catOf(j) === 'lead'},
+    {k: 'dep-edu', t: 'وكيلة المدرسة للشؤون التعليمية', i: 'book-open-check', cat: 'deputy', m: j => catOf(j) === 'deputy' && /التعليمية/.test(plain(j))},
+    {k: 'dep-std', t: 'وكيلة المدرسة لشؤون الطالبات', i: 'user-check', cat: 'deputy', m: j => catOf(j) === 'deputy' && !/التعليمية/.test(plain(j))},
+    {k: 'counselor', t: 'الموجهة الطلابية', i: 'compass', cat: 'counselor', m: j => catOf(j) === 'counselor'},
+    {k: 'teacher', t: 'معلمة', i: 'graduation-cap', cat: 'teacher', m: j => catOf(j) === 'teacher'},
+    {k: 'admin', t: 'مساعدة إدارية', i: 'folder-kanban', cat: 'admin', m: j => catOf(j) === 'admin'},
+    {k: 'service', t: 'عاملة خدمات', i: 'hand-helping', cat: 'service', m: j => catOf(j) === 'service'}];
+  /* وحدات المتابعة اليومية (تُمنح للوكيلات حسب المهام) */
+  const MODS_ALL = [['att', 'الحضور والغياب', 'clipboard-check'], ['late', 'التأخر عن الحصص', 'alarm-clock'], ['sup', 'الإشراف اليومي', 'calendar-days'], ['assembly', 'الاصطفاف الصباحي', 'sunrise'], ['duty', 'مناوبة بداية الدوام', 'door-open'], ['dutyend', 'مناوبة نهاية الدوام', 'sunset'], ['staff', 'بيانات المنسوبات', 'users']];
+  function defMods(job){ const j = plain(job); if (/التعليمية/.test(j)) return ['att', 'late', 'sup', 'staff']; if (/وكيل/.test(j)) return ['assembly', 'duty', 'dutyend', 'sup']; return ['att']; }
+  const myMods = () => !acct ? [] : acct.role === 'admin' ? MODS_ALL.map(m => m[0]) : acct.ops ? (acct.mods || []) : [];
+  const PAGE_MOD = {staff: 'staff', att: 'att', late: 'late', sup: 'sup', assembly: 'assembly', duty: 'duty', dutyend: 'dutyend'};
+  const hasForm = () => !!acct && FORMS_OF(acct.cat).length > 0;
+  /* نماذج التقييم الظاهرة: الإدارة ترى الكل، وكل منسوبة نموذجها فقط */
+  const visSecs = () => (useFb && acct && acct.role !== 'admin') ? cur().sections.filter(s => s.id === FORM_SEC[acct.form]) : cur().sections;
   const OPS_PAGES = ['staff', 'att', 'assembly', 'late', 'sup', 'duty', 'dutyend', 'io'];
   function navAllowed(r){
     const R = roleNow();
     if (R === 'local' || R === 'none') return !['mine', 'cadre', 'evals', 'gc', ...MY_PAGES].includes(r);
     if (R === 'admin') return !MY_PAGES.includes(r);
     if (r === 'gc') return isCounselorAcct();
-    if (r === 'cadre' || r === 'evals') return false;
-    if (R === 'staff' && OPS_PAGES.includes(r)) return false;
+    if (r === 'cadre' || r === 'evals' || r === 'io') return false;
+    if (OPS_PAGES.includes(r)) return R === 'ops' && myMods().includes(PAGE_MOD[r]);
+    if ((r === 'myeval' || r === 'ev') && !hasForm()) return false;
     return true;
   }
   const SCORE = [[5, 'متميز'], [4, 'متقدم'], [3, 'متمكن'], [2, 'مبتدئ'], [1, 'غير مُرضٍ']];
@@ -4315,7 +4352,7 @@ body{font-synthesis:weight style}
   }
   /* مزامنة شهرية كاملة (مرة يوميًا لكل جهاز إدارة/متابعة) — تنشئ ملف حضور لكل منسوبة حتى إن لم يُسجَّل لها شيء */
   async function syncPersonal(force){
-    if (!fb || !acct || !acct.ops || !S.staff.length) return;
+    if (!fb || !acct || acct.role !== 'admin' || !S.staff.length) return;
     const key = 'pa-sync-' + today(); if (!force && store.get(key)) return;
     try {
       const [from, to] = monthRange(monthNow());
@@ -4385,12 +4422,13 @@ body{font-synthesis:weight style}
         <div class="hb-greet"><span><i data-lucide="calendar"></i>${dayName(today())} · ${hijri(today())}</span></div>
         <div class="hb-stats">
           <a href="#mine"><i data-lucide="award"></i><b>${items.length ? ar(pct) + '٪' : ar(ups.length)}</b><span>${items.length ? 'اكتمال شواهدي' : 'ملفاتي المرفوعة'}</span></a>
-          <a href="#myeval"><i data-lucide="star"></i><b>${ev && ev.status === 'published' ? ar(ev.total) : '—'}</b><span>درجتي</span></a>
+          ${hasForm() ? `<a href="#myeval"><i data-lucide="star"></i><b>${ev && ev.status === 'published' ? ar(ev.total) : '—'}</b><span>درجتي</span></a>` : `<a href="#mytasks"><i data-lucide="list-checks"></i><b>${ar(open.length)}</b><span>مهام مسندة</span></a>`}
           <a href="#myatt"><i data-lucide="calendar-check"></i><b>${ar(mc.a)}/${ar(mc.l)}</b><span>غياب/تأخر هذا الشهر</span></a>
           <a href="#mynotes"><i data-lucide="message-square-text"></i><b>${ar(unread)}</b><span>ملاحظات جديدة</span></a>
         </div>
-        <div class="hb-acts"><a class="hb-btn pri" href="#mine"><i data-lucide="upload"></i>رفع شاهد</a><a class="hb-btn" href="#myeval"><i data-lucide="star"></i>تقييمي</a><a class="hb-btn" href="#mytasks"><i data-lucide="list-checks"></i>تكليفاتي</a></div>
+        <div class="hb-acts"><a class="hb-btn pri" href="#mine"><i data-lucide="upload"></i>${hasForm() ? 'رفع شاهد' : 'ملفي'}</a>${hasForm() ? '<a class="hb-btn" href="#myeval"><i data-lucide="star"></i>تقييمي</a>' : ''}<a class="hb-btn" href="#mytasks"><i data-lucide="list-checks"></i>تكليفاتي</a></div>
       </section>
+      ${acct.cat === 'counselor' ? '<section class="panel" id="gc-panel"><span class="spinner"></span></section>' : ''}
       <div class="my-grid">
         <section class="panel"><h2><i data-lucide="bell"></i>تذكيراتي</h2><div class="rem-list">
           ${!file || !file.root ? `<a class="rem hl" href="#mine"><div><b>أنشئي ملفك في Google Drive</b><span>خطوة واحدة لتتمكني من رفع شواهدك.</span></div><i data-lucide="chevron-left" class="rem-go"></i></a>` : ''}
@@ -4402,10 +4440,70 @@ body{font-synthesis:weight style}
         </div></section>
         <section class="panel"><h2><i data-lucide="layout-grid"></i>صفحاتي</h2><div class="svc-grid my-svc">
           ${[['mine', 'folder-open', 'ملفي', 'c1'], ['myeval', 'star', 'تقييمي وتقدمي', 'c2'], ['myatt', 'calendar-check', 'حضوري', 'c3'], ['mytasks', 'list-checks', 'تكليفاتي', 'c4'], ['mynotes', 'message-square-text', 'ملاحظات الإدارة', 'c1'],
-            ...(isCounselorAcct() ? [['gc', 'compass', 'مكتب التوجيه', 'c2']] : []), ['ev', 'book-open', 'نماذج التقييم', 'c3'], ['profile', 'school', 'ملف المدرسة', 'c4']].map(([r, i, l, c]) => `<a class="svc-t ${c}" href="#${r}"><span class="svc-i"><i data-lucide="${i}"></i></span><span class="svc-l">${l}</span></a>`).join('')}
+            ...(isCounselorAcct() ? [['gc', 'compass', 'مكتب التوجيه', 'c2']] : []), ['ev', 'book-open', 'نموذج تقييمي', 'c3'], ['profile', 'school', 'ملف المدرسة', 'c4']].filter(x => navAllowed(x[0])).map(([r, i, l, c]) => `<a class="svc-t ${c}" href="#${r}"><span class="svc-i"><i data-lucide="${i}"></i></span><span class="svc-l">${l}</span></a>`).join('')}
         </div></section>
       </div>`);
     icons();
+    if (acct.cat === 'counselor') counselorPanel();
+  }
+
+
+  /* ---------- 🏠 لوحة الوكيلة ---------- */
+  async function deputyHome(again){
+    if (!acct) return;
+    if (!again) app.innerHTML = loading();
+    let file = null, ups = [], ev = null, notes = [], tasks = [];
+    await Promise.all([
+      loadFile(acct.email).then(x => file = x).catch(() => {}),
+      loadUploads(acct.email).then(x => ups = x).catch(() => {}),
+      fb.fs.doc('evals/' + acct.email).get().then(x => ev = x.exists ? x.data() : null).catch(() => {}),
+      myQ('notes').get().then(x => notes = x.docs.map(d => ({id: d.id, ...d.data()}))).catch(() => {}),
+      myQ('tasks').get().then(x => tasks = x.docs.map(d => ({id: d.id, ...d.data()}))).catch(() => {})
+    ]);
+    if (location.hash.replace('#', '') !== 'home' && location.hash) return;
+    const mods = myMods(), t = today(), di = dayIdx(t), wk = di > 4, N = S.staff.length;
+    const sec = secOfForm(acct.form), items = sec ? sec.items : [];
+    const done = items.filter(it => ups.some(u => u.item === it.id)).length, pct = items.length ? Math.round(done / items.length * 100) : 0;
+    const unread = notes.filter(n => !n.seen).length, open = tasks.filter(x => x.status !== 'done').length;
+    const card = (m, state, cls, line) => { const M0 = MODS_ALL.find(x => x[0] === m); return `<a class="dep-c ${cls}" href="#${m}"><span class="cp-i"><i data-lucide="${M0[2]}"></i></span><div><b>${M0[1]}</b><small>${line}</small></div><span class="spill ${cls}">${state}</span></a>`; };
+    const cards = [];
+    if (mods.includes('att')) { const rec = (T.att && T.att.rec) || {}; const n = Object.keys(rec).length, ab = Object.values(rec).filter(r => r.s === 'a').length; cards.push(card('att', wk ? 'عطلة' : n >= N && N ? 'مكتمل' : n ? 'جزئي' : 'لم يُسجَّل', wk ? 'none' : n >= N && N ? 'ok' : 'wait', `سُجّل ${ar(n)} من ${ar(N)}${ab ? ' · غائبات ' + ar(ab) : ''}`)); }
+    if (mods.includes('late')) { const n = ((T.late && T.late.entries) || []).length; cards.push(card('late', ar(n) + ' حالة', n ? 'wait' : 'ok', 'حالات التأخر عن الحصص اليوم')); }
+    if (mods.includes('sup')) { const c = cfg(); const n = wk ? 0 : c.slots.reduce((a, sl) => a + (((c.supGrid[di] || {})[sl.id]) || []).length, 0); cards.push(card('sup', wk ? 'عطلة' : ar(n) + ' مكلفة', 'info', 'الإشراف اليومي حسب الجدول')); }
+    if (mods.includes('assembly')) { const A = T.assembly; cards.push(card('assembly', wk ? 'عطلة' : A ? 'وُثّق' : 'لم يُوثّق', wk ? 'none' : A ? 'ok' : 'wait', A && A.rating ? 'التقييم: ' + esc(A.rating) : 'توثيق الاصطفاف الصباحي')); }
+    ['duty', 'dutyend'].forEach(k => { if (!mods.includes(k)) return; const ids = wk ? [] : (cfg()[DUTY[k].grid][di] || []), rec = (T[k] && T[k].rec) || {}, d = ids.filter(id => rec[id] && rec[id].s).length; cards.push(card(k, wk ? 'عطلة' : !ids.length ? 'لا يوجد' : d >= ids.length ? 'مكتمل' : `${ar(d)}/${ar(ids.length)}`, wk || !ids.length ? 'none' : d >= ids.length ? 'ok' : 'wait', `متابعة المناوِبات: ${ar(ids.length)}`)); });
+    const s = cur().settings, first = (acct.staffName || acct.name || '').split(/\s+/)[0];
+    app.innerHTML = pageWrap(`
+      <section class="hb my-hb">
+        <div class="hb-top">${acct.photo ? `<img src="${esc(acct.photo)}" alt="" class="my-ph" referrerpolicy="no-referrer">` : `<span class="mf-av">${esc(initials(acct.staffName || acct.name))}</span>`}
+          <div class="hb-id"><small>${esc(s.school || '')}${s.year ? ' · ' + esc(s.year) : ''}</small><h1>مرحبًا، أ. ${esc(first)}</h1><span>${esc(g(acct.job || ''))}</span></div>
+          <button type="button" class="hb-ref" id="dp-ref" title="تحديث" aria-label="تحديث"><i data-lucide="refresh-cw"></i></button></div>
+        <div class="hb-greet"><span><i data-lucide="calendar"></i>${dayName(t)} · ${hijri(t)}</span></div>
+        <div class="hb-stats">
+          <a href="#mine"><i data-lucide="award"></i><b>${items.length ? ar(pct) + '٪' : ar(ups.length)}</b><span>اكتمال شواهدي</span></a>
+          <a href="#myeval"><i data-lucide="star"></i><b>${ev && ev.status === 'published' ? ar(ev.total) : '—'}</b><span>درجتي</span></a>
+          <a href="#mytasks"><i data-lucide="list-checks"></i><b>${ar(open)}</b><span>مهام مسندة</span></a>
+          <a href="#mynotes"><i data-lucide="message-square-text"></i><b>${ar(unread)}</b><span>ملاحظات جديدة</span></a>
+        </div>
+      </section>
+      <section class="panel"><h2><i data-lucide="clipboard-list"></i>مهام اليوم</h2>
+        <div class="dep-grid">${cards.join('') || '<p class="muted">لم تُمنحي صلاحية أي وحدة من وحدات المتابعة اليومية. تواصلي مع مديرة المدرسة.</p>'}</div></section>
+      <section class="panel"><h2><i data-lucide="layout-grid"></i>صفحاتي</h2><div class="svc-grid my-svc">
+        ${[['mine', 'folder-open', 'ملفي', 'c1'], ['myeval', 'star', 'تقييمي وتقدمي', 'c2'], ['myatt', 'calendar-check', 'حضوري', 'c3'], ['mytasks', 'list-checks', 'تكليفاتي', 'c4'], ['mynotes', 'message-square-text', 'ملاحظات الإدارة', 'c1'], ['ev', 'book-open', 'نموذج تقييمي', 'c3']].map(([r, i, l, c]) => `<a class="svc-t ${c}" href="#${r}"><span class="svc-i"><i data-lucide="${i}"></i></span><span class="svc-l">${l}</span></a>`).join('')}
+      </div></section>`);
+    icons();
+    document.getElementById('dp-ref').onclick = () => deputyHome();
+    if (!again && !T.date) setTimeout(() => { if ((location.hash || '#home') === '#home') deputyHome(true); }, 2500);
+  }
+  /* لوحة الموجهة: مؤشرات مكتب التوجيه داخل رئيسيتها */
+  async function counselorPanel(){
+    const box = document.getElementById('gc-panel'); if (!box) return;
+    try {
+      const [p, c] = await Promise.all([fb.fs.collection('cprog').get(), fb.fs.collection('cases').get()]);
+      const progs = p.docs.map(d => d.data()), cases = c.docs.map(d => d.data()), done = progs.filter(x => x.status === 'done').length;
+      box.innerHTML = `<h2><i data-lucide="compass"></i>مكتب التوجيه</h2><div class="cat-kpis tight"><div><b>${ar(progs.length)}</b><span>برنامج</span></div><div><b>${progs.length ? ar(Math.round(done / progs.length * 100)) + '٪' : '—'}</b><span>التنفيذ</span></div><div><b>${ar(cases.filter(x => x.status !== 'closed').length)}</b><span>حالة مفتوحة</span></div><div><b>${ar(cases.filter(x => x.status === 'closed').length)}</b><span>مغلقة</span></div></div><a class="btn btn-ghost btn-sm" href="#gc" style="margin-top:10px"><i data-lucide="arrow-left"></i>فتح مكتب التوجيه</a>`;
+      icons();
+    } catch(e){ box.remove(); }
   }
 
   /* ---------- ⭐ تقييمي وتقدمي ---------- */
@@ -4704,6 +4802,8 @@ body{font-synthesis:weight style}
     else if (h.startsWith('cat-')) catPage(h.slice(4));
     else if (h.startsWith('pf-')) personPage(h.slice(3));
     else if (school && staffOnly()) { clearRouteSubs(); curRoute = ''; h === 'home' ? myHome() : lockPage(); }
+    else if (school && roleNow() === 'ops' && h === 'home') { clearRouteSubs(); curRoute = ''; deputyHome(); }
+    else if (school && roleNow() === 'ops' && !navAllowed(h)) { clearRouteSubs(); curRoute = ''; lockPage(); }
     else if (school) renderSchool(h);
     else if (item) element(h);
     else renderSchool('home');
