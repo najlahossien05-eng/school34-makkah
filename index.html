@@ -1660,6 +1660,13 @@ body.gated{overflow:hidden}
   .acc-s b{font-size:13.5px}
   .acc-s>span:not(.cp-i){font-size:11px}
 }
+.gate-link{all:unset;cursor:pointer;color:var(--petrol);font-size:13.5px}
+.gate-link:hover{text-decoration:underline}
+.gate-link.strong{font-weight:700;font-family:var(--f-display)}
+.gate-form .gate-link{align-self:flex-start;margin-top:-4px}
+.gate-or{display:flex;align-items:center;gap:10px;margin:14px 0 6px;color:var(--muted);font-size:13px}
+.gate-or::before,.gate-or::after{content:"";flex:1;height:1px;background:var(--line)}
+.gate-new{text-align:center;margin:14px 0 0;font-size:14px;color:var(--muted)}
 
 /* ===== الخط: سكالا مجالا (من جهاز المستخدم) مع بديل Noto Naskh Arabic ===== */
 /* سكالا مجالا يظهر أصغر من غيره بالحجم نفسه، فيُكبَّر بـ size-adjust دون تغيير بقية الأحجام */
@@ -3606,6 +3613,7 @@ body{font-synthesis:weight style}
   const fbLive = isLocal && /[?&]fb=live\b/.test(location.search);
   const useFb = !!(FB && FB.apiKey) && (webHost || fbEmu || fbLive);
   let fb = null, acct = null;
+  const fbEmuNoPw = fbEmu && /[?&]nopw\b/.test(location.search);
   const FB_V = '10.12.5';
   const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
   function loadScript(src){ return new Promise((ok, no) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = () => no(new Error('load ' + src)); document.head.appendChild(s); }); }
@@ -3684,78 +3692,101 @@ body{font-synthesis:weight style}
       const t = res && res.credential && res.credential.accessToken; if (t) keepTok(t, res.user.email);
     } catch(err){ claimOwner = false; if (btn) btn.disabled = false; if (msgEl) msgEl.innerHTML = `<div class="msg err">${esc(authMsg(err))}</div>`; }
   }
-  async function gateLogin(note, door){
+  async function gateLogin(note){
     const g = gateEl();
-    let owner = null; try { owner = await fb.fs.doc('meta/owner').get(); } catch(e){}
-    const first = owner && !owner.exists;
-    door = door || '';
-    if (!door) {
-      g.innerHTML = gateShell(`
-        <h1>الدخول إلى المنصة</h1><p class="gate-sub">اختاري طريقة الدخول المناسبة لك.</p>
-        ${note ? `<div class="msg info">${esc(note)}</div>` : ''}
-        <div class="doors">
-          <button type="button" class="door" data-door="p"><span class="door-i"><i data-lucide="landmark"></i></span><b>دخول مديرة المدرسة</b><small>الإدارة والمتابعة والتقييم ولوحة التحكم</small></button>
-          <button type="button" class="door" data-door="s"><span class="door-i alt"><i data-lucide="users-round"></i></span><b>دخول الكادر</b><small>الوكيلات، والموجهة، والمعلمات، والإداريات، والمستخدمات</small></button>
-        </div>`);
-      icons(); g.querySelectorAll('[data-door]').forEach(b => b.onclick = () => gateLogin('', b.dataset.door));
-      return;
-    }
-    if (door === 's') return gateCats(note);
     g.innerHTML = gateShell(`
-      <button type="button" class="gate-back" id="g-back"><i data-lucide="arrow-right"></i>رجوع</button>
-      <h1>دخول مديرة المدرسة</h1><p class="gate-sub">${first ? 'أول استخدام للمنصة: فعّلي حساب الإدارة بحسابك في Google، وهو يُفعَّل مرة واحدة فقط.' : 'ادخلي بحساب Google المرتبط بحساب الإدارة.'}</p>
+      <h1>تسجيل الدخول</h1><p class="gate-sub">ادخلي ببريدك الإلكتروني وكلمة المرور.</p>
       ${note ? `<div class="msg info">${esc(note)}</div>` : ''}
+      <form id="g-login" class="gate-form" novalidate>
+        <label class="field"><span>البريد الإلكتروني</span><input class="in ltr" id="g-email" type="email" autocomplete="username" inputmode="email" placeholder="name@gmail.com"></label>
+        <label class="field"><span>كلمة المرور</span><span class="pw"><input class="in ltr" id="g-pass" type="password" autocomplete="current-password"><button type="button" class="pw-eye" data-eye="g-pass" aria-label="إظهار كلمة المرور"><i data-lucide="eye"></i></button></span></label>
+        <button class="gate-link" type="button" id="g-forgot">نسيت كلمة المرور؟</button>
+        <div id="g-msg2" aria-live="polite"></div>
+        <button class="btn btn-primary btn-block" type="submit"><i data-lucide="log-in"></i>تسجيل الدخول</button>
+      </form>
+      <div class="gate-or"><span>أو</span></div>
       <div id="g-msg" aria-live="polite"></div>
-      <button class="btn-google" type="button" id="g-google">${G_ICON}<span>${first ? 'تفعيل حساب الإدارة بحساب Google' : 'الدخول بحساب Google'}</span></button>
-      <details class="gate-alt"><summary>الدخول بالبريد وكلمة المرور</summary>
-        <form id="g-login" class="gate-form" novalidate>
-          <label class="field"><span>البريد الإلكتروني</span><input class="in ltr" id="g-email" type="email" autocomplete="username" inputmode="email"></label>
-          <label class="field"><span>كلمة المرور</span><span class="pw"><input class="in ltr" id="g-pass" type="password" autocomplete="current-password"><button type="button" class="pw-eye" data-eye="g-pass" aria-label="إظهار كلمة المرور"><i data-lucide="eye"></i></button></span></label>
-          <div id="g-msg2" aria-live="polite"></div>
-          <button class="btn btn-primary btn-block" type="submit"><i data-lucide="log-in"></i>دخول</button>
-          <button class="btn btn-ghost btn-block" type="button" id="g-forgot">نسيت كلمة المرور</button>
-        </form></details>`);
+      <button class="btn-google" type="button" id="g-google">${G_ICON}<span>المتابعة بحساب Google</span></button>
+      <p class="gate-new">ليس لديك حساب؟ <button type="button" class="gate-link strong" id="g-create">إنشاء حساب جديد</button></p>`);
     wireEyes(g); icons();
-    document.getElementById('g-back').onclick = () => gateLogin();
     const m1 = document.getElementById('g-msg');
-    document.getElementById('g-google').onclick = e => { claimOwner = !!first; doorWanted = 'p'; googleSignIn(e.currentTarget, m1); };
-    const msg = m => { document.getElementById('g-msg2').innerHTML = m ? `<div class="msg err">${esc(m)}</div>` : ''; };
+    document.getElementById('g-google').onclick = e => { claimOwner = false; googleSignIn(e.currentTarget, m1); };
+    document.getElementById('g-create').onclick = () => gateCreate();
+    const msg = (m, ok) => { document.getElementById('g-msg2').innerHTML = m ? `<div class="msg ${ok ? 'ok' : 'err'}">${esc(m)}</div>` : ''; };
     document.getElementById('g-login').onsubmit = async ev => {
       ev.preventDefault();
-      const e = document.getElementById('g-email').value.trim(), p = document.getElementById('g-pass').value;
+      const e = document.getElementById('g-email').value.trim(), pw = document.getElementById('g-pass').value;
       if (!emailOk(e)) return msg('اكتبي البريد الإلكتروني بشكل صحيح.');
-      if (!p) return msg('اكتبي كلمة المرور.');
+      if (!pw) return msg('اكتبي كلمة المرور.');
       const btn = g.querySelector('#g-login [type=submit]'); btn.disabled = true; msg('');
-      try { doorWanted = 'p'; await fb.auth.signInWithEmailAndPassword(e, p); } catch(err){ msg(authMsg(err)); btn.disabled = false; }
+      try { await fb.auth.signInWithEmailAndPassword(e, pw); }
+      catch(err){ btn.disabled = false; msg(authMsg(err) + (/(invalid|wrong|not-found)/.test(err.code || '') ? ' إن كان حسابك جديدًا فاختاري «إنشاء حساب جديد».' : '')); }
     };
     document.getElementById('g-forgot').onclick = async () => {
       const e = document.getElementById('g-email').value.trim();
-      if (!emailOk(e)) return msg('اكتبي بريدك الإلكتروني أولًا ثم اضغطي «نسيت كلمة المرور».');
+      if (!emailOk(e)) return msg('اكتبي بريدك الإلكتروني أولًا، ثم اضغطي «نسيت كلمة المرور؟».');
       try { await fb.auth.sendPasswordResetEmail(e); } catch(err){ if (err.code !== 'auth/user-not-found') return msg(authMsg(err)); }
-      document.getElementById('g-msg2').innerHTML = '<div class="msg ok">إن كان البريد مسجّلًا فستصلك رسالة لتعيين كلمة مرور جديدة.</div>';
+      msg('إن كان البريد مسجّلًا فستصلك رسالة لتعيين كلمة مرور جديدة. تحققي من البريد غير الهام أيضًا.', true);
     };
   }
   let doorWanted = '';
-  /* دخول الكادر: اختيار الفئة ثم Google */
-  function gateCats(note){
+  /* إنشاء حساب جديد: اختيار الفئة ثم Google */
+  async function gateCreate(){
     const g = gateEl(), seeds = seedList();
-    const cats = CATS.filter(c => c.k !== 'lead');
+    let owner = null; try { owner = await fb.fs.doc('meta/owner').get(); } catch(e){}
+    const noOwner = owner && !owner.exists;
+    const cats = (noOwner ? [{k: 'lead', t: 'مديرة المدرسة', i: 'landmark'}] : []).concat(CATS.filter(c => c.k !== 'lead'));
     g.innerHTML = gateShell(`
-      <button type="button" class="gate-back" id="g-back"><i data-lucide="arrow-right"></i>رجوع</button>
-      <h1>دخول الكادر</h1><p class="gate-sub">اختاري فئتك، ثم ادخلي بحساب Google. إن كان لك حساب مفعّل فستدخلين مباشرة، وإلا يُنشأ لك طلب حساب تعتمده مديرة المدرسة.</p>
-      ${note ? `<div class="msg info">${esc(note)}</div>` : ''}
-      <div class="cat-pick">${cats.map(c => `<button type="button" class="cp" data-cat="${c.k}"><span class="cp-i"><i data-lucide="${c.i}"></i></span><b>${c.t}</b><small>${ar(seeds.filter(x => catOf(x.job) === c.k).length)} منسوبة</small></button>`).join('')}</div>
+      <button type="button" class="gate-back" id="g-back"><i data-lucide="arrow-right"></i>تسجيل الدخول</button>
+      <h1>إنشاء حساب جديد</h1><p class="gate-sub">اختاري فئتك، ثم أنشئي الحساب بحساب Google. بعدها تختارين اسمك وتضعين كلمة مرور تدخلين بها لاحقًا، ويُرسل طلبك لمديرة المدرسة لاعتماده.</p>
+      <div class="cat-pick">${cats.map(c => `<button type="button" class="cp" data-cat="${c.k}"><span class="cp-i"><i data-lucide="${c.i}"></i></span><b>${c.t}</b><small>${c.k === 'lead' ? 'تفعيل حساب الإدارة' : ar(seeds.filter(x => catOf(x.job) === c.k).length) + ' منسوبة'}</small></button>`).join('')}</div>
       <div id="g-msg" aria-live="polite"></div>
       <button class="btn-google" type="button" id="g-google" disabled>${G_ICON}<span>اختاري فئتك أولًا</span></button>`);
     icons();
     document.getElementById('g-back').onclick = () => gateLogin();
     const gb = document.getElementById('g-google');
+    let pickCat = '';
     g.querySelectorAll('[data-cat]').forEach(b => b.onclick = () => {
+      pickCat = b.dataset.cat;
       g.querySelectorAll('[data-cat]').forEach(x => x.classList.toggle('on', x === b));
-      try { sessionStorage.setItem('regcat', b.dataset.cat); } catch(e){}
-      gb.disabled = false; gb.querySelector('span').textContent = 'الدخول بحساب Google — ' + (CATS.find(c => c.k === b.dataset.cat) || {}).t;
+      try { sessionStorage.setItem('regcat', pickCat === 'lead' ? '' : pickCat); } catch(e){}
+      gb.disabled = false; gb.querySelector('span').textContent = 'إنشاء الحساب بحساب Google';
     });
-    gb.onclick = e => { doorWanted = 's'; googleSignIn(e.currentTarget, document.getElementById('g-msg')); };
+    gb.onclick = e => { claimOwner = pickCat === 'lead'; doorWanted = 'new'; googleSignIn(e.currentTarget, document.getElementById('g-msg')); };
+  }
+  /* تعيين كلمة مرور لحساب أُنشئ بـ Google (للدخول لاحقًا بالبريد وكلمة المرور) */
+  const hasPw = u => !!(u && (u.providerData || []).some(p => p && p.providerId === 'password'));
+  const pwSkip = new Set();
+  function gateSetPw(u){
+    const g = gateEl();
+    g.innerHTML = gateShell(`
+      <h1>تعيين كلمة المرور</h1>${who(u)}
+      <p class="gate-sub">ضعي كلمة مرور لحسابك؛ تدخلين بها في المرات القادمة ببريدك <b class="ltr">${esc(u.email)}</b> دون الحاجة إلى Google.</p>
+      <form id="pw-f" class="gate-form" novalidate>
+        <label class="field"><span>كلمة المرور (٨ أحرف على الأقل)</span><span class="pw"><input class="in ltr" id="pw1" type="password" autocomplete="new-password"><button type="button" class="pw-eye" data-eye="pw1" aria-label="إظهار كلمة المرور"><i data-lucide="eye"></i></button></span></label>
+        <label class="field"><span>تأكيد كلمة المرور</span><input class="in ltr" id="pw2" type="password" autocomplete="new-password"></label>
+        <div id="pw-msg" aria-live="polite"></div>
+        <button class="btn btn-primary btn-block" type="submit"><i data-lucide="check"></i>حفظ ومتابعة</button>
+        <button class="btn btn-ghost btn-block" type="button" id="pw-later">لاحقًا</button>
+      </form>`);
+    wireEyes(g); icons();
+    const go = () => { pwSkip.add(String(u.email).toLowerCase()); onUser(fb.auth.currentUser || u); };
+    document.getElementById('pw-later').onclick = go;
+    document.getElementById('pw-f').onsubmit = async ev => {
+      ev.preventDefault();
+      const a = document.getElementById('pw1').value, b = document.getElementById('pw2').value;
+      const msg = m => { document.getElementById('pw-msg').innerHTML = m ? `<div class="msg err">${esc(m)}</div>` : ''; };
+      if (a.length < 8) return msg('كلمة المرور ٨ أحرف على الأقل.');
+      if (a !== b) return msg('كلمتا المرور غير متطابقتين.');
+      const btn = g.querySelector('#pw-f [type=submit]'); btn.disabled = true;
+      try { await u.linkWithCredential(firebase.auth.EmailAuthProvider.credential(u.email, a)); toast('حُفظت كلمة المرور. تستطيعين الدخول بها في المرة القادمة.', 'ok'); go(); }
+      catch(err){
+        if (err.code === 'auth/provider-already-linked') return go();
+        if (err.code === 'auth/email-already-in-use' || err.code === 'auth/credential-already-in-use') { try { await u.updatePassword(a); toast('حُفظت كلمة المرور.', 'ok'); return go(); } catch(e2){ err = e2; } }
+        if (err.code === 'auth/requires-recent-login') { try { await u.reauthenticateWithPopup(gProvider(u.email)); await u.linkWithCredential(firebase.auth.EmailAuthProvider.credential(u.email, a)); return go(); } catch(e2){ err = e2; } }
+        btn.disabled = false; msg(authMsg(err));
+      }
+    };
   }
   function wireEyes(root){
     root.querySelectorAll('[data-eye]').forEach(b => b.onclick = () => { const i = document.getElementById(b.dataset.eye); const show = i.type === 'password'; i.type = show ? 'text' : 'password'; b.innerHTML = `<i data-lucide="${show ? 'eye-off' : 'eye'}"></i>`; icons(); });
@@ -3781,7 +3812,7 @@ body{font-synthesis:weight style}
         ${cat === 'teacher' ? `<label class="field"><span>التخصص (نموذج التقييم)</span><select class="in" id="r-form-k">${FORMS_OF('teacher').map(f => `<option value="${f}">${esc(FORM_LBL[f].split('—').pop().trim())}</option>`).join('')}</select></label>` : ''}
         <div id="r-msg" aria-live="polite"></div>
         <button class="btn btn-primary btn-block" type="submit" disabled><i data-lucide="send"></i>إرسال الطلب</button>
-        <button class="btn btn-ghost btn-block" type="button" id="r-back"><i data-lucide="arrow-right"></i>تغيير الفئة</button>
+        <button class="btn btn-ghost btn-block" type="button" id="r-back"><i data-lucide="arrow-right"></i>رجوع</button>
         <button class="btn btn-ghost btn-block" type="button" id="r-out"><i data-lucide="log-out"></i>الدخول بحساب آخر</button>
       </form>`);
     icons();
@@ -3796,7 +3827,7 @@ body{font-synthesis:weight style}
     };
     q.oninput = draw; if (cs) cs.onchange = () => { pick = null; sub.disabled = true; draw(); }; draw();
     document.getElementById('r-out').onclick = () => fb.auth.signOut();
-    document.getElementById('r-back').onclick = async () => { await fb.auth.signOut(); };
+    document.getElementById('r-back').onclick = async () => { try { sessionStorage.removeItem('regcat'); } catch(e){} await fb.auth.signOut(); };
     document.getElementById('r-form').onsubmit = async ev => {
       ev.preventDefault(); if (!pick) return;
       const msg = m => { document.getElementById('r-msg').innerHTML = m ? `<div class="msg err">${esc(m)}</div>` : ''; };
@@ -3839,6 +3870,7 @@ body{font-synthesis:weight style}
     if (!u) { acct = null; fbReady && location.reload(); gateLogin(); return; }
     gateLoading('جارٍ التحقق من الحساب…');
     const e = String(u.email || '').toLowerCase();
+    if (!hasPw(u) && !pwSkip.has(e) && !fbEmuNoPw) { gateSetPw(u); return; }
     try {
       const o = await fb.fs.doc('meta/owner').get();
       if (!o.exists && claimOwner) {
@@ -3851,7 +3883,7 @@ body{font-synthesis:weight style}
         acct = {email: e, name: lead.name || o.data().name || u.displayName || '', role: 'admin', owner: true, ops: true, job: lead.job || '{مدير|مديرة} المدرسة', cat: 'lead', form: 'principal', staffName: lead.name || o.data().name || '', photo: u.photoURL || ''};
       } else {
         const m = await fb.fs.doc('members/' + e).get();
-        if (!m.exists) { acct = null; if (doorWanted === 'p') { await fb.auth.signOut(); gateLogin('هذا الحساب ليس حساب الإدارة. للتسجيل كمنسوبة اختاري «دخول الكادر».'); return; } gateRegister(u); return; }
+        if (!m.exists) { acct = null; gateRegister(u, doorWanted === 'new' ? '' : 'هذا الحساب غير مسجّل في المنصة بعد. اختاري اسمك لإرسال طلب حساب.'); return; }
         const d = m.data();
         if (!d.active) { acct = null; gatePending(u, d.staffName || d.name, d.status === 'stopped'); return; }
         acct = {email: e, name: d.name || '', role: d.role === 'admin' ? 'admin' : 'member', owner: false, ops: d.role === 'admin' || !!d.ops, cat: d.cat || catOf(d.job), form: d.form || defForm(d.job), staffName: d.staffName || d.name || '', job: d.job || '', photo: d.photo || u.photoURL || ''};
@@ -3860,6 +3892,8 @@ body{font-synthesis:weight style}
     } catch(err){ gateLogin(authMsg(err)); return; }
     canWrite = true; deviceMode = false; canEdit = acct.role === 'admin'; art = null;
     if (!fbReady) { fbReady = true; initDb(fb.fs); }
+    { const h0 = (location.hash || '').replace('#', ''); const base = h0.replace(/^(cat-|pf-).*/, 'cadre');
+      if ((h0 === 'admin' && acct.role !== 'admin') || (h0 && NAV.some(n => n.r === base) && !navAllowed(base))) history.replaceState(null, '', location.pathname + location.search + '#home'); }
     hideGate(); chrome(); renderBar(); route();
   }
   async function fbStart(){
