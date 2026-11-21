@@ -1736,6 +1736,30 @@ body.plat .nav{background:linear-gradient(180deg,#0b2530,#0B3D4A)}
 .dev-school-h{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 12px;border-top:0;padding-top:0}
 .su-strip{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#7a4b00;color:#fff;padding:8px 16px;font-size:14px}
 .su-strip span{flex:1;min-width:200px}.su-strip .btn{background:#fff;color:#7a4b00;border:0}
+/* ===== الجولة التعريفية ===== */
+#tour{position:fixed;inset:0;z-index:1000;pointer-events:none}
+#tour .tr-shade{position:fixed;inset:0;pointer-events:auto;background:transparent}
+#tour.center .tr-shade{background:rgba(6,28,34,.62)}
+#tour .tr-hole{position:fixed;border-radius:14px;box-shadow:0 0 0 9999px rgba(6,28,34,.62),0 0 0 3px #1FB5AC,0 0 22px 4px rgba(31,181,172,.55);transition:left .3s,top .3s,width .3s,height .3s;pointer-events:none}
+#tour .tr-card{position:fixed;width:min(360px,calc(100vw - 24px));box-sizing:border-box;background:var(--card,#fff);color:var(--ink,#16323a);border-radius:18px;padding:16px 18px 14px;box-shadow:0 18px 50px rgba(0,0,0,.28);pointer-events:auto;transition:top .3s,left .3s,opacity .2s;direction:rtl}
+#tour.center .tr-card{top:50%!important;left:50%!important;transform:translate(-50%,-50%);width:min(440px,calc(100vw - 24px))}
+#tour.busy .tr-card{opacity:.55}
+#tour .tr-card.sheet{left:12px!important;right:12px;width:auto;bottom:calc(12px + env(safe-area-inset-bottom,0px));top:auto!important}
+#tour .tr-card.sheet.top{bottom:auto;top:calc(12px + env(safe-area-inset-top,0px))!important}
+#tour.center .tr-card.sheet{bottom:auto}
+.tr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.tr-n{font-size:12px;font-weight:700;color:var(--teal,#138D90);background:var(--soft,#e9f3f3);border-radius:99px;padding:2px 10px}
+.tr-x{all:unset;cursor:pointer;width:30px;height:30px;display:grid;place-items:center;border-radius:50%;color:var(--muted,#5b6b6e)}.tr-x:hover{background:var(--soft,#e9f3f3)}.tr-x svg{width:18px;height:18px}
+.tr-x:focus-visible{outline:2px solid var(--teal)}
+#tour h3{margin:0 0 6px;font-size:18px;color:var(--petrol,#0B3D4A)}
+#tour p{margin:0 0 12px;font-size:15px;line-height:1.75}
+.tr-bar{height:4px;background:var(--soft,#e9f3f3);border-radius:4px;overflow:hidden;margin-bottom:12px}.tr-bar span{display:block;height:100%;background:linear-gradient(90deg,#1FB5AC,#0E5A66);transition:width .3s}
+.tr-acts{display:flex;gap:8px;justify-content:flex-start;flex-wrap:wrap}.tr-acts .btn{flex:0 0 auto}
+.tr-acts #tr-next{margin-inline-start:auto}
+body.plat #tour-btn{display:none!important}
+#g-tour{display:inline-flex;align-items:center;gap:6px}#g-tour svg{width:16px;height:16px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #tour h3{color:#9fe3dc}}
+[data-theme="dark"] #tour h3{color:#9fe3dc}
 
 /* ===== الخط: سكالا مجالا (من جهاز المستخدم) مع بديل Noto Naskh Arabic ===== */
 /* سكالا مجالا يظهر أصغر من غيره بالحجم نفسه، فيُكبَّر بـ size-adjust دون تغيير بقية الأحجام */
@@ -1881,6 +1905,7 @@ body{font-synthesis:weight style}
           <div class="top-actions">
             <a class="fab" id="fab" href="#att" title="تسجيل حضور اليوم" aria-label="تسجيل حضور اليوم"><i data-lucide="clipboard-check"></i></a>
             <button type="button" class="icon-btn search-btn" id="search-btn" aria-label="بحث" aria-controls="gsearch" aria-expanded="false"><i data-lucide="search"></i></button>
+            <button type="button" class="icon-btn" id="tour-btn" aria-label="الجولة التعريفية" title="الجولة التعريفية"><i data-lucide="map"></i></button>
             <button type="button" class="icon-btn" id="theme-btn" aria-label="تبديل الوضع الليلي"><i data-lucide="moon"></i></button>
             <div class="bell-wrap"><button type="button" class="icon-btn" id="bell-btn" aria-label="التنبيهات" aria-expanded="false" aria-controls="bell-pop"><i data-lucide="bell"></i><span class="badge" id="bell-n" hidden></span></button><div class="bell-pop" id="bell-pop" hidden></div></div>
             <div class="edition" id="edition" role="group" aria-label="النسخة">
@@ -1898,6 +1923,7 @@ body{font-synthesis:weight style}
     <nav class="bnav" id="bnav" aria-label="التنقل السريع"></nav>
     <div id="bar"></div><div id="layer"></div>`;
   const app = document.getElementById('app');
+  document.getElementById('tour-btn').onclick = () => tourMenu();
   /* رسم الأيقونات تلقائيًا لأي محتوى جديد (التحديثات الحية لا تمر دائمًا عبر icons()) */
   let iconFrame = 0;
   new MutationObserver(() => {
@@ -3815,6 +3841,7 @@ body{font-synthesis:weight style}
       <p class="gate-new">ليس لديك حساب؟ <button type="button" class="gate-link strong" id="g-create">الانضمام إلى مدرستي</button></p>
       <p class="gate-new" id="g-signup-p" hidden>مدرسة جديدة؟ <button type="button" class="gate-link strong" id="g-signup">سجّلي مدرستك مجانًا</button></p>`);
     wireEyes(g); icons();
+    tourGateLink();
     const m1 = document.getElementById('g-msg');
     document.getElementById('g-google').onclick = e => { claimOwner = false; googleSignIn(e.currentTarget, m1); };
     document.getElementById('g-create').onclick = () => SOLO ? soloJoin() : gateJoin();
@@ -4142,7 +4169,7 @@ body{font-synthesis:weight style}
     if (!SOLO && LIC && LIC.plan === 'trial' && acct.role === 'admin' && !ss.get('trialNote')) { ss.set('trialNote', '1'); const left = Math.max(0, Math.ceil(((LIC.untilMs || 0) - Date.now()) / dayMs)); setTimeout(() => toast(`تجربة مجانية: تبقّى ${ar(left)} يومًا. للاشتراك تواصلي مع مزوّد المنصة.`, 'info'), 1200); }
     { const h0 = (location.hash || '').replace('#', ''); const base = h0.replace(/^(cat-|pf-).*/, 'cadre');
       if ((h0 === 'admin' && acct.role !== 'admin') || (h0 && NAV.some(n => n.r === base) && !navAllowed(base))) history.replaceState(null, '', location.pathname + location.search + '#home'); }
-    hideGate(); chrome(); renderBar(); route();
+    hideGate(); chrome(); renderBar(); route(); tourAuto();
   }
   async function fbStart(){
     gateLoading();
@@ -5470,6 +5497,260 @@ body{font-synthesis:weight style}
         SETUP.open = ''; SETUP.at = 0; setTimeout(setupPage, 450);
       } catch(e){ b.disabled = false; toast(authMsg(e), 'err'); }
     });
+  }
+
+  /* ================= الجولة التعريفية: إضاءة العنصر + بطاقة شرح، تتنقل بين الصفحات ================= */
+  /* الجولات: login (صفحة الدخول) · admin (المديرة) · ops (الوكيلة) · staff (المنسوبة) + مكتب التوجيه للموجهة.
+     خطوة = {r: صفحة أو دالة تعيدها، el: محدد أو قائمة محددات، t: عنوان، d: شرح، nav: داخل القائمة الجانبية، act: إجراء قبل العرض}
+     العنصر غير الظاهر يُتخطّى، والخطوة بلا عنصر تظهر بطاقة في الوسط. */
+  const TOUR = {on: false, steps: [], i: 0, el: null, raf: 0, navOpened: false, token: 0};
+  const tKey = () => 'tour-seen-' + (acct ? acct.email : 'guest');
+  const isMob = () => innerWidth < 720;
+  const sideHidden = () => { const n = document.getElementById('nav'); if (!n) return false; const r = n.getBoundingClientRect(); return r.right <= 1 || r.left >= innerWidth - 1 || getComputedStyle(n).visibility === 'hidden'; };
+  const visible = e => !!e && e.getClientRects().length > 0 && getComputedStyle(e).visibility !== 'hidden';
+  const pickEl = sel => { if (!sel) return null; for (const s of [].concat(sel)) { const all = document.querySelectorAll(s); for (const e of all) if (visible(e)) return e; } return null; };
+  const curHash = () => (location.hash || '#home').replace(/^#(g-)?/, '') || 'home';
+  const clickTab = txt => () => { const b = [...document.querySelectorAll('#app .tabs button, #app .tabs a')].find(x => x.innerText.trim() === txt); if (b && !b.classList.contains('on')) b.click(); };
+  const firstOf = cat => () => { const on = new Set(((typeof CD !== 'undefined' && CD.members) || []).filter(m => m.active && m.staffId).map(m => m.staffId)), L = (S.staff || []).filter(x => catOf(x.job) === cat); const s = L.find(x => on.has(x.id)) || L[0]; return s ? 'pf-' + s.id : null; };
+
+  /* ---------- المحتوى ---------- */
+  const T_LOGIN = [
+    {t: 'أهلًا بكِ في ' + PLATFORM, d: 'جولة قصيرة تعرّفكِ بطريقة الدخول إلى المنصة وإنشاء حسابكِ لأول مرة. يمكنكِ إيقافها في أي وقت.'},
+    {el: '.gate-brand', t: 'هوية المنصة', d: 'منصة خاصة بمدرستكِ: كل البيانات والحسابات فيها لمنسوبات المدرسة فقط.'},
+    {el: '#g-google', t: 'الدخول بحساب Google (الأسهل)', d: 'اضغطي هنا واختاري حساب Google الخاص بكِ. في أول دخول يُطلب منكِ وضع كلمة مرور لتستخدميها لاحقًا إن أردتِ.'},
+    {el: '#g-email', t: 'البريد الإلكتروني', d: 'إن وضعتِ كلمة مرور من قبل: اكتبي بريدكِ نفسه المرتبط بحساب Google.'},
+    {el: '#g-pass', t: 'كلمة المرور', d: 'اكتبي كلمة المرور، ويمكنكِ إظهارها بأيقونة العين للتأكد منها، ثم اضغطي «تسجيل الدخول».'},
+    {el: '#g-forgot', t: 'نسيتِ كلمة المرور؟', d: 'يصلكِ رابط على بريدكِ لتعيينها من جديد.'},
+    {el: '#g-create', t: 'ليس لديكِ حساب بعد؟', d: 'اضغطي «الانضمام إلى مدرستي»، ثم: ١) اختاري مسماكِ الوظيفي ٢) ادخلي بحساب Google ٣) اختاري اسمكِ من قائمة منسوبات المدرسة ٤) أرسلي الطلب.'},
+    {t: 'بعد إرسال الطلب', d: 'تعتمد مديرة المدرسة حسابكِ وتحدد صلاحياتكِ، فتدخلين مباشرة إلى لوحتكِ الخاصة. وعند أول دخول تبدأ جولة تعرّفكِ بكل صفحاتكِ.'}
+  ];
+  const T_CHROME = [
+    {el: '#nav', nav: true, t: 'القائمة الرئيسية', d: 'كل أقسام المنصة المتاحة لكِ في مكان واحد، ولا يظهر لكِ إلا ما يخص صلاحياتكِ. على الجوال تفتح من زر القائمة.'},
+    {el: '#nav-foot', nav: true, t: 'حسابكِ', d: 'اسمكِ ومسماكِ والبريد المرتبط، وزر «تسجيل الخروج».'},
+    {el: ['#gsearch', '#search-btn'], t: 'البحث السريع', d: 'ابحثي عن أي منسوبة بالاسم أو الرقم الوظيفي، أو عن أي صفحة، وانتقلي إليها مباشرة.'},
+    {el: '#fab', t: 'تسجيل حضور اليوم', d: 'اختصار يفتح سجل الحضور ليوم اليوم بضغطة واحدة.'},
+    {el: '#bell-btn', t: 'التنبيهات', d: 'تنبيهات اليوم: الغياب والتأخر، والتكليفات والملاحظات الجديدة، والطلبات المنتظرة.'},
+    {el: '#theme-btn', t: 'الوضع الليلي', d: 'تبديل ألوان المنصة بين النهاري والليلي لراحة العين.'},
+    {el: '#admin-link', t: 'لوحة التحكم', d: 'إعدادات المنصة كلها: الأقسام، والبيانات، وملف المدرسة، والنسخ الاحتياطي، وحسابات المنسوبات.'},
+    {el: '#tour-btn', t: 'الجولة التعريفية', d: 'من هذا الزر تعيدين الجولة كاملة متى شئتِ، أو تطلبين شرح الصفحة التي أنتِ فيها فقط.'},
+    {el: '#bnav', t: 'شريط التنقل السفلي', d: 'على الجوال: أهم صفحاتكِ في أسفل الشاشة، و«القائمة» تفتح باقي الأقسام.'}
+  ];
+  const T_ADMIN = [
+    {r: 'home', el: '.hb', t: 'الرئيسية: لوحة المدرسة', d: 'نظرة شاملة على المدرسة اليوم. تتحدث الأرقام تلقائيًا مع كل تسجيل.'},
+    {r: 'home', el: '#setup-ban', t: 'تهيئة المدرسة', d: 'بطاقة تبيّن ما بقي من خطوات تجهيز المدرسة، وتختفي بعد إنهاء التهيئة.'},
+    {r: 'home', el: '.hb-stats', t: 'أرقام سريعة', d: 'عدد المنسوبات والطالبات، ومستوى التميز، ونسبة حضور اليوم.'},
+    {r: 'home', el: '.hb-acts', t: 'اختصارات', d: 'تسجيل حضور اليوم، وملف المدرسة، ومجلد ملفات المدرسة في Google Drive.'},
+    {r: 'home', el: '.svc', t: 'خدمات المنصة', d: 'بطاقات صغيرة تفتح كل خدمة: الحضور، والاصطفاف، والتأخر، والإشراف، والمناوبة، والشواهد وغيرها.'},
+    {r: 'home', el: '.d-chart', t: 'الحضور خلال الأسبوع', d: 'مخطط تفاعلي لنسب الحضور. مرّري المؤشر على أي يوم لتظهر تفاصيله، وغيّري المدة من القائمة أعلاه.'},
+    {r: 'home', el: '.d-goal', t: 'مستوى التميز', d: 'نسبة تحقيق مؤشرات الأداء المدرسي، مأخوذة من ملف إنجازات المدرسة.'},
+    {r: 'home', el: '.d-rem', t: 'تذكيرات اليوم', d: 'ما يحتاج متابعة اليوم: سجلات لم تُعبّأ، ومناوبات، وطلبات حسابات.'},
+    {r: 'home', el: '.d-table', t: 'حضور اليوم', d: 'قائمة المنسوبات وحالة كل واحدة اليوم، مع البحث.'},
+    {r: 'home', el: '.d-sched', t: 'جدول اليوم', d: 'الإشراف والمناوبة لهذا اليوم وأسماء المكلفات.'},
+    {r: 'setup', el: '.setup-top', t: 'معالج تهيئة المدرسة', d: 'ثماني خطوات تُكتشف تلقائيًا: بيانات المدرسة، والأسماء، والدوام، وفترة التقييم، ودعوة الكادر، وقبول الطلبات، وملفكِ في Drive، وملف المدرسة.'},
+    {r: 'setup', el: 'ol.steps', t: 'الخطوات', d: 'اضغطي أي خطوة لتفتح نموذجها وتحفظيها مكانها. الخطوة المنجزة تأخذ علامة ✓.'},
+    {r: 'mine', el: '.mf-head', t: 'ملفي', d: 'ملف شواهدكِ أنتِ: بياناتكِ ونسبة اكتمال شواهدكِ.'},
+    {r: 'mine', el: '.mf-drive', t: 'إنشاء الملف في Google Drive', d: 'بضغطة واحدة يُنشأ مجلد باسمكِ في Drive الخاص بكِ، وفيه مجلد لكل عنصر من نموذج تقييمكِ.'},
+    {r: 'mine', el: '.mf-sec', t: 'شواهد كل عنصر', d: 'لكل عنصر من نموذج التقييم زر لرفع الشاهد مباشرة إلى مجلده، مع عدد ما رُفع.'},
+    {r: 'cadre', el: '.cat-grid', t: 'الكادر', d: 'المنسوبات مقسّمات حسب الفئة: القيادة، والوكيلات، والتوجيه، والمعلمات، والإداريات، والمستخدمات.'},
+    {r: 'cat-teacher', el: '.cat-kpis', t: 'ملف الفئة', d: 'إحصاءات الفئة: الحسابات المفعّلة، ومن أنشأت ملفها، ونسب اكتمال الشواهد.'},
+    {r: 'cat-teacher', el: '.ppl', t: 'منسوبات الفئة', d: 'اضغطي أي اسم لفتح ملفها الكامل.'},
+    {r: firstOf('teacher'), el: '.mf-head', t: 'ملف منسوبة', d: 'ملفها وشواهدها كما تراها هي، مع روابط مجلداتها في Drive. وبعد تفعيل حسابها تظهر هنا أدوات التقييم والملاحظات والتكليفات.'},
+    {r: firstOf('teacher'), el: '.adm-tools', t: 'أدوات الإدارة على الملف', d: 'تقييم الأداء (من ١ إلى ٥ لكل عنصر، ويُحسب المجموع تلقائيًا ويُطبع)، وإرسال ملاحظة لها، وإسناد تكليف بموعد تسليم.'},
+    {r: 'evals', el: '.cat-kpis', t: 'التقييم الوظيفي', d: 'متابعة تقييم كل المنسوبات: من لم يبدأ، والمسودات، والمعتمدة.'},
+    {r: 'evals', el: '.tabs', t: 'تصفية الحالات', d: 'اعرضي المنسوبات حسب حالة التقييم.'},
+    {r: 'evals', el: '#ev-csv', t: 'التصدير', d: 'تصدير درجات التقييم إلى ملف Excel.'},
+    {r: 'gc', el: '.pg-head', t: 'مكتب التوجيه الطلابي', d: 'خطة التوجيه وبرامجها، وحالات الطالبات بسرية تامة لا تراها إلا الموجهة والإدارة.'},
+    {r: 'gc', el: '.tabs', t: 'الخطة والحالات', d: 'تبويب للبرامج (وقائي، إنمائي، علاجي) وحالة تنفيذها، وتبويب لحالات الطالبات ومتابعتها.'},
+    {r: 'profile', el: '.pf-hero', t: 'ملف المدرسة', d: 'تعريف المدرسة: الرؤية والرسالة، والبيانات الأساسية، والمبادرات، والتعاميم، والتقارير.'},
+    {r: 'ach', el: '.ach-hero', t: 'إنجازات المدرسة', d: 'الأداء العام، ومستوى التميز، ومؤشرات القمة، والقيم، ونتائج نافس، في عرض جاهز للمشاركة.'},
+    {r: 'staff', el: '.toolbar', t: 'منسوبات المدرسة', d: 'سجل الكادر: الإضافة فردًا أو دفعة واحدة، والبحث والتصفية حسب العمل، والتصدير.'},
+    {r: 'staff', el: '#st-bulk', t: 'إضافة دفعة', d: 'الصقي الأسماء من Excel مرة واحدة بدل الإضافة فردًا فردًا.'},
+    {r: 'staff', el: '.tbl-wrap', t: 'الجدول', d: 'اضغطي أي صف لتعديل بيانات المنسوبة أو حذفها.'},
+    {r: 'att', el: '.tabs', t: 'الحضور والغياب', d: 'السجل اليومي والتقرير الشهري.'},
+    {r: 'att', el: '#dpick', t: 'اختيار اليوم', d: 'انتقلي لأي يوم لتسجيله أو مراجعته.'},
+    {r: 'att', el: '#all-p', t: 'تحضير الجميع', d: 'سجّلي حضور الجميع بضغطة، ثم عدّلي حالات الغياب والتأخر فقط.'},
+    {r: 'att', el: '#att-body', t: 'السجل', d: 'لكل منسوبة: حاضرة، متأخرة، غائبة، أو إجازة/مهمة. يُحفظ تلقائيًا ويصل لكل منسوبة في صفحة «حضوري».'},
+    {r: 'assembly', el: '#as-body', t: 'الاصطفاف الصباحي', d: 'المشرفة، وأعداد الحاضرات والغائبات والمتأخرات، وفقرات الإذاعة، والملاحظات، مع سجل الأيام السابقة.'},
+    {r: 'late', el: '#late-body', t: 'التأخر عن الحصص', d: 'سجّلي التأخر عن الحصص: المنسوبة، والحصة، والدقائق، والسبب، مع تقرير شهري.'},
+    {r: 'sup', el: '#sup-body', t: 'الإشراف اليومي', d: 'جدول الإشراف الأسبوعي لكل موقع، ومتابعة التنفيذ يوميًا. أضيفي المواقع من أسفل الجدول.'},
+    {r: 'duty', el: '#duty-body', t: 'مناوبة بداية الدوام', d: 'المتابعة اليومية للمناوبات وجدول توزيعها. ومثلها «مناوبة نهاية الدوام».'},
+    {r: 'io', el: '.form-cols', t: 'الاستيراد والتصدير', d: 'استيراد المنسوبات من Excel، وتصدير التقارير الشهرية، والنسخ الاحتياطي واستعادته.'},
+    {r: 'ev', el: '.form-pick', t: 'شواهد الأداء الوظيفي', d: 'نماذج التقييم الثمانية لشاغلي الوظائف التعليمية. اختاري النموذج لعرض عناصره.'},
+    {r: 'ev', el: '#sections', t: 'العناصر والمؤشرات', d: 'لكل عنصر: الوزن، ومؤشرات التحقق، وقياس الأثر، ورابط مجلد الشواهد.'},
+    {r: 'admin', el: '.tabs', t: 'لوحة التحكم', d: 'خمسة تبويبات: الأقسام والعناصر، وبيانات المنصة، وملف المدرسة، والنسخ الاحتياطي، والحسابات.'},
+    {r: 'admin', act: clickTab('الحسابات'), el: '#tab', t: 'الحسابات', d: 'طلبات الانضمام بانتظار قبولكِ، والحسابات المفعّلة حسب الفئة. لكل وكيلة تحددين الوحدات اليومية التي تديرها.'},
+    {r: 'admin', act: clickTab('الحسابات'), el: '.invite', t: 'دعوة المنسوبات', d: 'رسالة جاهزة برابط المنصة وخطوات الانضمام، تنسخينها أو ترسلينها عبر واتساب.'}
+  ];
+  const T_PERSONAL = [
+    {r: 'home', el: '.my-hb', t: 'رئيسيتكِ', d: 'ترحيب بكِ، وتاريخ اليوم، ونسبة اكتمال شواهدكِ.'},
+    {r: 'home', el: '.hb-acts', t: 'اختصارات', d: 'رفع شاهد، وتقييمي، وتكليفاتي.'},
+    {r: 'home', el: '.dep-grid', t: 'مهام اليوم', d: 'الوحدات اليومية المسندة إليكِ من الإدارة مع حالة كل منها اليوم.'},
+    {r: 'home', el: '.my-grid', t: 'تذكيراتي', d: 'ما ينتظركِ: تكليفات قريبة الموعد، وملاحظات جديدة من الإدارة.'},
+    {r: 'mine', el: '.mf-head', t: 'ملفي', d: 'ملف شواهدكِ: نموذج تقييمكِ ونسبة الاكتمال.'},
+    {r: 'mine', el: '.mf-drive', t: 'إنشاء ملفكِ في Google Drive', d: 'أول خطوة: اضغطي «إنشاء ملفي» فيُنشأ مجلد باسمكِ في Drive الخاص بكِ، وفيه مجلد لكل عنصر من نموذج تقييمكِ، وتطّلع عليه الإدارة.'},
+    {r: 'mine', el: '.mf-sec', t: 'رفع الشواهد', d: 'لكل عنصر زر «رفع»: اختاري الملف (صورة أو PDF أو غيره) فيُحفظ في مجلد العنصر مباشرة.'},
+    {r: 'myeval', el: '.cat-kpis', t: 'تقييمي وتقدمي', d: 'درجتكِ وتقديركِ بعد أن تعتمد الإدارة التقييم.'},
+    {r: 'myeval', el: '.ev-tbl', t: 'عناصر التقييم', d: 'كل عنصر بوزنه ودرجتكِ فيه، ويمكنكِ طباعة النموذج.'},
+    {r: 'myatt', el: '.cal', t: 'حضوري', d: 'تقويم الشهر بألوان الحالات: حاضرة، متأخرة، غائبة، إجازة أو مهمة.'},
+    {r: 'mytasks', el: '.wk-grid', t: 'جدولي الأسبوعي', d: 'إشرافكِ ومناوباتكِ خلال الأسبوع.'},
+    {r: 'mytasks', el: '.task-list', t: 'المهام المسندة', d: 'التكليفات من الإدارة بموعد التسليم. اكتبي ردّكِ وعلّمي المهمة منجزة.'},
+    {r: 'mynotes', el: '.note-list', t: 'ملاحظات الإدارة', d: 'الملاحظات والشكر الموجه إليكِ من الإدارة، وتُعلَّم مقروءة عند فتحها.'},
+    {r: 'gc', el: '.pg-head', t: 'مكتب التوجيه الطلابي', d: 'خطتكِ وبرامجكِ (وقائي، إنمائي، علاجي) وحالة تنفيذها.'},
+    {r: 'gc', el: '.tabs', t: 'الحالات', d: 'حالات الطالبات ومتابعتها بسرية: لا يراها إلا أنتِ والإدارة.'},
+    {r: 'profile', el: '.pf-hero', t: 'ملف المدرسة', d: 'الرؤية والرسالة وبيانات المدرسة ومبادراتها وتعاميمها.'},
+    {r: 'ach', el: '.ach-hero', t: 'إنجازات المدرسة', d: 'إنجازات المدرسة ومستوى تميزها ونتائج نافس.'},
+    {r: 'ev', el: '.form-pick', t: 'شواهد الأداء الوظيفي', d: 'نموذج تقييمكِ وعناصره ومؤشراته وقياس الأثر لكل عنصر.'}
+  ];
+  const T_OPS = [
+    {r: 'staff', el: '.toolbar', t: 'منسوبات المدرسة', d: 'سجل الكادر: الإضافة والتعديل والتصدير.'},
+    {r: 'att', el: '#att-body', t: 'الحضور والغياب', d: 'سجّلي حضور اليوم، و«تحضير الجميع» يختصر الوقت، ثم عدّلي الحالات المختلفة فقط.'},
+    {r: 'late', el: '#late-body', t: 'التأخر عن الحصص', d: 'تسجيل التأخر عن الحصص مع تقرير شهري.'},
+    {r: 'sup', el: '#sup-body', t: 'الإشراف اليومي', d: 'جدول الإشراف ومتابعة تنفيذه.'},
+    {r: 'assembly', el: '#as-body', t: 'الاصطفاف الصباحي', d: 'تسجيل الاصطفاف وأعداده وفقراته.'},
+    {r: 'duty', el: '#duty-body', t: 'مناوبة بداية الدوام', d: 'متابعة المناوبة وجدولها.'},
+    {r: 'dutyend', el: '#duty-body', t: 'مناوبة نهاية الدوام', d: 'متابعة مناوبة الانصراف وجدولها.'}
+  ];
+  const T_END = {t: 'انتهت الجولة 🎉', d: 'تعرّفتِ على المنصة كلها. يمكنكِ إعادة الجولة أو شرح أي صفحة من زر الخريطة أعلى الشاشة.'};
+  function tourFor(){
+    const R = roleNow(), allowed = s => !s.r || typeof s.r === 'function' || navAllowed(String(s.r).replace(/^cat-.*/, 'cadre'));
+    const intro = {t: 'أهلًا بكِ في ' + PLATFORM, d: (cur().settings.solo && cur().settings.solo.tagline ? '«' + cur().settings.solo.tagline + '». ' : '') + 'جولة تمر بكِ على كل أقسام المنصة المتاحة لكِ، من القائمة والأزرار العلوية إلى تفاصيل كل صفحة. استخدمي «التالي» أو أسهم لوحة المفاتيح.'};
+    let body = R === 'admin' ? T_ADMIN : R === 'ops' ? T_PERSONAL.slice(0, 4).concat(T_OPS, T_PERSONAL.slice(4)) : T_PERSONAL;
+    body = body.filter(allowed);
+    return [intro].concat(T_CHROME, body, [T_END]);
+  }
+
+  /* ---------- المحرك ---------- */
+  function tourUI(){
+    let o = document.getElementById('tour');
+    if (!o) {
+      o = document.createElement('div'); o.id = 'tour'; o.setAttribute('role', 'dialog'); o.setAttribute('aria-modal', 'true'); o.setAttribute('aria-labelledby', 'tr-t');
+      o.innerHTML = `<div class="tr-shade"></div><div class="tr-hole" aria-hidden="true"></div><div class="tr-card"><div class="tr-top"><span class="tr-n" id="tr-n"></span><button type="button" class="tr-x" id="tr-x" aria-label="إنهاء الجولة"><i data-lucide="x"></i></button></div>
+        <h3 id="tr-t"></h3><p id="tr-d"></p><div class="tr-bar"><span id="tr-bar"></span></div>
+        <div class="tr-acts"><button type="button" class="btn btn-ghost btn-sm" id="tr-prev"><i data-lucide="arrow-right"></i>السابق</button><button type="button" class="btn btn-primary btn-sm" id="tr-next">التالي<i data-lucide="arrow-left"></i></button></div></div>`;
+      document.body.appendChild(o); icons();
+      o.querySelector('#tr-x').onclick = () => tourEnd();
+      o.querySelector('#tr-prev').onclick = () => tourGo(-1);
+      o.querySelector('#tr-next').onclick = () => tourGo(1);
+      o.querySelector('.tr-shade').onclick = () => {};
+    }
+    return o;
+  }
+  function tourStart(steps, from){
+    if (!steps || !steps.length) return;
+    TOUR.on = true; TOUR.steps = steps; TOUR.i = from || 0;
+    document.body.classList.add('touring');
+    tourUI(); tourShow(1);
+    addEventListener('resize', tourPlace); addEventListener('scroll', tourPlace, true); addEventListener('keydown', tourKey);
+  }
+  function tourEnd(){
+    TOUR.on = false; TOUR.token++;
+    const o = document.getElementById('tour'); if (o) o.remove();
+    document.body.classList.remove('touring');
+    if (TOUR.navOpened) { setNav(false); TOUR.navOpened = false; }
+    removeEventListener('resize', tourPlace); removeEventListener('scroll', tourPlace, true); removeEventListener('keydown', tourKey);
+    try { localStorage.setItem(tKey(), '1'); } catch(e){}
+  }
+  function tourKey(e){
+    if (!TOUR.on) return;
+    if (e.key === 'Escape') { e.preventDefault(); tourEnd(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'Enter') { e.preventDefault(); tourGo(1); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); tourGo(-1); }
+  }
+  function tourGo(d){ const n = TOUR.i + d; if (n < 0) return; if (n >= TOUR.steps.length) return tourEnd(); TOUR.i = n; tourShow(d); }
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  async function tourShow(dir){
+    const tok = ++TOUR.token, s = TOUR.steps[TOUR.i], o = tourUI();
+    o.classList.add('busy');
+    let route = typeof s.r === 'function' ? s.r() : s.r;
+    if (typeof s.r === 'function' && !route) return tourSkip(dir, tok);
+    if (route && curHash() !== route) { location.hash = '#' + route; await wait(350); }
+    if (tok !== TOUR.token) return;
+    if (s.nav && sideHidden()) { if (!TOUR.navOpened) { setNav(true); TOUR.navOpened = true; await wait(320); } }
+    else if (TOUR.navOpened) { setNav(false); TOUR.navOpened = false; await wait(250); }
+    if (s.act) { try { s.act(); } catch(e){} await wait(300); }
+    let el = null;
+    if (s.el) { for (let k = 0; k < 30 && tok === TOUR.token; k++) { el = pickEl(s.el); if (el) break; await wait(150); } }
+    if (tok !== TOUR.token) return;
+    if (s.el && !el) return tourSkip(dir, tok);
+    TOUR.el = el;
+    if (el && !s.nav) { const r = el.getBoundingClientRect(); const tall = r.height > innerHeight * .6; el.scrollIntoView({block: tall ? 'start' : 'center', behavior: 'smooth'}); await wait(380); }
+    if (tok !== TOUR.token) return;
+    const total = TOUR.steps.length, last = TOUR.i === total - 1;
+    o.querySelector('#tr-n').textContent = ar(TOUR.i + 1) + ' من ' + ar(total);
+    o.querySelector('#tr-t').textContent = s.t;
+    o.querySelector('#tr-d').textContent = s.d;
+    o.querySelector('#tr-bar').style.width = Math.round((TOUR.i + 1) / total * 100) + '%';
+    o.querySelector('#tr-prev').hidden = TOUR.i === 0;
+    const nx = o.querySelector('#tr-next'); nx.innerHTML = last ? '<i data-lucide="check"></i>إنهاء' : 'التالي<i data-lucide="arrow-left"></i>'; icons();
+    o.classList.toggle('center', !el);
+    o.classList.remove('busy');
+    tourPlace();
+    nx.focus({preventScroll: true});
+  }
+  function tourSkip(dir, tok){
+    if (tok !== TOUR.token) return;
+    const n = TOUR.i + (dir < 0 ? -1 : 1);
+    if (n < 0 || n >= TOUR.steps.length) { if (n >= TOUR.steps.length) tourEnd(); else { TOUR.i = 0; tourShow(1); } return; }
+    TOUR.i = n; tourShow(dir);
+  }
+  function tourPlace(){
+    if (!TOUR.on) return;
+    cancelAnimationFrame(TOUR.raf);
+    TOUR.raf = requestAnimationFrame(() => {
+      const o = document.getElementById('tour'); if (!o) return;
+      const hole = o.querySelector('.tr-hole'), card = o.querySelector('.tr-card'), el = TOUR.el;
+      if (!el || !visible(el)) { hole.style.cssText = 'display:none'; card.style.cssText = ''; return; }
+      const p = 6, r = el.getBoundingClientRect(), vw = innerWidth, vh = innerHeight;
+      const x = Math.max(4, r.left - p), y = Math.max(4, r.top - p), w = Math.min(vw - 8, r.right + p) - x, h = Math.min(vh - 8, r.bottom + p) - y;
+      hole.style.cssText = `display:block;left:${x}px;top:${y}px;width:${w}px;height:${h}px`;
+      if (isMob()) { card.style.cssText = ''; card.classList.add('sheet'); const ch = card.offsetHeight; card.classList.toggle('top', y + h > vh - ch - 20 && y > ch + 30); return; }
+      card.classList.remove('sheet', 'top');
+      const cw = card.offsetWidth, ch = card.offsetHeight, gap = 14;
+      let top, left;
+      if (y + h + gap + ch < vh) top = y + h + gap; else if (y - gap - ch > 0) top = y - gap - ch; else top = Math.max(12, Math.min(vh - ch - 12, y + h / 2 - ch / 2));
+      left = x + w - cw; /* محاذاة يمين العنصر (RTL) */
+      if (top > y && top < y + h) left = x - cw - gap < 12 ? x + w + gap : x - cw - gap; /* بجانبه عند ضيق المساحة */
+      left = Math.max(12, Math.min(vw - cw - 12, left));
+      card.style.cssText = `top:${Math.round(top)}px;left:${Math.round(left)}px`;
+    });
+  }
+  /* اختيار نوع الجولة من زر الخريطة */
+  function tourMenu(){
+    const h = curHash(), pg = h.startsWith('pf-') ? 'pf' : h;
+    const all = tourFor(), page = all.filter(s => { const r = typeof s.r === 'function' ? s.r() : s.r; return r && (r === h || (pg === 'pf' && String(r).startsWith('pf-'))); });
+    const o = tourUI(); TOUR.on = true; TOUR.steps = [{}]; TOUR.i = 0; TOUR.el = null; TOUR.token++;
+    document.body.classList.add('touring'); addEventListener('keydown', tourKey);
+    o.classList.add('center'); o.classList.remove('busy');
+    o.querySelector('.tr-hole').style.cssText = 'display:none';
+    o.querySelector('.tr-card').style.cssText = ''; o.querySelector('.tr-card').classList.remove('sheet', 'top');
+    o.querySelector('#tr-n').textContent = 'الجولة التعريفية';
+    o.querySelector('#tr-t').textContent = PLATFORM;
+    o.querySelector('#tr-d').innerHTML = 'اختاري ما تريدين:';
+    o.querySelector('#tr-bar').style.width = '0';
+    o.querySelector('#tr-prev').hidden = true;
+    const nx = o.querySelector('#tr-next'); nx.innerHTML = '<i data-lucide="map"></i>الجولة الكاملة';
+    nx.onclick = () => { nx.onclick = () => tourGo(1); tourStart(all, 0); };
+    let pb = o.querySelector('#tr-page');
+    if (page.length) {
+      if (!pb) { pb = document.createElement('button'); pb.type = 'button'; pb.id = 'tr-page'; pb.className = 'btn btn-ghost btn-sm'; nx.before(pb); }
+      pb.hidden = false; pb.innerHTML = '<i data-lucide="file-search"></i>شرح هذه الصفحة';
+      pb.onclick = () => { pb.hidden = true; nx.onclick = () => tourGo(1); tourStart(page.concat([{t: 'انتهى شرح الصفحة', d: 'يمكنكِ طلب شرح أي صفحة أخرى، أو الجولة الكاملة، من زر الخريطة أعلى الشاشة.'}]), 0); };
+    } else if (pb) pb.hidden = true;
+    icons(); nx.focus();
+  }
+  /* عرض الجولة تلقائيًا أول مرة لكل حساب */
+  function tourAuto(){
+    if (!acct || (acct.super && !SID)) return;
+    let seen = false; try { seen = !!localStorage.getItem(tKey()); } catch(e){ seen = true; }
+    if (seen || TOUR.on) return;
+    setTimeout(() => { if (!TOUR.on && !document.getElementById('gate')) tourStart(tourFor(), 0); }, 1200);
+  }
+  /* جولة صفحة الدخول: رابط أسفل نافذة الدخول */
+  function tourGateLink(){
+    const g = document.getElementById('gate'); if (!g || !g.querySelector('#g-login') || g.querySelector('#g-tour')) return;
+    const p = document.createElement('p'); p.className = 'gate-new'; p.innerHTML = '<button type="button" class="gate-link" id="g-tour"><i data-lucide="map"></i> جولة تعريفية بطريقة الدخول</button>';
+    g.querySelector('.gate-body').appendChild(p); icons();
+    p.querySelector('button').onclick = () => tourStart(T_LOGIN, 0);
   }
 
   /* ---------- التوجيه ---------- */
