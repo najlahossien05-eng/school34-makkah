@@ -1702,6 +1702,31 @@ body.gated{overflow:hidden}
 .dev-school-h{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:16px;border-top:2px dashed var(--line)}
 .dev-school-h h2{display:flex;align-items:center;gap:8px;font-size:19px;color:var(--petrol)}
 .sg-list{margin:0 0 12px;padding-inline-start:18px;color:var(--muted);font-size:13.5px;line-height:1.9}
+/* ===== معالج تهيئة المدرسة ===== */
+.setup-ban{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--card,#fff);border:1px solid var(--line,#dfe7e8);border-inline-start:5px solid var(--teal);border-radius:16px;padding:12px 16px;margin:0 0 14px;color:inherit;text-decoration:none;box-shadow:0 4px 16px rgba(0,70,80,.06)}
+.setup-ban>div{flex:1;min-width:160px;display:flex;flex-direction:column;gap:2px}
+.setup-ban small,.setup-top small{color:var(--muted,#5b6b6e)}
+.sb-ring{--p:0;width:54px;height:54px;border-radius:50%;flex:none;display:grid;place-items:center;background:conic-gradient(var(--teal) calc(var(--p)*1%),var(--soft,#e9f3f3) 0)}
+.sb-ring b{width:42px;height:42px;border-radius:50%;background:var(--card,#fff);display:grid;place-items:center;font-size:13px;color:var(--petrol)}
+.sb-ring.lg{width:72px;height:72px}.sb-ring.lg b{width:56px;height:56px;font-size:16px}
+.setup-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--card,#fff);border:1px solid var(--line,#dfe7e8);border-radius:18px;padding:16px;margin-bottom:14px}
+.setup-top>div{flex:1;min-width:180px;display:flex;flex-direction:column;gap:3px}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.step{background:var(--card,#fff);border:1px solid var(--line,#dfe7e8);border-radius:16px;overflow:hidden}
+.step.on{border-color:var(--teal);box-shadow:0 6px 20px rgba(0,110,120,.08)}
+.step-h{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer}
+.step-h:focus-visible{outline:2px solid var(--teal);outline-offset:-2px}
+.step-n{width:34px;height:34px;border-radius:50%;flex:none;display:grid;place-items:center;background:var(--soft,#e9f3f3);color:var(--petrol);font-weight:700}
+.step.ok .step-n{background:var(--teal);color:#fff}.step-n svg{width:18px;height:18px}
+.step-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.step-t small{color:var(--muted,#5b6b6e);font-size:13px}
+.step.ok .step-t b{color:var(--teal)}
+.step-c{width:18px;height:18px;transition:transform .2s;color:var(--muted,#5b6b6e)}.step.on .step-c{transform:rotate(180deg)}
+.step-b{padding:0 16px}.step.on .step-b{padding:4px 16px 16px;border-top:1px solid var(--line,#dfe7e8)}
+.su-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.inv-grid{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start}
+.qr-mini{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}.qr-mini small{color:var(--muted,#5b6b6e);font-size:12px;max-width:150px}
+.qr-mini #su-qr canvas,.qr-mini #su-qr img,.qr-mini #su-qr svg{width:140px!important;height:140px!important}
+@media (max-width:640px){.inv-grid{grid-template-columns:1fr}.setup-ban .btn{width:100%;justify-content:center}}
 
 /* ===== الخط: سكالا مجالا (من جهاز المستخدم) مع بديل Noto Naskh Arabic ===== */
 /* سكالا مجالا يظهر أصغر من غيره بالحجم نفسه، فيُكبَّر بـ size-adjust دون تغيير بقية الأحجام */
@@ -1814,6 +1839,7 @@ body{font-synthesis:weight style}
     {r: 'mytasks', t: 'تكليفاتي', i: 'list-checks'},
     {r: 'mynotes', t: 'ملاحظات الإدارة', i: 'message-square-text'},
     {r: 'gc', t: 'مكتب التوجيه', i: 'compass'},
+    {r: 'setup', t: 'تهيئة المدرسة', i: 'list-checks'},
     {r: 'dev', t: 'لوحة المطوّر', i: 'shield-half'},
     {r: 'profile', t: 'ملف المدرسة', i: 'school'},
     {r: 'ach', t: 'إنجازات المدرسة', i: 'trophy'},
@@ -2726,7 +2752,7 @@ body{font-synthesis:weight style}
       ['ev', 'award', 'شواهد الأداء', 'c2'], ['io', 'arrow-down-up', 'استيراد وتصدير', 'c3']
     ];
     const svcTile = ([r, i, l, c]) => `<a class="svc-t ${c}" href="#${hashFor(r)}"><span class="svc-i"><i data-lucide="${i}"></i></span><span class="svc-l">${l}</span></a>`;
-    app.innerHTML = `<div class="wrap page dash2">
+    app.innerHTML = `<div class="wrap page dash2">${typeof setupBanner === 'function' ? setupBanner() : ''}
       <section class="hb" aria-label="الواجهة الرئيسية">
         ${cur().settings.badge ? `<span class="hb-num" aria-hidden="true">${esc(cur().settings.badge)}</span>` : ''}
         <div class="hb-top">
@@ -4490,6 +4516,7 @@ body{font-synthesis:weight style}
   const OPS_PAGES = ['staff', 'att', 'assembly', 'late', 'sup', 'duty', 'dutyend', 'io'];
   function navAllowed(r){
     if (r === 'dev') return !!(acct && acct.super);
+    if (r === 'setup') return typeof setupOn === 'function' && !!setupOn();
     const R = roleNow();
     if (R === 'local' || R === 'none') return !['mine', 'cadre', 'evals', 'gc', ...MY_PAGES].includes(r);
     if (R === 'admin') return !MY_PAGES.includes(r);
@@ -4786,7 +4813,7 @@ body{font-synthesis:weight style}
     try { notes = (await SD.collection('notes').where('email', '==', e).get()).docs.map(d => ({id: d.id, ...d.data()})).sort((a, b) => a.at < b.at ? 1 : -1); } catch(er){}
     try { tasks = (await SD.collection('tasks').where('email', '==', e).get()).docs.map(d => ({id: d.id, ...d.data()})).sort((a, b) => a.at < b.at ? 1 : -1); } catch(er){}
     const sc = clone((ev && ev.scores) || {});
-    const term = (ev && ev.term) || 'الفصل الدراسي الأول ' + (cur().settings.year || '');
+    const term = (ev && ev.term) || cfg().evalTerm || 'الفصل الدراسي الأول ' + (cur().settings.year || '');
     const box = document.createElement('div'); box.className = 'stack adm-tools';
     box.innerHTML = `
       ${items.length ? `<section class="panel eval-p"><h2><i data-lucide="star"></i>تقييم الأداء <span class="spill ${ev && ev.status === 'published' ? 'ok' : ev ? 'wait' : 'none'}">${ev && ev.status === 'published' ? 'معتمد ومنشور' : ev ? 'مسودة' : 'لم يبدأ'}</span></h2>
@@ -5171,6 +5198,170 @@ body{font-synthesis:weight style}
     });
   }
 
+  /* ================= معالج تهيئة المدرسة (SaaS) — #setup ================= */
+  /* خطوات تُكتشف تلقائيًا من بيانات المدرسة، وتظهر بطاقتها في رئيسية الإدارة حتى تكتمل */
+  const SETUP = {cache: null, at: 0, busy: false, open: ''};
+  const STEPS = [
+    {k: 'school', t: 'بيانات المدرسة', i: 'school', d: 'الاسم والمرحلة والنوع وإدارة التعليم والمدينة واسم المدير/المديرة.'},
+    {k: 'staff', t: 'أسماء المنسوبات', i: 'users', d: 'أضيفي الكادر مرة واحدة؛ منها تُبنى قائمة التسجيل والحضور والتقييم.'},
+    {k: 'sched', t: 'الدوام والإشراف', i: 'clock', d: 'بداية الدوام ونهايته، وعدد الحصص، ومواقع الإشراف اليومي.'},
+    {k: 'term', t: 'فترة التقييم', i: 'star', d: 'اسم فترة التقييم الحالية، وآخر موعد لرفع الشواهد.'},
+    {k: 'invite', t: 'دعوة الكادر', i: 'send', d: 'رابط المدرسة ورمزها ورسالة جاهزة للواتساب.'},
+    {k: 'approve', t: 'قبول الطلبات', i: 'user-check', d: 'اعتماد حسابات المنسوبات وتحديد صلاحياتهن.'},
+    {k: 'drive', t: 'ملفي في Google Drive', i: 'folder-open', d: 'إنشاء ملف شواهدك أنتِ لعناصر نموذج تقييمك.'},
+    {k: 'profile', t: 'ملف المدرسة (اختياري)', i: 'id-card', d: 'الرؤية والرسالة وأعداد الطالبات والإنجازات.', opt: true}
+  ];
+  const setupOn = () => useFb && acct && acct.role === 'admin' && !acct.super || (useFb && acct && acct.super && SID);
+  async function loadSetup(force){
+    if (!fb || !acct || !SID) return null;
+    if (!force && SETUP.cache && Date.now() - SETUP.at < 30000) return SETUP.cache;
+    if (SETUP.busy) return SETUP.cache; SETUP.busy = true;
+    const c = {pending: 0, active: 0, drive: false};
+    try { const m = await SD.collection('members').get(); m.docs.forEach(d => { const x = d.data(); if (x.active) c.active++; else if (x.status === 'pending') c.pending++; }); } catch(e){}
+    try { c.drive = (await SD.doc('files/' + acct.email).get()).exists; } catch(e){}
+    SETUP.cache = c; SETUP.at = Date.now(); SETUP.busy = false; return c;
+  }
+  function stepDone(k){
+    const sc = SCHOOL || {}, cf = cfg(), c = SETUP.cache || {}, P = SP();
+    return ({
+      school: !!(sc.name && sc.office && sc.city && sc.principal),
+      staff: S.staff.length > 0,
+      sched: !!(S.cfg && S.cfg.startTime && S.cfg.schedSet),
+      term: !!cf.evalTerm,
+      invite: !!cf.invitedAt || (c.active + c.pending) > 0,
+      approve: (c.active || 0) > 0,
+      drive: !!c.drive,
+      profile: !!(cf.profileSkip || P.vision || P.about || (P.info || []).some(r => r.k === 'عدد الطالبات' && r.v))
+    })[k];
+  }
+  const reqSteps = () => STEPS.filter(s => !s.opt);
+  function setupBanner(){
+    if (!setupOn() || cfg().setupDone) return '';
+    if (!SETUP.cache && !SETUP.req) { SETUP.req = true; loadSetup().then(c => { if (c && (location.hash || '#home').replace(/^#(g-)?/, '') === 'home' && document.getElementById('setup-ban')) dash(true); }); }
+    const done = STEPS.filter(s => stepDone(s.k)).length, next = STEPS.find(s => !stepDone(s.k));
+    if (!next) return '';
+    return `<a class="setup-ban" id="setup-ban" href="#setup"><span class="sb-ring" style="--p:${Math.round(done / STEPS.length * 100)}"><b>${ar(done)}/${ar(STEPS.length)}</b></span>
+      <div><b>أكملي تهيئة المدرسة</b><small>الخطوة التالية: ${esc(next.t)}</small></div><span class="btn btn-primary btn-sm">متابعة التهيئة<i data-lucide="arrow-left"></i></span></a>`;
+  }
+  /* تحويل نص المسمى (من Excel) إلى المسمى الرسمي */
+  function jobFromText(t){
+    const x = String(t || '').trim(); if (!x) return '';
+    const has = (...w) => w.some(s => x.includes(s));
+    if (has('مدير')) return JOBS[0];
+    if (has('وكيل') && has('تعليم')) return JOBS[1];
+    if (has('وكيل') && has('طالب', 'طلاب')) return JOBS[2];
+    if (has('وكيل')) return JOBS[3];
+    if (has('موجه') && has('صح')) return '{الموجه الصحي|الموجهة الصحية}';
+    if (has('موجه', 'مرشد')) return '{الموجه الطلابي|الموجهة الطلابية}';
+    if (has('رياض')) return 'معلمة رياض الأطفال';
+    if (has('محضر', 'مختبر')) return '{محضر|محضرة} مختبر';
+    if (has('نشاط')) return '{رائد|رائدة} النشاط';
+    if (has('مصادر')) return '{أمين|أمينة} مصادر التعلم';
+    if (has('مسجل')) return '{مسجل|مسجلة} معلومات';
+    if (has('إداري', 'اداري', 'كاتب')) return '{المساعد الإداري|المساعدة الإدارية}';
+    if (has('حارس')) return 'حارس';
+    if (has('مستخدم', 'عامل', 'خدمات')) return '{عامل|عاملة} خدمات';
+    if (has('مساعد')) return has('إعاقة', 'اعاقة') ? JOBS[12] : JOBS[8];
+    if (has('إعاقة', 'اعاقة', 'تربية خاصة')) return JOBS[9];
+    if (has('موهوب')) return JOBS[10];
+    if (has('ممارس')) return JOBS[5];
+    if (has('متقدم')) return JOBS[6];
+    if (has('خبير')) return JOBS[7];
+    if (has('معلم')) return '{معلم|معلمة}';
+    return '';
+  }
+  async function setupPage(){
+    if (!setupOn()) { app.innerHTML = pageWrap('<div class="panel lock-panel"><i data-lucide="lock-keyhole"></i><div><h2>للإدارة فقط</h2><p>تهيئة المدرسة متاحة لمديرة المدرسة.</p></div></div>'); icons(); return; }
+    if (!S.staffReady) { app.innerHTML = loading('جارٍ تحميل بيانات المدرسة…'); setTimeout(() => location.hash === '#setup' && setupPage(), 800); return; }
+    await loadSetup(true);
+    const done = STEPS.filter(s => stepDone(s.k)).length, allReq = reqSteps().every(s => stepDone(s.k));
+    const open = SETUP.open || (STEPS.find(s => !stepDone(s.k)) || {}).k || '';
+    const sc = SCHOOL || {}, cf = cfg(), c = SETUP.cache || {};
+    const url = (location.origin + location.pathname).replace(/#.*$/, '') + (sc.code ? '?s=' + sc.code : '');
+    const inviteTxt = `السلام عليكم ورحمة الله\nمنصة ${sc.name || 'المدرسة'} لإدارة المدرسة والأداء الوظيفي:\n${url}\nرمز المدرسة: ${sc.code || ''}\n١) افتحي الرابط واضغطي «الانضمام إلى مدرستي».\n٢) اختاري مسماك، وادخلي بحساب Google، واختاري اسمك، وأرسلي الطلب.\n٣) بعد القبول افتحي «ملفي» وأنشئي ملفك في Google Drive، ثم ارفعي شواهدك.`;
+    const body = k => {
+      if (k === 'school') return `<div class="row2"><div class="field"><label for="su-name">اسم المدرسة</label><input class="in" id="su-name" value="${esc(sc.name || '')}"></div>
+          <div class="field"><label for="su-pr">اسم المدير / المديرة</label><input class="in" id="su-pr" value="${esc(sc.principal || '')}"></div></div>
+        <div class="row2"><div class="field"><label for="su-stage">المرحلة</label><select class="in" id="su-stage">${['رياض الأطفال', 'ابتدائي', 'متوسط', 'ثانوي', 'مجمع'].map(x => `<option ${x === sc.stage ? 'selected' : ''}>${x}</option>`).join('')}</select></div>
+          <div class="field"><label for="su-gender">نوع المدرسة</label><select class="in" id="su-gender"><option value="f" ${sc.gender !== 'm' ? 'selected' : ''}>بنات</option><option value="m" ${sc.gender === 'm' ? 'selected' : ''}>بنين</option></select></div></div>
+        <div class="row2"><div class="field"><label for="su-office">إدارة التعليم</label><input class="in" id="su-office" value="${esc(sc.office || sc.region || '')}"></div>
+          <div class="field"><label for="su-city">المدينة</label><input class="in" id="su-city" value="${esc(sc.city || '')}"></div></div>
+        <button type="button" class="btn btn-primary btn-sm" data-save="school"><i data-lucide="save"></i>حفظ بيانات المدرسة</button>`;
+      if (k === 'staff') return `<p class="muted">المضاف حاليًا: <b>${ar(S.staff.length)}</b> منسوبة. ${S.staff.length ? `<a href="#staff">عرض القائمة وتعديلها</a>` : ''}</p>
+        <div class="field"><label for="su-names">الصقي الأسماء (كل اسم في سطر)</label><textarea class="in" id="su-names" style="min-height:150px" placeholder="سمر أحمد الزهراني\tمعلمة\nنادية سعد الصبحي\tوكيلة الشؤون التعليمية\nلطيفة محسن النفيعي\tموجهة طلابية"></textarea>
+          <span class="hint">يمكن لصق عمودين من Excel: الاسم ثم المسمى. إن لم يُكتب المسمى يُستخدم المسمى الافتراضي.</span></div>
+        <div class="row2"><div class="field"><label for="su-job">المسمى الافتراضي</label><select class="in" id="su-job">${JOBS.map(j => `<option value="${esc(j)}" ${j === DEF_JOB ? 'selected' : ''}>${esc(g(j))}</option>`).join('')}</select></div>
+          <div class="field"><span class="lbl">&nbsp;</span><div id="su-prev" class="muted">—</div></div></div>
+        <div class="su-acts"><button type="button" class="btn btn-primary btn-sm" data-save="staff"><i data-lucide="user-plus"></i>إضافة الأسماء</button><a class="btn btn-ghost btn-sm" href="#io"><i data-lucide="file-spreadsheet"></i>استيراد من ملف Excel</a></div><div id="su-staff-msg"></div>`;
+      if (k === 'sched') return `<div class="row2"><div class="field"><label for="su-start">بداية الدوام</label><input class="in" id="su-start" type="time" value="${esc(cf.startTime || '06:45')}"></div>
+          <div class="field"><label for="su-end">نهاية الدوام</label><input class="in" id="su-end" type="time" value="${esc(cf.endTime || '12:30')}"></div></div>
+        <div class="row2"><div class="field"><label for="su-periods">عدد الحصص</label><input class="in" id="su-periods" type="number" min="1" max="10" value="${esc(cf.periods || 7)}"></div>
+          <div class="field"><label for="su-slots">مواقع الإشراف اليومي (افصلي بفاصلة)</label><input class="in" id="su-slots" value="${esc((cf.slots || []).map(s => s.name).join('، '))}"></div></div>
+        <div class="su-acts"><button type="button" class="btn btn-primary btn-sm" data-save="sched"><i data-lucide="save"></i>حفظ الدوام</button><a class="btn btn-ghost btn-sm" href="#sup"><i data-lucide="calendar-days"></i>توزيع الإشراف</a><a class="btn btn-ghost btn-sm" href="#duty"><i data-lucide="door-open"></i>توزيع المناوبة</a></div>`;
+      if (k === 'term') return `<div class="row2"><div class="field"><label for="su-term">فترة التقييم الحالية</label><input class="in" id="su-term" value="${esc(cf.evalTerm || 'الفصل الدراسي الأول ' + (cur().settings.year || ''))}"></div>
+          <div class="field"><label for="su-due">آخر موعد لرفع الشواهد (اختياري)</label><input class="in" id="su-due" type="date" value="${esc(cf.evidenceDue || '')}"></div></div>
+        <p class="hint">تظهر الفترة تلقائيًا في نماذج التقييم، والموعد يظهر للمنسوبات في رئيسيتهن.</p>
+        <button type="button" class="btn btn-primary btn-sm" data-save="term"><i data-lucide="save"></i>حفظ فترة التقييم</button>`;
+      if (k === 'invite') return `<div class="inv-grid"><div><div class="act-code"><span class="ltr">${esc(sc.code || '—')}</span></div><p class="muted">رمز المدرسة · الرابط: <span class="ltr">${esc(url)}</span></p>
+          <textarea class="in" id="su-inv" readonly style="min-height:150px">${esc(inviteTxt)}</textarea>
+          <div class="su-acts"><button type="button" class="btn btn-ghost btn-sm" id="su-copy"><i data-lucide="copy"></i>نسخ الرسالة</button><a class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(inviteTxt)}" id="su-wa"><i data-lucide="message-circle"></i>إرسال عبر واتساب</a>
+          <button type="button" class="btn btn-primary btn-sm" data-save="invite"><i data-lucide="check"></i>أرسلتُ الدعوة</button></div></div>
+          <div class="qr-mini" data-qr-wrap><div id="su-qr"></div><small>رمز QR للصقه في غرفة المعلمات</small></div></div>`;
+      if (k === 'approve') return `<p class="muted">طلبات بانتظار القبول: <b>${ar(c.pending || 0)}</b> · حسابات مفعّلة: <b>${ar(c.active || 0)}</b></p>
+        <div class="su-acts"><a class="btn btn-primary btn-sm" href="#admin" id="su-users"><i data-lucide="user-check"></i>مراجعة الطلبات</a><button type="button" class="btn btn-ghost btn-sm" data-refresh><i data-lucide="refresh-cw"></i>تحديث</button></div>`;
+      if (k === 'drive') return `<p class="muted">يُنشأ مجلد باسمك في Google Drive الخاص بك، وفيه مجلد لكل عنصر من نموذج تقييمك.</p><a class="btn btn-primary btn-sm" href="#mine"><i data-lucide="folder-plus"></i>فتح «ملفي»</a>`;
+      if (k === 'profile') return `<p class="muted">يمكن استكماله لاحقًا في أي وقت.</p><div class="su-acts"><a class="btn btn-primary btn-sm" href="#admin" id="su-prof"><i data-lucide="pencil"></i>تعبئة ملف المدرسة</a><button type="button" class="btn btn-ghost btn-sm" data-save="profileSkip">لاحقًا</button></div>`;
+      return '';
+    };
+    app.innerHTML = pageWrap(`
+      ${pageHead('تهيئة المدرسة', 'list-checks', 'خطوات قصيرة لتجهيز المدرسة قبل دعوة الكادر. تُحفظ كل خطوة فور إنجازها، ويمكنك العودة إليها في أي وقت.')}
+      <section class="setup-top"><span class="sb-ring lg" style="--p:${Math.round(done / STEPS.length * 100)}"><b>${ar(done)}/${ar(STEPS.length)}</b></span>
+        <div><b>${allReq ? 'اكتملت الخطوات الأساسية 🎉' : 'تقدّم التهيئة'}</b><small>${allReq ? 'المدرسة جاهزة. يمكنك إخفاء بطاقة التهيئة من الرئيسية.' : `الخطوة التالية: ${esc((STEPS.find(s => !stepDone(s.k)) || {}).t || '')}`}</small></div>
+        ${allReq ? '<button type="button" class="btn btn-primary btn-sm" data-save="finish"><i data-lucide="check-check"></i>إنهاء التهيئة</button>' : ''}</section>
+      <ol class="steps">${STEPS.map((s, i) => { const ok = stepDone(s.k), on = s.k === open;
+        return `<li class="step${ok ? ' ok' : ''}${on ? ' on' : ''}" data-step="${s.k}"><button type="button" class="step-h" aria-expanded="${on}"><span class="step-n">${ok ? '<i data-lucide="check"></i>' : ar(i + 1)}</span><span class="step-t"><b>${s.t}</b><small>${s.d}</small></span><i data-lucide="chevron-down" class="step-c"></i></button>
+          <div class="step-b">${on ? body(s.k) : ''}</div></li>`; }).join('')}</ol>`);
+    icons();
+    app.querySelectorAll('.step-h').forEach(b => b.onclick = () => { const k = b.closest('[data-step]').dataset.step; SETUP.open = SETUP.open === k ? '-' : k; setupPage(); });
+    const qrEl = document.getElementById('su-qr'); if (qrEl) qr(qrEl, url);
+    const cp = document.getElementById('su-copy'); if (cp) cp.onclick = () => { const t = document.getElementById('su-inv'); navigator.clipboard.writeText(t.value).then(() => toast('نُسخت الرسالة.', 'ok'), () => t.select()); };
+    ['su-users', 'su-prof'].forEach(id => { const a = document.getElementById(id); if (a) a.onclick = () => { adminTab = id === 'su-users' ? 'users' : 'school'; }; });
+    const rf = app.querySelector('[data-refresh]'); if (rf) rf.onclick = () => { SETUP.at = 0; setupPage(); };
+    const names = document.getElementById('su-names');
+    const parse = () => (names ? names.value : '').split(/\r?\n/).map(l => l.trim()).filter(Boolean).map(l => { const parts = l.split(/\t|\s*[،,;|]\s*|\s+-\s+/).map(x => x.trim()).filter(Boolean); const nm = parts[0] || '', jb = jobFromText(parts.slice(1).join(' ')); return {name: nm, job: jb}; }).filter(x => x.name.length >= 3);
+    if (names) names.oninput = () => { const L = parse(), exist = new Set(S.staff.map(s => s.name.trim())); const nw = L.filter(x => !exist.has(x.name)); document.getElementById('su-prev').innerHTML = L.length ? `${ar(nw.length)} اسمًا جديدًا${L.length - nw.length ? ` · ${ar(L.length - nw.length)} موجود مسبقًا` : ''} · ${ar(L.filter(x => x.job).length)} بمسمى من النص` : '—'; };
+    app.querySelectorAll('[data-save]').forEach(b => b.onclick = async () => {
+      const k = b.dataset.save, v = id => (document.getElementById(id) || {}).value;
+      b.disabled = true;
+      try {
+        if (k === 'school') {
+          const upd = {name: v('su-name').trim(), principal: v('su-pr').trim(), stage: v('su-stage'), gender: v('su-gender'), office: v('su-office').trim(), region: v('su-office').trim(), city: v('su-city').trim()};
+          if (upd.name.length < 4) { toast('اكتبي اسم المدرسة.', 'err'); b.disabled = false; return; }
+          await fb.fs.doc('schools/' + SID).update(upd); Object.assign(SCHOOL, upd); applySchool(SCHOOL);
+          if (upd.principal) cur().settings.person = upd.principal; chrome(); toast('حُفظت بيانات المدرسة.', 'ok');
+        }
+        if (k === 'staff') {
+          const exist = new Set(S.staff.map(s => s.name.trim())), L = parse().filter(x => !exist.has(x.name)), def = v('su-job');
+          if (!L.length) { toast('لا توجد أسماء جديدة للإضافة.', 'err'); b.disabled = false; return; }
+          const msg = document.getElementById('su-staff-msg'), base = S.staff.length; let n = 0;
+          for (const x of L) { if (await put('staff/' + db.collection('staff').doc().id, {name: x.name, job: x.job || def, subject: '', phone: '', order: base + n + 1})) n++; else break; if (msg) msg.innerHTML = `<div class="msg info">أُضيف ${ar(n)} من ${ar(L.length)}…</div>`; }
+          toast(`أُضيفت ${ar(n)} منسوبة.`, 'ok');
+        }
+        if (k === 'sched') {
+          const slots = v('su-slots').split(/[،,]/).map(s => s.trim()).filter(Boolean);
+          saveCfg(c => { c.startTime = v('su-start'); c.endTime = v('su-end'); c.periods = Math.max(1, Math.min(10, +v('su-periods') || 7)); c.schedSet = true;
+            c.slots = slots.map((nm, i) => (c.slots || []).find(s => s.name === nm) || {id: 's' + Date.now().toString(36) + i, name: nm}); });
+          toast('حُفظ الدوام.', 'ok');
+        }
+        if (k === 'term') { saveCfg(c => { c.evalTerm = v('su-term').trim(); c.evidenceDue = v('su-due'); }); toast('حُفظت فترة التقييم.', 'ok'); }
+        if (k === 'invite') saveCfg(c => { c.invitedAt = new Date().toISOString(); });
+        if (k === 'profileSkip') saveCfg(c => { c.profileSkip = true; });
+        if (k === 'finish') { saveCfg(c => { c.setupDone = true; }); toast('اكتملت تهيئة المدرسة.', 'ok'); setTimeout(() => { location.hash = '#home'; }, 600); return; }
+        SETUP.open = ''; SETUP.at = 0; setTimeout(setupPage, 450);
+      } catch(e){ b.disabled = false; toast(authMsg(e), 'err'); }
+    });
+  }
+
   /* ---------- التوجيه ---------- */
   function route(){
     let h = (location.hash || '').replace('#', '');
@@ -5181,7 +5372,7 @@ body{font-synthesis:weight style}
     const old = /^e(\d{1,2})$/.exec(h); if (old) h = 'i' + old[1];
     if (!h) h = 'home';
     const school = SCHOOL_ROUTES.includes(h);
-    const pg = h === 'profile' || h === 'ach' || h === 'mine' || h === 'cadre' || ['evals', 'myeval', 'myatt', 'mytasks', 'mynotes', 'gc', 'dev'].includes(h) || /^cat-[a-z]+$/.test(h) || /^pf-[\w-]+$/.test(h);
+    const pg = h === 'profile' || h === 'ach' || h === 'mine' || h === 'cadre' || ['evals', 'myeval', 'myatt', 'mytasks', 'mynotes', 'gc', 'dev', 'setup'].includes(h) || /^cat-[a-z]+$/.test(h) || /^pf-[\w-]+$/.test(h);
     const item = !school && !pg && h !== 'admin' && h !== 'ev' && /^[a-z][a-z0-9]{1,24}$/.test(h);
     activeRoute = (school || item || pg || h === 'admin' || h === 'ev') ? h : 'home';
     chrome();
@@ -5199,6 +5390,7 @@ body{font-synthesis:weight style}
     else if (h === 'mynotes') myNotesPage();
     else if (h === 'gc') gcPage();
     else if (h === 'dev') devPage();
+    else if (h === 'setup') setupPage();
     else if (h.startsWith('cat-')) catPage(h.slice(4));
     else if (h.startsWith('pf-')) personPage(h.slice(3));
     else if (school && staffOnly()) { clearRouteSubs(); curRoute = ''; h === 'home' ? myHome() : lockPage(); }
