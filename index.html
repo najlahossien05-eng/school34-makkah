@@ -3677,7 +3677,7 @@ body{font-synthesis:weight style}
       <div class="panel"><h2><i data-lucide="eye"></i>الرؤية والرسالة والسيرة</h2><div class="form-grid">
         ${ta('sc-vision', 'الرؤية', P.vision)}${ta('sc-mission', 'الرسالة (اختياري)', P.mission)}
         ${ta('sc-bio', 'السيرة الذاتية لمديرة المدرسة', P.bio, 'كل فقرة في سطر.', 160)}
-        ${ta('sc-about', 'من نحن (٣٤)', P.about, '', 130)}
+        ${ta('sc-about', 'من نحن', P.about, '', 130)}
       </div></div>
       <div class="panel"><h2><i data-lucide="school"></i>بيانات المدرسة والتقارير والمبادرات</h2><div class="form-grid">
         ${ta('sc-info', 'بيانات المدرسة', pairs(P.info, 'k', 'v'), 'كل سطر: البيان | القيمة', 200)}
@@ -3728,12 +3728,20 @@ body{font-synthesis:weight style}
   function templateState(sc){
     const t = JSON.parse(JSON.stringify(PUBLISHED0)), P0 = t.school || {};
     t.settings = Object.assign({}, t.settings, {school: sc.name || '', person: sc.principal || '', region: sc.office || sc.region || '', mainFolder: '', siteUrl: '', editions: sc.gender === 'm' ? 'm' : 'f', defaultEdition: sc.gender === 'm' ? 'm' : 'f', badge: ''});
-    t.sections = (t.sections || []).map(sec => Object.assign({}, sec, {items: (sec.items || []).map(it => Object.assign({}, it, {links: []}))}));
+    t.sections = (t.sections || []).map(sec => Object.assign({}, sec, {folder: '', items: (sec.items || []).map(it => Object.assign({}, it, {links: []}))}));
     t.school = {name: sc.name || '', banner: [], leaders: [], counts: [], teachers: [], teachersSlots: 0, admins: [], adminsSlots: 0,
       policyGoals: P0.policyGoals || [], vision2030: P0.vision2030 || [], vision: '', mission: '', visionGoals: [], bio: '',
       info: [{k: 'المدينة', v: sc.city || ''}, {k: 'المرحلة', v: sc.stage || ''}, {k: 'إدارة التعليم', v: sc.office || sc.region || ''}, {k: 'عدد المنسوبات', v: ''}, {k: 'عدد الطالبات', v: ''}],
       reports: [], initiatives: [], about: '', ach: {}, folders: {}, reportCats: (P0.reportCats || []).map(r => Object.assign({}, r, {url: ''})), circulars: [], staffSeed: []};
     return t;
+  }
+  /* روابط مدرسة ٣٤ المدمجة في القالب (مجلدات Drive وغيرها) لا تظهر لأي مدرسة أخرى */
+  const S34_URLS = (() => { const set = new Set(); JSON.stringify(PUBLISHED0, (k, v) => { if (typeof v === 'string' && /^https?:\/\//.test(v)) set.add(v); return v; }); return set; })();
+  function scrubForeign(st){
+    const walk = v => Array.isArray(v) ? v.map(walk).filter(x => !(x && typeof x === 'object' && 'url' in x && !x.url))
+      : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, k === 'firebase' ? x : walk(x)]))
+      : typeof v === 'string' && S34_URLS.has(v) ? '' : v;
+    return walk(st);
   }
   function applySchool(sc){
     if (!sc) return;
@@ -4045,7 +4053,8 @@ body{font-synthesis:weight style}
   function who(u){ return `<div class="gate-who">${u.photoURL ? `<img src="${esc(u.photoURL)}" alt="" referrerpolicy="no-referrer">` : `<span class="avatar">${esc(initials(u.displayName || u.email))}</span>`}<div><b>${esc(u.displayName || '')}</b><small class="ltr">${esc(u.email)}</small></div></div>`; }
 
   /* ---------- طلب الانضمام ---------- */
-  function seedList(){ return (ROSTER.length ? ROSTER : (SP().staffSeed || [])).filter(x => x && x.name); }
+  /* أسماء المدرسة الحالية فقط: في النسخة المستضافة من meta/roster للمدرسة نفسها، ولا يُرجع أبدًا إلى أسماء مدمجة لمدرسة أخرى */
+  function seedList(){ return (useFb ? ROSTER : (SP().staffSeed || [])).filter(x => x && x.name); }
   function gateRegister(u, note){
     const g = gateEl(), all = seedList();
     let tk = ''; try { tk = sessionStorage.getItem('regcat') || ''; } catch(e){}
@@ -4150,8 +4159,9 @@ body{font-synthesis:weight style}
       else { claimOwner = false; }
       if (acct && acct.super) {}
       else if (o.exists && o.data().email === e) {
-        const lead = seedList().find(x => /مدير/.test(x.job)) || {};
-        acct = {email: e, name: lead.name || o.data().name || u.displayName || '', role: 'admin', owner: true, ops: true, staffId: lead.id || '', job: lead.job || '{مدير|مديرة} المدرسة', cat: 'lead', form: 'principal', staffName: lead.name || o.data().name || '', photo: u.photoURL || ''};
+        const isLead = x => catOf(x.job) === 'lead', pr = String(SCHOOL.principal || o.data().name || '').trim();
+        const lead = seedList().find(x => isLead(x) && pr && x.name.trim() === pr) || seedList().find(isLead) || {};
+        acct = {email: e, name: lead.name || pr || u.displayName || '', role: 'admin', owner: true, ops: true, staffId: lead.id || '', job: lead.job || '{مدير|مديرة} المدرسة', cat: 'lead', form: 'principal', staffName: lead.name || pr || '', photo: u.photoURL || ''};
       } else {
         const m = await SD.doc('members/' + e).get();
         if (!m.exists) { acct = null; gateRegister(u, doorWanted === 'new' ? '' : 'هذا الحساب غير مسجّل في المنصة بعد. اختاري اسمك لإرسال طلب حساب.'); return; }
@@ -4162,6 +4172,7 @@ body{font-synthesis:weight style}
       let got = false;
       try { const s = await SD.doc('site/state').get(); if (s.exists && s.data().json) { const v = JSON.parse(s.data().json); if (v && v.settings && Array.isArray(v.sections)) { v.settings.firebase = FB; PUBLISHED = v; got = true; } } } catch(x){}
       if (!got) { PUBLISHED = templateState(SCHOOL); PUBLISHED.settings.firebase = FB; }
+      if (SID !== 's34') { PUBLISHED = scrubForeign(PUBLISHED); PUBLISHED.settings.firebase = FB; }
       applySchool(SCHOOL);
     } catch(err){ gateLogin(authMsg(err)); return; }
     canWrite = true; deviceMode = false; canEdit = acct.role === 'admin'; art = null;
