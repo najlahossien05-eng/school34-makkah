@@ -1727,6 +1727,14 @@ body.gated{overflow:hidden}
 .qr-mini{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}.qr-mini small{color:var(--muted,#5b6b6e);font-size:12px;max-width:150px}
 .qr-mini #su-qr canvas,.qr-mini #su-qr img,.qr-mini #su-qr svg{width:140px!important;height:140px!important}
 @media (max-width:640px){.inv-grid{grid-template-columns:1fr}.setup-ban .btn{width:100%;justify-content:center}}
+/* ===== لوحة المطوّر: واجهة منصة مستقلة ===== */
+body.plat .gsearch,body.plat #search-btn,body.plat .bell-wrap,body.plat #fab,body.plat .ticker,body.plat .edition,body.plat #admin-link{display:none!important}
+body.plat .nav-me .avatar svg,.su-strip svg,#me-chip .avatar svg{width:18px;height:18px}
+body.plat .nav{background:linear-gradient(180deg,#0b2530,#0B3D4A)}
+.back-link{display:inline-flex;align-items:center;gap:6px;color:var(--teal);text-decoration:none;font-weight:600;margin:4px 0 8px}.back-link svg{width:16px;height:16px}
+.dev-school-h{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 12px;border-top:0;padding-top:0}
+.su-strip{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#7a4b00;color:#fff;padding:8px 16px;font-size:14px}
+.su-strip span{flex:1;min-width:200px}.su-strip .btn{background:#fff;color:#7a4b00;border:0}
 
 /* ===== الخط: سكالا مجالا (من جهاز المستخدم) مع بديل Noto Naskh Arabic ===== */
 /* سكالا مجالا يظهر أصغر من غيره بالحجم نفسه، فيُكبَّر بـ size-adjust دون تغيير بقية الأحجام */
@@ -1952,6 +1960,8 @@ body{font-synthesis:weight style}
   });
 
   function chrome(){
+    if (isPlat()) { platChrome(activeRoute || 'dev'); return; }
+    document.body.classList.remove('plat');
     const st = cur().settings;
     const both = st.editions === 'both';
     if (!both) ed = st.editions === 'f' ? 'f' : 'm';
@@ -2004,6 +2014,7 @@ body{font-synthesis:weight style}
     document.getElementById('foot-r').textContent = st.year ? 'العام الدراسي ' + st.year : '';
     document.title = (st.school ? st.school + ' — ' : '') + cur0.t;
     renderTicker();
+    if (acct && acct.super && SID) superStrip();
     icons();
   }
 
@@ -3763,7 +3774,7 @@ body{font-synthesis:weight style}
   }
 
   /* ---------- شاشة الدخول ---------- */
-  function gateEl(){ let g = document.getElementById('gate'); if (!g) { g = document.createElement('div'); g.id = 'gate'; document.body.appendChild(g); } document.body.classList.add('gated'); return g; }
+  function gateEl(){ let g = document.getElementById('gate'); if (!g) { g = document.createElement('div'); g.id = 'gate'; document.body.appendChild(g); } document.body.classList.add('gated'); document.title = PLATFORM; return g; }
   function hideGate(){ const g = document.getElementById('gate'); if (g) g.remove(); document.body.classList.remove('gated'); }
   function gateShell(inner){
     const s = cur().settings, nm = SCHOOL ? SCHOOL.name : (ss.get('joinName') || '');
@@ -4082,7 +4093,7 @@ body{font-synthesis:weight style}
       if (sup && !SID) {
         acct = {email: e, name: u.displayName || 'مطوّر المنصة', role: 'admin', owner: false, super: true, ops: true, cat: '', form: '', staffName: '', job: '', photo: u.photoURL || ''};
         PUBLISHED.settings.school = PLATFORM; PUBLISHED.settings.region = 'لوحة مالكة المنصة';
-        canWrite = false; canEdit = true; art = null; hideGate(); chrome(); history.replaceState(null, '', location.pathname + location.search + '#dev'); devPage(); return;
+        canWrite = false; canEdit = true; art = null; hideGate(); activeRoute = (location.hash || '').slice(1); chrome(); devPage(); return;
       }
       try { const x = await fb.fs.doc('schools/' + SID).get(); SCHOOL = x.exists ? Object.assign({id: SID}, x.data()) : null; } catch(x){ SCHOOL = null; }
       if (!SCHOOL) { acct = null; gateEl().innerHTML = gateShell('<div class="msg err">المدرسة المرتبطة بحسابك غير موجودة. تواصلي مع مزوّد المنصة.</div><button class="btn btn-ghost btn-block" type="button" id="x-out">تسجيل الخروج</button>'); document.getElementById('x-out').onclick = () => fb.auth.signOut(); return; }
@@ -5003,197 +5014,285 @@ body{font-synthesis:weight style}
     icons(); document.getElementById('bl-out').onclick = () => fb.auth.signOut();
   }
   const licOff = lic => !!lic && (lic.active === false || (lic.untilMs ? lic.untilMs < Date.now() : (lic.until && lic.until < today())));
-  async function devCount(col){ try { return (await SD.collection(col).get()).size; } catch(e){ return '—'; } }
-  async function devPage(){
+
+  /* ================= لوحة المطوّر: واجهة منصة مستقلة تمامًا عن واجهة المدرسة ================= */
+  /* وضع المنصة = حساب مطوّر دون مدرسة مفتوحة: لا اسم مدرسة ولا مديرة ولا قائمة مدرسة.
+     أدوات كل مدرسة (الترخيص، المالك، التفعيل، الحسابات، النسخ والتسليم) في صفحتها داخل اللوحة: #dev-s-<sid>.
+     «الدخول إلى واجهة المدرسة» يفتحها بشريط واضح لوضع المطوّر، والعودة تُغلقها. */
+  function isPlat(){ try { return !!(useFb && acct && acct.super && !SID); } catch(e){ return false; } }
+  const PNAV = [{r: 'dev', t: 'نظرة عامة', i: 'layout-dashboard'}, {r: 'devschools', t: 'المدارس', i: 'school'}, {r: 'devnew', t: 'إنشاء مدرسة', i: 'building-2'}, {r: 'devset', t: 'إعدادات المنصة', i: 'settings-2'}];
+  const XD = sid => ({doc: p => fb.fs.doc('schools/' + sid + '/' + p), collection: c => fb.fs.collection('schools/' + sid + '/' + c)});
+  const isoDay = d => { const x = new Date(d); return x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0'); };
+  const baseUrl = () => (location.origin + location.pathname).replace(/#.*$/, '');
+  const platRoute = h => PNAV.some(n => n.r === h) || /^dev-s-[\w-]+$/.test(h);
+  function platChrome(h){
+    document.body.classList.add('plat'); document.body.classList.remove('su-in');
+    const on = r => r === h || (r === 'devschools' && /^dev-s-/.test(h));
+    document.getElementById('nav-school').textContent = PLATFORM;
+    document.getElementById('region').textContent = 'لوحة المطوّر';
+    document.getElementById('tb-school').textContent = PLATFORM;
+    const tbS = document.querySelector('.tb-brand-t small'); if (tbS) tbS.textContent = 'لوحة المطوّر';
+    document.querySelectorAll('.nav-brand,.tb-brand').forEach(a => a.setAttribute('href', '#dev'));
+    const nl = document.getElementById('nav-list');
+    nl.innerHTML = PNAV.map(n => `<a href="#${n.r}" class="${on(n.r) ? 'on' : ''}" ${on(n.r) ? 'aria-current="page"' : ''}><i data-lucide="${n.i}"></i><span>${n.t}</span></a>`).join('');
+    nl.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setNav(false)));
+    document.getElementById('nav-foot').innerHTML = `<div class="nav-me"><span class="avatar"><i data-lucide="shield-half"></i></span><span><b>مطوّر المنصة</b><small>صلاحية على كل المدارس</small></span></div>
+      <div class="nav-acct"><span class="ltr">${esc(acct.email)}</span><button type="button" id="nav-out"><i data-lucide="log-out"></i>تسجيل الخروج</button></div>`;
+    document.getElementById('nav-out').onclick = fbSignOut;
+    pillsEl.innerHTML = PNAV.map(n => `<a class="pill${on(n.r) ? ' on' : ''}" href="#${n.r}">${n.t}</a>`).join('');
+    document.getElementById('bnav').innerHTML = PNAV.map(n => `<a href="#${n.r}" class="${on(n.r) ? 'on' : ''}"><i data-lucide="${n.i}"></i><span>${n.t}</span></a>`).join('');
+    ['admin-link', 'edition', 'ticker'].forEach(id => { const e = document.getElementById(id); if (e) e.hidden = true; });
+    const me = document.getElementById('me-chip'); me.hidden = false;
+    me.innerHTML = `<span class="avatar"><i data-lucide="shield-half"></i></span><span class="me-name"><b>مطوّر المنصة</b><small class="ltr">${esc(acct.email)}</small></span>`;
+    const t = /^dev-s-/.test(h) ? 'صفحة المدرسة' : (PNAV.find(n => n.r === h) || PNAV[0]).t;
+    document.getElementById('page-title').textContent = t;
+    document.getElementById('foot-l').textContent = PLATFORM + ' — لوحة المطوّر';
+    document.getElementById('foot-r').textContent = '';
+    document.title = PLATFORM + ' — ' + t;
+    icons();
+  }
+  /* شريط وضع المطوّر داخل مدرسة مفتوحة */
+  function superStrip(){
+    document.body.classList.add('su-in'); document.body.classList.remove('plat');
+    let s = document.getElementById('su-strip');
+    if (!s) { s = document.createElement('div'); s.id = 'su-strip'; s.className = 'su-strip'; document.querySelector('.main-col').insertBefore(s, document.getElementById('ticker')); }
+    s.innerHTML = `<i data-lucide="shield-half"></i><span>وضع المطوّر: أنتِ داخل <b>${esc((SCHOOL && SCHOOL.name) || SID)}</b> بصلاحية الإدارة، وما تفعلينه يُحفظ في بيانات هذه المدرسة.</span><button type="button" class="btn btn-sm" id="su-back"><i data-lucide="arrow-right"></i>العودة إلى لوحة المنصة</button>`;
+    document.getElementById('su-back').onclick = leaveSchool;
+    const me = document.getElementById('me-chip'); me.hidden = false;
+    me.innerHTML = `<span class="avatar"><i data-lucide="shield-half"></i></span><span class="me-name"><b>مطوّر المنصة</b><small>داخل المدرسة</small></span>`;
+    const nm = document.querySelector('#nav-foot .nav-me'); if (nm) nm.innerHTML = `<span class="avatar"><i data-lucide="shield-half"></i></span><span><b>مطوّر المنصة</b><small>داخل المدرسة</small></span>`;
+  }
+  function leaveSchool(){ const s = SID; ss.del('superSid'); location.hash = '#dev-s-' + s; location.reload(); }
+  function enterSchool(sid){ ss.set('superSid', sid); location.hash = '#home'; location.reload(); }
+
+  async function devPage(h){
     if (!acct || !acct.super) { location.hash = '#home'; return; }
+    if (SID) { /* مدرسة مفتوحة: لوحة المطوّر لا تُعرض داخل واجهة المدرسة */
+      app.innerHTML = pageWrap(`<div class="panel lock-panel"><i data-lucide="shield-half"></i><div><h2>أنتِ داخل مدرسة</h2><p>لوحة المطوّر منفصلة عن واجهة المدرسة. ارجعي إليها لإدارة المدارس والاشتراكات.</p></div><button type="button" class="btn btn-primary btn-sm" id="dv-back"><i data-lucide="arrow-right"></i>العودة إلى لوحة المنصة</button></div>`);
+      icons(); document.getElementById('dv-back').onclick = leaveSchool; return;
+    }
+    h = h || (location.hash || '').replace('#', '');
+    if (!platRoute(h)) { h = 'dev'; history.replaceState(null, '', location.pathname + location.search + '#dev'); }
+    platChrome(h);
     app.innerHTML = loading('جارٍ تحميل لوحة المطوّر…');
-    const plat = await platformSection();
-    if (!SID) { app.innerHTML = pageWrap(pageHead('لوحة المنصة', 'shield-half', 'إدارة المدارس المشتركة والاشتراكات وإعدادات المنصة.') + plat); icons(); wirePlatform(); return; }
-    let owner = null, members = [];
-    try { const o = await SD.doc('meta/owner').get(); owner = o.exists ? o.data() : null; } catch(e){}
-    try { members = (await SD.collection('members').get()).docs.map(d => d.data()); } catch(e){}
-    try { const L = await SD.doc('meta/license').get(); LIC = L.exists ? L.data() : null; } catch(e){}
-    let ACT = null; try { const A = await SD.doc('meta/activation').get(); ACT = A.exists ? A.data() : null; } catch(e){}
-    const [up, ev, st] = await Promise.all([devCount('uploads'), devCount('evals'), devCount('staff')]);
+    if (h.startsWith('dev-s-')) return devSchool(h.slice(6));
+    if (h === 'devnew') return devNew();
+    await loadPlat();
+    if (h === 'devset') return devSettings();
+    if (h === 'devschools') return devSchools();
+    devOverview();
+  }
+
+  /* ---------- بيانات المنصة ---------- */
+  let PLAT = {cfg: {}, list: []};
+  const scState = sc => !sc.lic ? ['بلا ترخيص', 'none'] : sc.lic.active === false ? ['موقوفة', 'bad'] : (sc.lic.untilMs || 0) < Date.now() ? ['منتهية', 'bad'] : sc.lic.plan === 'trial' ? ['تجربة', 'wait'] : ['مشتركة', 'ok'];
+  const scDays = sc => sc.lic && sc.lic.untilMs ? Math.ceil((sc.lic.untilMs - Date.now()) / 86400000) : null;
+  async function loadPlat(){
+    let cfg = {}, list = [];
+    try { const c = await fb.fs.doc('platform/config').get(); cfg = c.exists ? c.data() : {}; } catch(e){}
+    try { list = (await fb.fs.collection('schools').get()).docs.map(d => Object.assign({id: d.id}, d.data())); } catch(e){}
+    await Promise.all(list.map(async sc => { try { const L = await XD(sc.id).doc('meta/license').get(); sc.lic = L.exists ? L.data() : null; } catch(e){ sc.lic = null; } }));
+    list.sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
+    PLAT = {cfg, list}; return PLAT;
+  }
+  const schoolRow = sc => { const S0 = scState(sc), d = scDays(sc);
+    return `<div class="u-row" data-sc="${esc(sc.id)}"><span class="avatar">${esc(initials(sc.name || '؟'))}</span>
+      <div class="u-t"><b>${esc(sc.name || sc.id)}</b><small>${esc([sc.stage, sc.gender === 'm' ? 'بنين' : 'بنات', sc.city].filter(Boolean).join(' · '))} · الرمز <span class="ltr">${esc(sc.code || '—')}</span></small></div>
+      <span class="spill ${S0[1]}">${S0[0]}${d != null && S0[1] !== 'bad' ? ' · ' + ar(d) + ' يومًا' : ''}</span>
+      <div class="u-acts"><a class="btn btn-primary btn-sm" href="#dev-s-${esc(sc.id)}"><i data-lucide="sliders-horizontal"></i>إدارة</a>
+        <button type="button" class="btn btn-ghost btn-sm" data-pl="y1">تمديد سنة</button>
+        <button type="button" class="btn btn-ghost btn-sm" data-pl="toggle">${sc.lic && sc.lic.active === false ? 'تشغيل' : 'إيقاف'}</button></div></div>`; };
+  function wireRows(){
+    app.querySelectorAll('[data-sc]').forEach(r => {
+      const sid = r.dataset.sc, sc = PLAT.list.find(x => x.id === sid);
+      r.querySelectorAll('[data-pl]').forEach(b => b.onclick = async () => {
+        const a = b.dataset.pl, ref = XD(sid).doc('meta/license'); b.disabled = true;
+        try {
+          if (a === 'y1') { const u = Math.max(Date.now(), (sc.lic && sc.lic.untilMs) || 0) + 365 * 86400000; await ref.set({active: true, plan: 'paid', untilMs: u, until: isoDay(u), at: new Date().toISOString(), by: acct.email}, {merge: true}); toast('مُدّد الاشتراك سنة.', 'ok'); }
+          if (a === 'toggle') { await ref.set({active: !(sc.lic && sc.lic.active !== false)}, {merge: true}); toast('حُدّثت حالة المدرسة.', 'ok'); }
+          devPage();
+        } catch(e){ b.disabled = false; toast(authMsg(e), 'err'); }
+      });
+    });
+  }
+  const kpis = L => { const n = k => L.filter(x => scState(x)[1] === k).length;
+    return `<div class="cat-kpis"><div><b>${ar(L.length)}</b><span>مدرسة</span></div><div class="k-ok"><b>${ar(n('ok'))}</b><span>مشتركة</span></div><div class="k-wait"><b>${ar(n('wait'))}</b><span>في التجربة</span></div><div class="k-bad"><b>${ar(n('bad'))}</b><span>منتهية أو موقوفة</span></div></div>`; };
+  function devOverview(){
+    const L = PLAT.list;
+    const soon = L.filter(x => { const d = scDays(x); return d != null && d <= 14 && scState(x)[1] !== 'bad'; }).sort((a, b) => scDays(a) - scDays(b));
+    const ended = L.filter(x => scState(x)[1] === 'bad');
+    app.innerHTML = pageWrap(`${pageHead('لوحة المنصة', 'shield-half', 'إدارة المدارس المشتركة والاشتراكات. هذه الواجهة خاصة بمطوّر المنصة ولا تظهر لأي مدرسة.')}
+      ${kpis(L)}
+      <div class="dev-grid">
+        <section class="panel"><h2><i data-lucide="alarm-clock"></i>تنتهي خلال ١٤ يومًا (${ar(soon.length)})</h2><div class="u-list">${soon.map(schoolRow).join('') || '<p class="muted">لا توجد اشتراكات قريبة الانتهاء.</p>'}</div></section>
+        <section class="panel"><h2><i data-lucide="circle-off"></i>منتهية أو موقوفة (${ar(ended.length)})</h2><div class="u-list">${ended.map(schoolRow).join('') || '<p class="muted">لا توجد.</p>'}</div></section>
+      </div>
+      <section class="panel"><h2><i data-lucide="school"></i>أحدث المدارس</h2><div class="u-list">${L.slice(0, 5).map(schoolRow).join('') || '<p class="muted">لا توجد مدارس بعد.</p>'}</div>
+        <div class="su-acts"><a class="btn btn-ghost btn-sm" href="#devschools"><i data-lucide="list"></i>كل المدارس</a><a class="btn btn-ghost btn-sm" href="#devnew"><i data-lucide="plus"></i>إنشاء مدرسة</a></div></section>`);
+    icons(); wireRows();
+  }
+  function devSchools(){
+    const q = (M.devSQ || '').trim().toLowerCase(), L = PLAT.list.filter(x => !q || [x.name, x.code, x.city].join(' ').toLowerCase().includes(q));
+    app.innerHTML = pageWrap(`${pageHead('المدارس', 'school', 'كل المدارس المسجّلة في المنصة. اضغطي «إدارة» لإدارة مدرسة بعينها.')}
+      ${kpis(PLAT.list)}
+      <section class="panel"><div class="toolbar"><label class="search"><i data-lucide="search"></i><input id="dv-sq" type="search" value="${esc(M.devSQ || '')}" placeholder="ابحثي بالاسم أو الرمز أو المدينة…"></label></div>
+        <div class="u-list">${L.map(schoolRow).join('') || '<p class="muted">لا توجد نتائج.</p>'}</div></section>`);
+    icons(); wireRows();
+    const qi = document.getElementById('dv-sq'); qi.onchange = () => { M.devSQ = qi.value; devSchools(); };
+  }
+  function devSettings(){
+    const cfg = PLAT.cfg, b = baseUrl().replace(/^https?:\/\//, '');
+    app.innerHTML = pageWrap(`${pageHead('إعدادات المنصة', 'settings-2', 'إعدادات عامة تسري على كل المدارس.')}
+      <div class="dev-grid">
+        <section class="panel"><h2><i data-lucide="user-plus"></i>التسجيل الذاتي للمدارس</h2>
+          <label class="mod-c big"><input type="checkbox" id="pl-open" ${cfg.signupOpen ? 'checked' : ''}><span>السماح للمدارس بالتسجيل الذاتي (تجربة ١٤ يومًا)</span></label>
+          <p class="hint">عند الإغلاق لا تُنشأ مدرسة إلا من «إنشاء مدرسة» برمز تفعيل.</p>
+          <button type="button" class="btn btn-primary btn-sm" id="pl-save"><i data-lucide="save"></i>حفظ</button></section>
+        <section class="panel"><h2><i data-lucide="link"></i>روابط المنصة</h2>
+          <dl class="prof-dl"><div><dt>رابط الدخول</dt><dd class="ltr"><a href="${esc(baseUrl())}" target="_blank" rel="noopener">${esc(b)}</a></dd></div>
+            <div><dt>لوحة المطوّر</dt><dd class="ltr">${esc(b)}#dev</dd></div><div><dt>مشروع Firebase</dt><dd class="ltr">${esc((FB && FB.projectId) || '—')}</dd></div><div><dt>حسابك</dt><dd class="ltr">${esc(acct.email)}</dd></div></dl></section>
+      </div>`);
+    icons();
+    document.getElementById('pl-save').onclick = async () => { try { await fb.fs.doc('platform/config').set({signupOpen: document.getElementById('pl-open').checked, at: new Date().toISOString(), by: acct.email}, {merge: true}); toast('حُفظت إعدادات المنصة.', 'ok'); } catch(e){ toast(authMsg(e), 'err'); } };
+  }
+  function devNew(){
+    app.innerHTML = pageWrap(`${pageHead('إنشاء مدرسة', 'building-2', 'تُنشأ المدرسة باشتراك مدفوع ورمز تفعيل لحساب إدارتها، ثم تُرسل الرسالة لمديرها من صفحة المدرسة.')}
+      <section class="panel"><div class="field"><label for="nc-name">اسم المدرسة</label><input class="in" id="nc-name"></div>
+        <div class="row2"><div class="field"><label for="nc-stage">المرحلة</label><select class="in" id="nc-stage"><option>رياض الأطفال</option><option selected>ابتدائي</option><option>متوسط</option><option>ثانوي</option><option>مجمع</option></select></div>
+          <div class="field"><label for="nc-gender">النوع</label><select class="in" id="nc-gender"><option value="f">بنات</option><option value="m">بنين</option></select></div></div>
+        <div class="row2"><div class="field"><label for="nc-office">إدارة التعليم</label><input class="in" id="nc-office"></div><div class="field"><label for="nc-city">المدينة</label><input class="in" id="nc-city"></div></div>
+        <div class="row2"><div class="field"><label for="nc-code">رمز المدرسة (اختياري)</label><input class="in ltr code-in" id="nc-code" placeholder="يُولَّد تلقائيًا"></div><div class="field"><label for="nc-until">ينتهي الاشتراك في</label><input class="in" id="nc-until" type="date"><span class="hint">إن تُرك فارغًا: سنة من اليوم.</span></div></div>
+        <button type="button" class="btn btn-primary btn-sm" id="nc-go"><i data-lucide="plus"></i>إنشاء المدرسة ورمز التفعيل</button></section>`);
+    icons();
+    const g = id => document.getElementById(id);
+    g('nc-go').onclick = async () => {
+      const name = g('nc-name').value.trim(); if (name.length < 4) return toast('اكتبي اسم المدرسة.', 'err');
+      const code = (g('nc-code').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '')) || genCode(6), uu = g('nc-until').value;
+      const until = uu ? Date.parse(uu + 'T23:59:59+03:00') : Date.now() + 365 * 86400000;
+      g('nc-go').disabled = true;
+      try {
+        const ex = await fb.fs.doc('schoolCodes/' + code).get(); if (ex.exists) { g('nc-go').disabled = false; return toast('رمز المدرسة مستخدم. اختاري رمزًا آخر.', 'err'); }
+        const sid = fb.fs.collection('schools').doc().id, P = 'schools/' + sid, b = fb.fs.batch(), now = new Date().toISOString();
+        b.set(fb.fs.doc(P), {name, stage: g('nc-stage').value, gender: g('nc-gender').value, office: g('nc-office').value.trim(), region: g('nc-office').value.trim(), city: g('nc-city').value.trim(), principal: '', ownerEmail: '', plan: 'paid', code, createdAt: now});
+        b.set(fb.fs.doc('schoolCodes/' + code), {sid, name});
+        b.set(fb.fs.doc(P + '/meta/license'), {active: true, plan: 'paid', until: isoDay(until), untilMs: until, client: name, msg: '', at: now, by: acct.email});
+        b.set(fb.fs.doc(P + '/meta/activation'), {code: genCode(4) + '-' + genCode(4), at: now, by: acct.email});
+        await b.commit();
+        toast('أُنشئت المدرسة. أرسلي رسالة التفعيل لمديرها.', 'ok'); location.hash = '#dev-s-' + sid;
+      } catch(e){ g('nc-go').disabled = false; toast(authMsg(e), 'err'); }
+    };
+  }
+
+  /* ---------- صفحة مدرسة واحدة داخل لوحة المنصة ---------- */
+  async function devSchool(sid){
+    const X = XD(sid);
+    let sc = null, owner = null, members = [], L = null, ACT = null;
+    try { const d = await fb.fs.doc('schools/' + sid).get(); sc = d.exists ? Object.assign({id: sid}, d.data()) : null; } catch(e){}
+    if (!sc) { app.innerHTML = pageWrap('<div class="msg err">المدرسة غير موجودة.</div><a class="btn btn-ghost btn-sm" href="#devschools">العودة إلى المدارس</a>'); return; }
+    try { const o = await X.doc('meta/owner').get(); owner = o.exists ? o.data() : null; } catch(e){}
+    try { members = (await X.collection('members').get()).docs.map(d => d.data()); } catch(e){}
+    try { const l = await X.doc('meta/license').get(); L = l.exists ? l.data() : null; } catch(e){}
+    try { const a = await X.doc('meta/activation').get(); ACT = a.exists ? a.data() : null; } catch(e){}
+    const cnt = async c => { try { return (await X.collection(c).get()).size; } catch(e){ return '—'; } };
+    const [up, ev, st] = await Promise.all([cnt('uploads'), cnt('evals'), cnt('staff')]);
     const act = members.filter(m => m.active).length, pend = members.filter(m => !m.active && m.status === 'pending').length;
-    const L = LIC || {active: true, until: '', msg: '', client: ''};
-    const s = cur().settings, url = (location.origin + location.pathname).replace(/#.*$/, '') + (SCHOOL && SCHOOL.code ? '?s=' + SCHOOL.code : '');
+    const Lx = L || {active: true, until: '', msg: '', client: ''}, S0 = scState({lic: L}), dd = scDays({lic: L});
+    const url = baseUrl() + (sc.code ? '?s=' + sc.code : '');
     const q = (M.devQ || '').trim();
     const rows = members.filter(m => !q || (m.name + ' ' + m.email).includes(q)).sort((a, b) => String(a.name).localeCompare(String(b.name), 'ar'));
-    app.innerHTML = pageWrap(plat + `
-      <div class="dev-school-h"><h2><i data-lucide="school"></i>المدرسة المفتوحة: ${esc((SCHOOL && SCHOOL.name) || SID)}</h2><button type="button" class="btn btn-ghost btn-sm" id="dv-close"><i data-lucide="x"></i>إغلاق المدرسة</button></div>
-      ${pageHead('إدارة المدرسة', 'shield-half', 'إدارة المنصة كمزوّد خدمة: المالك، والحسابات، والترخيص، والتسليم. هذه الصفحة لا تظهر لأي مستخدم آخر.')}
-      <div class="cat-kpis"><div><b>${ar(act)}</b><span>حساب مفعّل</span></div><div><b>${ar(pend)}</b><span>طلب معلّق</span></div><div><b>${ar(st)}</b><span>منسوبة في السجل</span></div><div><b>${ar(up)}</b><span>شاهد مرفوع</span></div><div><b>${ar(ev)}</b><span>تقييم</span></div>
-        <div class="k-${licOff(L) ? 'bad' : 'ok'}"><b>${licOff(L) ? 'متوقفة' : 'تعمل'}</b><span>حالة المنصة</span></div></div>
+    const invite = `السلام عليكم ورحمة الله\nأهلًا بكم في ${PLATFORM} — ${sc.name}.\nرابط المدرسة: ${url}\nرمز المدرسة: ${sc.code || ''}\nرمز تفعيل حساب الإدارة: ${(ACT && ACT.code) || ''}\nخطوات التفعيل:\n١) افتح/ي الرابط واضغط/ي «الانضمام إلى مدرستي».\n٢) اختر/ي «مدير/ة المدرسة» واكتب/ي رمز التفعيل.\n٣) الدخول بحساب Google ثم وضع كلمة مرور.\n٤) تظهر «تهيئة المدرسة» لإكمال الإعداد ودعوة الكادر.`;
+    const tag = m => m.active ? (m.role === 'admin' ? ['إدارة', 'ok'] : m.ops ? ['متابعة يومية', 'info'] : ['منسوبة', 'info']) : (m.status === 'pending' ? ['معلّق', 'wait'] : ['موقوف', 'wait']);
+    app.innerHTML = pageWrap(`
+      <a class="back-link" href="#devschools"><i data-lucide="arrow-right"></i>كل المدارس</a>
+      ${pageHead(sc.name || sid, 'school', [sc.stage, sc.gender === 'm' ? 'بنين' : 'بنات', sc.office, sc.city].filter(Boolean).join(' · '))}
+      <div class="dev-school-h"><span class="spill ${S0[1]}">${S0[0]}${dd != null && S0[1] !== 'bad' ? ' · متبقٍ ' + ar(dd) + ' يومًا' : ''}</span>
+        <button type="button" class="btn btn-primary btn-sm" id="dv-enter"><i data-lucide="log-in"></i>الدخول إلى واجهة المدرسة</button></div>
+      <div class="cat-kpis"><div><b>${ar(act)}</b><span>حساب مفعّل</span></div><div><b>${ar(pend)}</b><span>طلب معلّق</span></div><div><b>${ar(st)}</b><span>منسوبة في السجل</span></div><div><b>${ar(up)}</b><span>شاهد مرفوع</span></div><div><b>${ar(ev)}</b><span>تقييم</span></div></div>
       <div class="dev-grid">
-        <section class="panel"><h2><i data-lucide="school"></i>بيانات النسخة</h2>
-          <dl class="prof-dl"><div><dt>المدرسة</dt><dd>${esc(s.school || '—')}</dd></div><div><dt>الرابط</dt><dd class="ltr"><a href="${esc(url)}" target="_blank" rel="noopener">${esc(url.replace(/^https?:\/\//, ''))}</a></dd></div>
-            <div><dt>مشروع Firebase</dt><dd class="ltr">${esc((FB && FB.projectId) || '—')}</dd></div><div><dt>حسابك</dt><dd class="ltr">${esc(acct.email)}</dd></div></dl></section>
-        <section class="panel"><h2><i data-lucide="crown"></i>مالكة المنصة (حساب الإدارة)</h2>
-          ${owner ? `<div class="u-row"><span class="avatar">${esc(initials(owner.name))}</span><div class="u-t"><b>${esc(owner.name || '')}</b><small class="ltr">${esc(owner.email)}</small></div><span class="spill ok">المالكة</span></div>` : '<div class="msg info">لا يوجد حساب إدارة. أول من يختار «إنشاء حساب جديد ← مديرة المدرسة» يصبح المالكة.</div>'}
-          <div class="field" style="margin-top:10px"><label for="dv-own">نقل الملكية إلى بريد آخر</label><div class="row2"><input class="in ltr" id="dv-own" type="email" placeholder="principal@gmail.com"><button type="button" class="btn btn-ghost" id="dv-own-go"><i data-lucide="arrow-left-right"></i>نقل الملكية</button></div>
-            <span class="hint">تدخل صاحبة البريد الجديد بحسابها في Google أو بكلمة مرور بالبريد نفسه، فتصبح المالكة فورًا.</span></div>
-          ${owner ? '<button type="button" class="btn btn-ghost btn-sm danger" id="dv-own-reset"><i data-lucide="user-x"></i>إلغاء حساب الإدارة (يُفعّل من جديد عند أول تسجيل)</button>' : ''}</section>
-        <section class="panel act-p"><h2><i data-lucide="ticket"></i>رمز تفعيل حساب الإدارة</h2>
-          ${owner ? `<div class="msg ok">حساب الإدارة مفعّل${owner.code ? ' بالرمز ' + esc(owner.code) : ''}. لإصدار رمز لمديرة جديدة ألغي حساب الإدارة الحالي أولًا من بطاقة «مالكة المنصة».</div>` : ''}
-          <div class="act-code"><span class="ltr" id="dv-code">${ACT && ACT.code ? esc(ACT.code) : '— لا يوجد رمز —'}</span>
-            <button type="button" class="btn btn-ghost btn-sm" id="dv-gen"><i data-lucide="refresh-cw"></i>${ACT && ACT.code ? 'رمز جديد' : 'إنشاء رمز'}</button></div>
-          <p class="hint">الرمز يُستخدم مرة واحدة: بعد أن تفعّل المديرة حسابها به لا يصلح لغيرها. إنشاء رمز جديد يُبطل القديم.</p>
-          ${ACT && ACT.code && !owner ? `<textarea class="in" id="dv-inv" readonly style="min-height:150px">${esc(`السلام عليكم ورحمة الله
-أهلًا بكِ في منصة ${s.school || 'المدرسة'} لإدارة المدرسة والأداء الوظيفي.
-رابط المنصة: ${url}
-رمز تفعيل حساب الإدارة: ${ACT.code}
-خطوات التفعيل:
-١) افتحي الرابط واضغطي «إنشاء حساب جديد».
-٢) اضغطي «الانضمام إلى مدرستي» (رمز المدرسة مكتوب تلقائيًا)، ثم اختاري «مديرة المدرسة» واكتبي رمز التفعيل.
-٣) اضغطي «تفعيل حساب الإدارة بحساب Google» واختاري حسابك، ثم ضعي كلمة مرور.
-٤) من «لوحة التحكم ← الحسابات» أرسلي رسالة الدعوة للمنسوبات.`)}</textarea>
-          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn btn-ghost btn-sm" id="dv-inv-copy"><i data-lucide="copy"></i>نسخ الرسالة</button><a class="btn btn-ghost btn-sm" id="dv-inv-wa" target="_blank" rel="noopener" href="#"><i data-lucide="message-circle"></i>إرسال عبر واتساب</a></div>` : ''}</section>
+        <section class="panel"><h2><i data-lucide="info"></i>بيانات المدرسة</h2>
+          <dl class="prof-dl"><div><dt>رمز المدرسة</dt><dd class="ltr">${esc(sc.code || '—')}</dd></div><div><dt>رابط الانضمام</dt><dd class="ltr"><a href="${esc(url)}" target="_blank" rel="noopener">${esc(url.replace(/^https?:\/\//, ''))}</a></dd></div>
+            <div><dt>المدير / المديرة</dt><dd>${esc(sc.principal || '—')}</dd></div><div><dt>تاريخ التسجيل</dt><dd>${esc((sc.createdAt || '').slice(0, 10) || '—')}</dd></div><div><dt>المعرّف</dt><dd class="ltr">${esc(sid)}</dd></div></dl></section>
         <section class="panel"><h2><i data-lucide="key-round"></i>الترخيص والاشتراك</h2>
-          <div class="field"><label class="mod-c big"><input type="checkbox" id="dv-act" ${L.active !== false ? 'checked' : ''}><span>المنصة تعمل</span></label></div>
-          <div class="row2"><div class="field"><label for="dv-until">ينتهي الاشتراك في</label><input class="in" id="dv-until" type="date" value="${esc(L.until || '')}"></div>
-            <div class="field"><label for="dv-client">اسم العميل</label><input class="in" id="dv-client" value="${esc(L.client || '')}" placeholder="مثال: الابتدائية ٣٤ — مكة"></div></div>
-          <div class="field"><label for="dv-msg">رسالة الإيقاف للمستخدمين</label><input class="in" id="dv-msg" value="${esc(L.msg || '')}" placeholder="المنصة متوقفة مؤقتًا. تواصلي مع مزوّد الخدمة."></div>
+          <div class="field"><label class="mod-c big"><input type="checkbox" id="dv-act" ${Lx.active !== false ? 'checked' : ''}><span>المدرسة تعمل</span></label></div>
+          <div class="row2"><div class="field"><label for="dv-until">ينتهي الاشتراك في</label><input class="in" id="dv-until" type="date" value="${esc(Lx.until || '')}"></div>
+            <div class="field"><label for="dv-client">اسم العميل</label><input class="in" id="dv-client" value="${esc(Lx.client || '')}"></div></div>
+          <div class="field"><label for="dv-msg">رسالة الإيقاف للمستخدمين</label><input class="in" id="dv-msg" value="${esc(Lx.msg || '')}" placeholder="المنصة متوقفة مؤقتًا. تواصلي مع مزوّد الخدمة."></div>
           <button type="button" class="btn btn-primary btn-sm" id="dv-lic"><i data-lucide="save"></i>حفظ الترخيص</button>
-          <p class="hint">عند الإيقاف أو انتهاء التاريخ تظهر الرسالة لكل المستخدمين بعد الدخول، وتبقى أنتِ قادرة على الدخول.</p></section>
-        <section class="panel danger-zone"><h2><i data-lucide="package-check"></i>التسليم للعميل</h2>
-          <p class="muted">يمسح بيانات التجربة كلها، ويُبقي أسماء المنسوبات والمحتوى والإعدادات. لا يمس الملفات داخل Google Drive للمستخدمين.</p>
-          <div class="mods">${WIPE.map(([k, l]) => `<label class="mod-c"><input type="checkbox" value="${k}" checked><span>${l}</span></label>`).join('')}<label class="mod-c"><input type="checkbox" value="__owner" checked><span>حساب الإدارة</span></label></div>
-          <div class="field" style="margin-top:10px"><label for="dv-confirm">للتأكيد اكتبي: تسليم</label><input class="in" id="dv-confirm" autocomplete="off"></div>
-          <button type="button" class="btn btn-ghost danger" id="dv-wipe"><i data-lucide="eraser"></i>مسح بيانات التجربة</button>
-          <div id="dv-wipe-msg" aria-live="polite"></div>
-          <button type="button" class="btn btn-ghost btn-sm" id="dv-backup" style="margin-top:10px"><i data-lucide="download"></i>نسخة احتياطية كاملة (JSON)</button></section>
+          <p class="hint">عند الإيقاف أو انتهاء التاريخ تُمنع الكتابة وتظهر الرسالة لمنسوبي المدرسة.</p></section>
+        <section class="panel"><h2><i data-lucide="crown"></i>حساب إدارة المدرسة (المالك)</h2>
+          ${owner ? `<div class="u-row"><span class="avatar">${esc(initials(owner.name || owner.email))}</span><div class="u-t"><b>${esc(owner.name || '')}</b><small class="ltr">${esc(owner.email)}</small></div><span class="spill ok">المالك</span></div>` : '<div class="msg info">لم يُفعَّل حساب الإدارة بعد. أرسلي رمز التفعيل لمدير المدرسة.</div>'}
+          <div class="field" style="margin-top:10px"><label for="dv-own">نقل الملكية إلى بريد آخر</label><div class="row2"><input class="in ltr" id="dv-own" type="email" placeholder="principal@gmail.com"><button type="button" class="btn btn-ghost" id="dv-own-go"><i data-lucide="arrow-left-right"></i>نقل الملكية</button></div></div>
+          ${owner ? '<button type="button" class="btn btn-ghost btn-sm danger" id="dv-own-reset"><i data-lucide="user-x"></i>إلغاء حساب الإدارة</button>' : ''}</section>
+        <section class="panel act-p"><h2><i data-lucide="ticket"></i>رمز تفعيل حساب الإدارة</h2>
+          <div class="act-code"><span class="ltr">${ACT && ACT.code ? esc(ACT.code) : '— لا يوجد رمز —'}</span><button type="button" class="btn btn-ghost btn-sm" id="dv-gen"><i data-lucide="refresh-cw"></i>${ACT && ACT.code ? 'رمز جديد' : 'إنشاء رمز'}</button></div>
+          <p class="hint">يُستخدم مرة واحدة. إنشاء رمز جديد يُبطل القديم.</p>
+          ${ACT && ACT.code && !owner ? `<textarea class="in" id="dv-inv" readonly style="min-height:160px">${esc(invite)}</textarea>
+            <div class="su-acts"><button type="button" class="btn btn-ghost btn-sm" id="dv-inv-copy"><i data-lucide="copy"></i>نسخ الرسالة</button><a class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(invite)}"><i data-lucide="message-circle"></i>إرسال عبر واتساب</a></div>` : ''}</section>
       </div>
-      <section class="panel"><h2><i data-lucide="users"></i>كل الحسابات (${ar(members.length)})</h2>
+      <section class="panel"><h2><i data-lucide="users"></i>حسابات المدرسة (${ar(members.length)})</h2>
         <div class="toolbar"><label class="search"><i data-lucide="search"></i><input id="dv-q" type="search" value="${esc(q)}" placeholder="ابحثي بالاسم أو البريد…"></label></div>
         <div class="u-list">${rows.map(m => `<div class="u-row" data-e="${esc(m.email)}">${m.photo ? `<img class="u-ph" src="${esc(m.photo)}" alt="" referrerpolicy="no-referrer">` : `<span class="avatar">${esc(initials(m.name))}</span>`}
           <div class="u-t"><b>${esc(m.name)}</b><small>${esc(plain(m.job || ''))} · <span class="ltr">${esc(m.email)}</span></small></div>
-          <span class="spill ${m.active ? (m.role === 'admin' ? 'ok' : 'info') : 'wait'}">${m.active ? (m.role === 'admin' ? 'إدارة' : m.ops ? 'متابعة يومية' : 'منسوبة') : (m.status === 'pending' ? 'معلّق' : 'موقوف')}</span>
-          <div class="u-acts"><button type="button" class="btn btn-ghost btn-sm" data-d="active">${m.active ? 'إيقاف' : 'تفعيل'}</button><button type="button" class="btn btn-ghost btn-sm" data-d="role">${m.role === 'admin' ? 'إلغاء الإدارة' : 'منح الإدارة'}</button><button type="button" class="btn btn-ghost btn-sm danger" data-d="del">حذف</button></div></div>`).join('') || '<p class="muted">لا توجد حسابات.</p>'}</div></section>`);
+          <span class="spill ${tag(m)[1]}">${tag(m)[0]}</span>
+          <div class="u-acts"><button type="button" class="btn btn-ghost btn-sm" data-d="active">${m.active ? 'إيقاف' : 'تفعيل'}</button><button type="button" class="btn btn-ghost btn-sm" data-d="role">${m.role === 'admin' ? 'إلغاء الإدارة' : 'منح الإدارة'}</button><button type="button" class="btn btn-ghost btn-sm danger" data-d="del">حذف</button></div></div>`).join('') || '<p class="muted">لا توجد حسابات.</p>'}</div></section>
+      <section class="panel danger-zone"><h2><i data-lucide="package-check"></i>النسخ الاحتياطي والتسليم</h2>
+        <button type="button" class="btn btn-ghost btn-sm" id="dv-backup"><i data-lucide="download"></i>نسخة احتياطية كاملة لهذه المدرسة (JSON)</button>
+        <p class="muted" style="margin-top:12px">مسح بيانات التجربة: يُبقي أسماء المنسوبات والمحتوى والإعدادات، ولا يمس ملفات Google Drive.</p>
+        <div class="mods">${WIPE.map(([k, l]) => `<label class="mod-c"><input type="checkbox" value="${k}" checked><span>${l}</span></label>`).join('')}<label class="mod-c"><input type="checkbox" value="__owner"><span>حساب الإدارة</span></label></div>
+        <div class="field" style="margin-top:10px"><label for="dv-confirm">للتأكيد اكتبي: تسليم</label><input class="in" id="dv-confirm" autocomplete="off"></div>
+        <button type="button" class="btn btn-ghost danger" id="dv-wipe"><i data-lucide="eraser"></i>مسح بيانات التجربة لهذه المدرسة</button>
+        <div id="dv-wipe-msg" aria-live="polite"></div></section>`);
     icons();
-    wirePlatform();
-    document.getElementById('dv-close').onclick = () => { ss.del('superSid'); location.hash = '#dev'; location.reload(); };
-    const qi = document.getElementById('dv-q'); qi.onchange = () => { M.devQ = qi.value; devPage(); };
-    document.getElementById('dv-gen').onclick = async () => {
-      const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', r = n => Array.from(crypto.getRandomValues(new Uint32Array(n)), x => A[x % A.length]).join('');
-      const code = r(4) + '-' + r(4);
-      try { await SD.doc('meta/activation').set({code, at: new Date().toISOString(), by: acct.email}); toast('أُنشئ رمز التفعيل.', 'ok'); devPage(); } catch(e){ toast(authMsg(e), 'err'); }
+    const g = id => document.getElementById(id), again = () => devSchool(sid);
+    g('dv-enter').onclick = () => enterSchool(sid);
+    const qi = g('dv-q'); qi.onchange = () => { M.devQ = qi.value; again(); };
+    g('dv-gen').onclick = async () => { try { await X.doc('meta/activation').set({code: genCode(4) + '-' + genCode(4), at: new Date().toISOString(), by: acct.email}); toast('أُنشئ رمز التفعيل.', 'ok'); again(); } catch(e){ toast(authMsg(e), 'err'); } };
+    const ic = g('dv-inv-copy'); if (ic) ic.onclick = () => navigator.clipboard.writeText(g('dv-inv').value).then(() => toast('نُسخت الرسالة.', 'ok'), () => g('dv-inv').select());
+    g('dv-lic').onclick = async () => {
+      const uu = g('dv-until').value, keepTrial = L && L.plan === 'trial' && (!uu || uu === L.until);
+      const v = {active: g('dv-act').checked, until: uu, untilMs: uu ? Date.parse(uu + 'T23:59:59+03:00') : Date.now() + 3650 * 86400000, plan: keepTrial ? 'trial' : 'paid', client: g('dv-client').value.trim(), msg: g('dv-msg').value.trim(), at: new Date().toISOString(), by: acct.email};
+      try { await X.doc('meta/license').set(v); toast('حُفظ الترخيص.', 'ok'); again(); } catch(e){ toast(authMsg(e), 'err'); }
     };
-    const inv = document.getElementById('dv-inv');
-    if (inv) { document.getElementById('dv-inv-wa').href = 'https://wa.me/?text=' + encodeURIComponent(inv.value); document.getElementById('dv-inv-copy').onclick = () => navigator.clipboard.writeText(inv.value).then(() => toast('نُسخت الرسالة.', 'ok'), () => inv.select()); }
-    document.getElementById('dv-lic').onclick = async () => {
-      const uu = document.getElementById('dv-until').value; const v = {active: document.getElementById('dv-act').checked, until: uu, untilMs: uu ? Date.parse(uu + 'T23:59:59+03:00') : Date.now() + 3650 * 86400000, plan: (LIC && LIC.plan === 'trial' && !uu) ? 'trial' : 'paid', client: document.getElementById('dv-client').value.trim(), msg: document.getElementById('dv-msg').value.trim(), at: new Date().toISOString(), by: acct.email};
-      try { await SD.doc('meta/license').set(v); toast('حُفظ الترخيص.', 'ok'); devPage(); } catch(e){ toast(authMsg(e), 'err'); }
+    g('dv-own-go').onclick = async () => {
+      const ne = g('dv-own').value.trim().toLowerCase(); if (!emailOk(ne)) return toast('اكتبي بريدًا صحيحًا.', 'err');
+      try {
+        const o = await X.doc('meta/owner').get();
+        if (o.exists) await X.doc('meta/owner').update({email: ne}); else await X.doc('meta/owner').set({email: ne, name: '', at: new Date().toISOString()});
+        try { await fb.fs.doc('schools/' + sid).update({ownerEmail: ne}); } catch(x){}
+        try { await fb.fs.doc('userSchools/' + ne).set({sid, role: 'owner', at: new Date().toISOString()}); } catch(x){}
+        toast('نُقلت الملكية إلى ' + ne, 'ok'); again();
+      } catch(e){ toast(authMsg(e), 'err'); }
     };
-    document.getElementById('dv-own-go').onclick = async () => {
-      const ne = document.getElementById('dv-own').value.trim().toLowerCase(); if (!emailOk(ne)) return toast('اكتبي بريدًا صحيحًا.', 'err');
-      try { const o = await SD.doc('meta/owner').get(); if (o.exists) await SD.doc('meta/owner').update({email: ne, name: o.data().name || ''}); else await SD.doc('meta/owner').set({email: ne, name: '', at: new Date().toISOString()}); toast('نُقلت الملكية إلى ' + ne, 'ok'); devPage(); } catch(e){ toast(authMsg(e), 'err'); }
+    const rs = g('dv-own-reset'); if (rs) armDelete(rs, async () => { try { await X.doc('meta/owner').delete(); toast('أُلغي حساب الإدارة.', 'ok'); again(); } catch(e){ toast(authMsg(e), 'err'); } });
+    g('dv-backup').onclick = async () => {
+      const out = {at: new Date().toISOString(), school: sc, data: {}};
+      for (const c of [...WIPE.map(w => w[0]), 'staff', 'config', 'site', 'meta']) { try { out.data[c] = {}; (await X.collection(c).get()).docs.forEach(d => { out.data[c][d.id] = d.data(); }); } catch(e){} }
+      saveBlob('نسخة-' + (sc.code || sid) + '-' + today() + '.json', JSON.stringify(out, null, 1), 'application/json');
     };
-    const rs = document.getElementById('dv-own-reset'); if (rs) armDelete(rs, async () => { try { await SD.doc('meta/owner').delete(); toast('أُلغي حساب الإدارة.', 'ok'); devPage(); } catch(e){ toast(authMsg(e), 'err'); } });
-    document.getElementById('dv-wipe').onclick = async () => {
-      if (document.getElementById('dv-confirm').value.trim() !== 'تسليم') return toast('اكتبي كلمة «تسليم» للتأكيد.', 'err');
-      const box = document.getElementById('dv-wipe-msg'), picks = [...app.querySelectorAll('.danger-zone .mods input:checked')].map(i => i.value);
-      const btn = document.getElementById('dv-wipe'); btn.disabled = true; let total = 0;
+    g('dv-wipe').onclick = async () => {
+      if (g('dv-confirm').value.trim() !== 'تسليم') return toast('اكتبي كلمة «تسليم» للتأكيد.', 'err');
+      const box = g('dv-wipe-msg'), picks = [...app.querySelectorAll('.danger-zone .mods input:checked')].map(i => i.value), btn = g('dv-wipe');
+      btn.disabled = true; let total = 0;
       for (const c of picks.filter(x => x !== '__owner')) {
         box.innerHTML = `<div class="msg info"><span class="spinner"></span>مسح ${esc((WIPE.find(w => w[0] === c) || [c, c])[1])}…</div>`;
-        try { for (;;) { const snap = await SD.collection(c).limit(400).get(); if (snap.empty) break; const b = fb.fs.batch(); snap.docs.forEach(d => b.delete(d.ref)); await b.commit(); total += snap.size; if (snap.size < 400) break; } }
+        try { for (;;) { const snap = await X.collection(c).limit(400).get(); if (snap.empty) break; const b = fb.fs.batch(); snap.docs.forEach(d => b.delete(d.ref)); await b.commit(); total += snap.size; if (snap.size < 400) break; } }
         catch(e){ box.innerHTML = `<div class="msg err">تعذّر مسح ${esc(c)}: ${esc(authMsg(e))}</div>`; btn.disabled = false; return; }
       }
-      if (picks.includes('__owner')) { try { await SD.doc('meta/owner').delete(); } catch(e){} }
-      try { ['staff-seeded', 'staff-seeded-' + ((FB && FB.projectId) || 'fb')].forEach(k => store.del(k)); } catch(e){}
-      box.innerHTML = `<div class="msg ok">تم: حُذفت ${ar(total)} وثيقة. المنصة جاهزة للتسليم.</div>`; btn.disabled = false; CD.at = 0;
-    };
-    document.getElementById('dv-backup').onclick = async () => {
-      const out = {at: new Date().toISOString(), project: FB && FB.projectId, data: {}};
-      for (const c of [...WIPE.map(w => w[0]), 'staff', 'config', 'site', 'meta']) { try { out.data[c] = {}; (await SD.collection(c).get()).docs.forEach(d => { out.data[c][d.id] = d.data(); }); } catch(e){} }
-      saveBlob('نسخة-المنصة-' + today() + '.json', JSON.stringify(out, null, 1), 'application/json');
+      if (picks.includes('__owner')) { try { await X.doc('meta/owner').delete(); } catch(e){} }
+      box.innerHTML = `<div class="msg ok">تم: حُذفت ${ar(total)} وثيقة من هذه المدرسة.</div>`; btn.disabled = false;
     };
     app.querySelectorAll('.u-row[data-e]').forEach(r => {
-      const e = r.dataset.e, m = members.find(x => x.email === e), ref = SD.doc('members/' + e);
+      const e = r.dataset.e, m = members.find(x => x.email === e), ref = X.doc('members/' + e);
       r.querySelectorAll('[data-d]').forEach(b => {
         const run = async () => {
           try {
             if (b.dataset.d === 'active') await ref.update({active: !m.active, status: m.active ? 'stopped' : 'active'});
             if (b.dataset.d === 'role') await ref.update({role: m.role === 'admin' ? 'member' : 'admin'});
-            if (b.dataset.d === 'del') { await ref.delete(); try { await SD.doc('links/' + nameKey(m.staffName || m.name)).delete(); } catch(x){} }
-            devPage();
+            if (b.dataset.d === 'del') { await ref.delete(); if (m.staffId) { try { await X.doc('links/' + m.staffId).delete(); } catch(x){} } try { await fb.fs.doc('userSchools/' + e).delete(); } catch(x){} }
+            again();
           } catch(err){ toast(authMsg(err), 'err'); }
         };
         if (b.dataset.d === 'del') armDelete(b, run); else b.onclick = run;
-      });
-    });
-  }
-
-  /* ================= لوحة المنصة (SaaS): المدارس والاشتراكات ================= */
-  const PLANS = {trial: 'تجربة مجانية', paid: 'مشترك', school: 'مشترك'};
-  async function platformSection(){
-    let cfg = {}, list = [];
-    try { const c = await fb.fs.doc('platform/config').get(); cfg = c.exists ? c.data() : {}; } catch(e){}
-    try { list = (await fb.fs.collection('schools').get()).docs.map(d => Object.assign({id: d.id}, d.data())); } catch(e){}
-    await Promise.all(list.map(async sc => { try { const L = await fb.fs.doc('schools/' + sc.id + '/meta/license').get(); sc.lic = L.exists ? L.data() : null; } catch(e){ sc.lic = null; } }));
-    list.sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
-    const now = Date.now(), st = sc => !sc.lic ? ['بلا ترخيص', 'none'] : sc.lic.active === false ? ['موقوفة', 'bad'] : (sc.lic.untilMs || 0) < now ? ['منتهية', 'bad'] : sc.lic.plan === 'trial' ? ['تجربة', 'wait'] : ['مشتركة', 'ok'];
-    const days = sc => sc.lic && sc.lic.untilMs ? Math.ceil((sc.lic.untilMs - now) / 86400000) : null;
-    const act = list.filter(x => st(x)[1] === 'ok').length, tri = list.filter(x => st(x)[1] === 'wait').length, exp = list.filter(x => st(x)[1] === 'bad').length;
-    PLAT = {cfg, list};
-    return `<section class="plat">
-      <div class="cat-kpis"><div><b>${ar(list.length)}</b><span>مدرسة</span></div><div class="k-ok"><b>${ar(act)}</b><span>مشتركة</span></div><div class="k-wait"><b>${ar(tri)}</b><span>في التجربة</span></div><div class="k-bad"><b>${ar(exp)}</b><span>منتهية أو موقوفة</span></div></div>
-      <div class="dev-grid">
-        <section class="panel"><h2><i data-lucide="settings-2"></i>إعدادات المنصة</h2>
-          <label class="mod-c big"><input type="checkbox" id="pl-open" ${cfg.signupOpen ? 'checked' : ''}><span>السماح للمدارس بالتسجيل الذاتي (تجربة ١٤ يومًا)</span></label>
-          <button type="button" class="btn btn-ghost btn-sm" id="pl-save" style="margin-top:8px"><i data-lucide="save"></i>حفظ</button>
-          <p class="hint">عند الإغلاق لا تُنشأ مدرسة إلا من هذه اللوحة برمز تفعيل.</p></section>
-        <section class="panel"><h2><i data-lucide="building-2"></i>إنشاء مدرسة</h2>
-          <div class="field"><label for="nc-name">اسم المدرسة</label><input class="in" id="nc-name"></div>
-          <div class="row2"><div class="field"><label for="nc-stage">المرحلة</label><select class="in" id="nc-stage"><option>رياض الأطفال</option><option selected>ابتدائي</option><option>متوسط</option><option>ثانوي</option><option>مجمع</option></select></div>
-            <div class="field"><label for="nc-gender">النوع</label><select class="in" id="nc-gender"><option value="f">بنات</option><option value="m">بنين</option></select></div></div>
-          <div class="row2"><div class="field"><label for="nc-office">إدارة التعليم</label><input class="in" id="nc-office"></div><div class="field"><label for="nc-city">المدينة</label><input class="in" id="nc-city"></div></div>
-          <div class="row2"><div class="field"><label for="nc-code">رمز المدرسة (اختياري)</label><input class="in ltr code-in" id="nc-code" placeholder="يُولَّد تلقائيًا"></div><div class="field"><label for="nc-until">ينتهي الاشتراك في</label><input class="in" id="nc-until" type="date"></div></div>
-          <button type="button" class="btn btn-primary btn-sm" id="nc-go"><i data-lucide="plus"></i>إنشاء المدرسة ورمز التفعيل</button>
-          <div id="nc-msg" aria-live="polite"></div></section>
-      </div>
-      <section class="panel"><h2><i data-lucide="school"></i>المدارس (${ar(list.length)})</h2>
-        <div class="u-list">${list.map(sc => { const S0 = st(sc), d = days(sc); return `<div class="u-row" data-sc="${esc(sc.id)}"><span class="avatar">${esc(initials(sc.name || '؟'))}</span>
-          <div class="u-t"><b>${esc(sc.name || sc.id)}</b><small>${esc([sc.stage, sc.gender === 'm' ? 'بنين' : 'بنات', sc.city].filter(Boolean).join(' · '))} · الرمز <span class="ltr">${esc(sc.code || '—')}</span> · <span class="ltr">${esc(sc.ownerEmail || 'لم تُفعَّل الإدارة')}</span></small></div>
-          <span class="spill ${S0[1]}">${S0[0]}${d != null && S0[1] !== 'bad' ? ' · ' + ar(d) + ' يومًا' : ''}</span>
-          <div class="u-acts"><button type="button" class="btn btn-primary btn-sm" data-pl="open"><i data-lucide="log-in"></i>فتح وإدارة</button>
-            <button type="button" class="btn btn-ghost btn-sm" data-pl="y1">تمديد سنة</button>
-            <button type="button" class="btn btn-ghost btn-sm" data-pl="toggle">${sc.lic && sc.lic.active === false ? 'تشغيل' : 'إيقاف'}</button></div></div>`; }).join('') || '<p class="muted">لا توجد مدارس بعد.</p>'}</div></section>
-    </section>`;
-  }
-  let PLAT = {cfg: {}, list: []};
-  function wirePlatform(){
-    const g = id => document.getElementById(id);
-    if (g('pl-save')) g('pl-save').onclick = async () => { try { await fb.fs.doc('platform/config').set({signupOpen: g('pl-open').checked, at: new Date().toISOString(), by: acct.email}, {merge: true}); toast('حُفظت إعدادات المنصة.', 'ok'); } catch(e){ toast(authMsg(e), 'err'); } };
-    if (g('nc-go')) g('nc-go').onclick = async () => {
-      const name = g('nc-name').value.trim(); if (name.length < 4) return toast('اكتبي اسم المدرسة.', 'err');
-      const code = (g('nc-code').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '')) || genCode(6), uu = g('nc-until').value;
-      const until = uu ? Date.parse(uu + 'T23:59:59+03:00') : Date.now() + 365 * 86400000;
-      const iso = d => { const x = new Date(d); return x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0'); };
-      try {
-        const ex = await fb.fs.doc('schoolCodes/' + code).get(); if (ex.exists) return toast('رمز المدرسة مستخدم. اختاري رمزًا آخر.', 'err');
-        const sid = fb.fs.collection('schools').doc().id, act = genCode(4) + '-' + genCode(4), P = 'schools/' + sid, b = fb.fs.batch(), now = new Date().toISOString();
-        b.set(fb.fs.doc(P), {name, stage: g('nc-stage').value, gender: g('nc-gender').value, office: g('nc-office').value.trim(), region: g('nc-office').value.trim(), city: g('nc-city').value.trim(), principal: '', ownerEmail: '', plan: 'paid', code, createdAt: now});
-        b.set(fb.fs.doc('schoolCodes/' + code), {sid, name});
-        b.set(fb.fs.doc(P + '/meta/license'), {active: true, plan: 'paid', until: iso(until), untilMs: until, client: name, msg: '', at: now, by: acct.email});
-        b.set(fb.fs.doc(P + '/meta/activation'), {code: act, at: now, by: acct.email});
-        await b.commit();
-        const url = (location.origin + location.pathname).replace(/#.*$/, '') + '?s=' + code;
-        const txt = `السلام عليكم ورحمة الله\nأهلًا بكم في ${PLATFORM} — ${name}.\nرابط المدرسة: ${url}\nرمز المدرسة: ${code}\nرمز تفعيل حساب الإدارة: ${act}\nخطوات التفعيل:\n١) افتح/ي الرابط واضغط/ي «الانضمام إلى مدرستي».\n٢) اختر/ي «مديرة المدرسة» واكتب/ي رمز التفعيل.\n٣) الدخول بحساب Google ثم وضع كلمة مرور.\n٤) من «لوحة التحكم ← الحسابات» تُرسل رسالة الدعوة للكادر.`;
-        g('nc-msg').innerHTML = `<div class="msg ok" style="margin-top:10px">أُنشئت المدرسة. أرسلي هذه الرسالة لمديرها:</div><textarea class="in" readonly style="min-height:170px;margin-top:6px" id="nc-txt">${esc(txt)}</textarea><div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap"><button type="button" class="btn btn-ghost btn-sm" id="nc-copy"><i data-lucide="copy"></i>نسخ</button><a class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(txt)}"><i data-lucide="message-circle"></i>واتساب</a><button type="button" class="btn btn-ghost btn-sm" id="nc-refresh"><i data-lucide="refresh-cw"></i>تحديث القائمة</button></div>`;
-        icons(); g('nc-copy').onclick = () => navigator.clipboard.writeText(g('nc-txt').value).then(() => toast('نُسخت.', 'ok'), () => g('nc-txt').select()); g('nc-refresh').onclick = () => devPage();
-      } catch(e){ toast(authMsg(e), 'err'); }
-    };
-    document.querySelectorAll('[data-sc]').forEach(r => {
-      const sid = r.dataset.sc, sc = PLAT.list.find(x => x.id === sid);
-      r.querySelectorAll('[data-pl]').forEach(b => b.onclick = async () => {
-        const a = b.dataset.pl, ref = fb.fs.doc('schools/' + sid + '/meta/license');
-        try {
-          if (a === 'open') { ss.set('superSid', sid); location.hash = '#dev'; location.reload(); return; }
-          if (a === 'y1') { const base = Math.max(Date.now(), (sc.lic && sc.lic.untilMs) || 0), u = base + 365 * 86400000, x = new Date(u); await ref.set({active: true, plan: 'paid', untilMs: u, until: x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0'), at: new Date().toISOString(), by: acct.email}, {merge: true}); toast('مُدّد الاشتراك سنة.', 'ok'); }
-          if (a === 'toggle') { await ref.set({active: !(sc.lic && sc.lic.active !== false)}, {merge: true}); toast('حُدّثت حالة المدرسة.', 'ok'); }
-          devPage();
-        } catch(e){ toast(authMsg(e), 'err'); }
       });
     });
   }
@@ -5371,6 +5470,7 @@ body{font-synthesis:weight style}
     else { const sv = store.get('edition'); ed = sv === 'f' || sv === 'm' ? sv : (st.defaultEdition || 'm'); }
     const old = /^e(\d{1,2})$/.exec(h); if (old) h = 'i' + old[1];
     if (!h) h = 'home';
+    if (isPlat()) { clearRouteSubs(); curRoute = ''; activeRoute = h; devPage(h); return; }
     const school = SCHOOL_ROUTES.includes(h);
     const pg = h === 'profile' || h === 'ach' || h === 'mine' || h === 'cadre' || ['evals', 'myeval', 'myatt', 'mytasks', 'mynotes', 'gc', 'dev', 'setup'].includes(h) || /^cat-[a-z]+$/.test(h) || /^pf-[\w-]+$/.test(h);
     const item = !school && !pg && h !== 'admin' && h !== 'ev' && /^[a-z][a-z0-9]{1,24}$/.test(h);
